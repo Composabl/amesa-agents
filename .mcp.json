@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "amesa": {
+      "type": "http",
+      "url": "https://api.amesa.com/v1/mcp",
+      "tools": ["*"]
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "agents": {
+    "implementation-engineer": {
+      "persistent_name": "Hicks",
+      "universe": "Alien",
+      "created_at": "2026-05-22T17:39:06Z",
+      "legacy_named": false,
+      "status": "active"
+    },
+    "analyst": {
+      "persistent_name": "Hudson",
+      "universe": "Alien",
+      "created_at": "2026-05-22T17:39:06Z",
+      "legacy_named": false,
+      "status": "active"
+    }
+  }
+}
