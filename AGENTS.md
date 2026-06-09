@@ -33,7 +33,7 @@ amesa-agents/
 ├── AGENTS.md                 # This file
 ├── README.md                 # Project overview and CLI reference
 ├── .mcp.json                 # AMESA MCP server config
-├── .squad/                   # Squad AI team definitions (Hicks, Hudson, Scribe, Ralph)
+├── .squad/                   # AI team definitions (Hicks, Hudson, Scribe, Ralph)
 ├── agent-context/            # Component specs for agents to read before implementing
 │   ├── teacher/
 │   ├── controller/
@@ -52,7 +52,7 @@ amesa-agents/
 
 ## AI Team
 
-This workspace uses a Squad of specialized agents. Address them by name:
+This workspace uses a AMESA assist agents (Squad). Address them by name:
 
 | Agent      | Role                    | What to ask them                                        |
 | ---------- | ----------------------- | ------------------------------------------------------- |

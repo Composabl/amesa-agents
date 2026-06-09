@@ -8,7 +8,7 @@ This is an AI-assisted workspace for building, publishing, and analyzing intelli
 
 - [What Is This Repo?](#what-is-this-repo)
 - [What Is AMESA?](#what-is-amesa)
-- [The Squad AI Team](#the-squad-ai-team)
+- [AMESA Assist Agents](#amesa-assist-agents)
 - [Prerequisites](#prerequisites)
 - [Getting Started](#getting-started)
 - [Core Capabilities](#core-capabilities)
@@ -43,9 +43,9 @@ This workspace is all about flexibility. You can use your own coding agents to c
 - **Training** agents in simulation
 - **Monitoring** performance with structured data (benchmarks, historian logs)
 
-AMESA handles the infrastructure; your Squad AI team handles the implementation.
+AMESA handles the infrastructure; your AMESA assist agents handle the implementation.
 
-## The Squad AI Team
+## AMESA Assist Agents
 
 Four specialized agents power this workspace:
 
@@ -71,7 +71,7 @@ Before you start, ensure you have:
 
 1. **AMESA account** — sign up at [amesa.com](https://amesa.com) to get access to the Agent Orchestration Studio.
 2. **AMESA MCP connection** — the `.mcp.json` file in this repo is pre-configured to point at `https://api.amesa.com/v1/mcp`. The AMESA MCP server is the communication bridge between this workspace and the AMESA Agent Orchestration Studio.
-3. **(Optional) GitHub Copilot CLI** — enables the Squad AI team in your workspace.
+3. **(Optional) GitHub Copilot CLI** — enables specialized AMESA assist agents in your workspace.
 
 ## Getting Started
 
@@ -144,7 +144,7 @@ amesa-agents/
 ├── AGENTS.md                 # AI agent guidelines (read this if you're an AI agent)
 ├── README.md                 # This file
 ├── .mcp.json                 # AMESA MCP server config
-├── .squad/                   # Squad AI team definitions (Hicks, Hudson, Scribe, Ralph)
+├── .squad/                   # AI team definitions (Hicks, Hudson, Scribe, Ralph)
 ├── agent-context/            # Component specs for AI agents to read before implementing
 │   ├── teacher/              #   SkillTeacher interface, publishing, and quirks
 │   ├── controller/           #   SkillController interface, publishing, and quirks
@@ -324,7 +324,7 @@ Ask Hudson or Hicks to set up an analysis pipeline:
 copilot "Hudson, let's set up automated benchmark analysis for every agent we publish. How would we do that?"
 ```
 
-### Customize the Squad
+### Customize AMESA Assist Agents
 
 Edit `.squad/agents/<name>/charter.md` to change how a team member behaves, what tools they use, or what they prioritize.
 
