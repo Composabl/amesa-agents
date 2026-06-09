@@ -1,0 +1,2606 @@
+{
+  "pole-balance": {
+    "scenario-0": {
+      "scenario_data": "{\"cart_pos_init\": 0.0, \"pole_theta_init\": 0.01}",
+      "episode-0": [
+        {
+          "state": {
+            "cart_pos": 0.01306,
+            "cart_vel": -0.003549,
+            "pole_theta": -0.007918,
+            "pole_alpha": 0.002284
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.013603,
+            "cart_vel": 0.027176,
+            "pole_theta": -0.007651,
+            "pole_alpha": 0.013363
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.014841,
+            "cart_vel": 0.061912,
+            "pole_theta": -0.007072,
+            "pole_alpha": 0.028934
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.015198,
+            "cart_vel": 0.017814,
+            "pole_theta": -0.006711,
+            "pole_alpha": 0.018048
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.014738,
+            "cart_vel": -0.022983,
+            "pole_theta": -0.00625,
+            "pole_alpha": 0.023082
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.013419,
+            "cart_vel": -0.065962,
+            "pole_theta": -0.005893,
+            "pole_alpha": 0.017814
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.012324,
+            "cart_vel": -0.054764,
+            "pole_theta": -0.005424,
+            "pole_alpha": 0.023472
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.011888,
+            "cart_vel": -0.021787,
+            "pole_theta": -0.004795,
+            "pole_alpha": 0.031446
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.011538,
+            "cart_vel": -0.017482,
+            "pole_theta": -0.003917,
+            "pole_alpha": 0.043891
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.010869,
+            "cart_vel": -0.033438,
+            "pole_theta": -0.002721,
+            "pole_alpha": 0.059819
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.010103,
+            "cart_vel": -0.038311,
+            "pole_theta": -0.001591,
+            "pole_alpha": 0.056511
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.008808,
+            "cart_vel": -0.064773,
+            "pole_theta": -0.000711,
+            "pole_alpha": 0.044001
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.00742,
+            "cart_vel": -0.069364,
+            "pole_theta": 0.00016,
+            "pole_alpha": 0.043529
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.006254,
+            "cart_vel": -0.058307,
+            "pole_theta": 0.000626,
+            "pole_alpha": 0.02331
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.005065,
+            "cart_vel": -0.059479,
+            "pole_theta": 0.000566,
+            "pole_alpha": -0.003013
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.003572,
+            "cart_vel": -0.074631,
+            "pole_theta": 0.000289,
+            "pole_alpha": -0.013826
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.001309,
+            "cart_vel": -0.11316,
+            "pole_theta": 0.000131,
+            "pole_alpha": -0.007923
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.000121,
+            "cart_vel": -0.071478,
+            "pole_theta": -0.000307,
+            "pole_alpha": -0.021915
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.001419,
+            "cart_vel": -0.064894,
+            "pole_theta": -0.000661,
+            "pole_alpha": -0.017684
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.003247,
+            "cart_vel": -0.091441,
+            "pole_theta": -0.000836,
+            "pole_alpha": -0.008758
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.005168,
+            "cart_vel": -0.096035,
+            "pole_theta": -0.000764,
+            "pole_alpha": 0.003626
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.008143,
+            "cart_vel": -0.148758,
+            "pole_theta": -0.001018,
+            "pole_alpha": -0.01269
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.011418,
+            "cart_vel": -0.163733,
+            "pole_theta": -0.001261,
+            "pole_alpha": -0.012185
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.015339,
+            "cart_vel": -0.196075,
+            "pole_theta": -0.001338,
+            "pole_alpha": -0.003845
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.018704,
+            "cart_vel": -0.168245,
+            "pole_theta": -0.00123,
+            "pole_alpha": 0.005421
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.022568,
+            "cart_vel": -0.193193,
+            "pole_theta": -0.001353,
+            "pole_alpha": -0.006183
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.026774,
+            "cart_vel": -0.210311,
+            "pole_theta": -0.001094,
+            "pole_alpha": 0.012946
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.03124,
+            "cart_vel": -0.22329,
+            "pole_theta": -0.000995,
+            "pole_alpha": 0.004969
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.035806,
+            "cart_vel": -0.228294,
+            "pole_theta": -0.001002,
+            "pole_alpha": -0.000336
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.04059,
+            "cart_vel": -0.23919,
+            "pole_theta": -0.001243,
+            "pole_alpha": -0.012065
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": true,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        }
+      ],
+      "episode-1": [
+        {
+          "state": {
+            "cart_pos": -0.023349,
+            "cart_vel": -0.03193,
+            "pole_theta": 0.00646,
+            "pole_alpha": 0.016777
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.024277,
+            "cart_vel": -0.04643,
+            "pole_theta": 0.006625,
+            "pole_alpha": 0.008262
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.024969,
+            "cart_vel": -0.034576,
+            "pole_theta": 0.006964,
+            "pole_alpha": 0.016948
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.026075,
+            "cart_vel": -0.055304,
+            "pole_theta": 0.007122,
+            "pole_alpha": 0.007911
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.026844,
+            "cart_vel": -0.038455,
+            "pole_theta": 0.007166,
+            "pole_alpha": 0.002199
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.02788,
+            "cart_vel": -0.051802,
+            "pole_theta": 0.006869,
+            "pole_alpha": -0.014881
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.029263,
+            "cart_vel": -0.06915,
+            "pole_theta": 0.006711,
+            "pole_alpha": -0.007913
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.030827,
+            "cart_vel": -0.078198,
+            "pole_theta": 0.00631,
+            "pole_alpha": -0.020048
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.031904,
+            "cart_vel": -0.053864,
+            "pole_theta": 0.005787,
+            "pole_alpha": -0.026108
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.033089,
+            "cart_vel": -0.059231,
+            "pole_theta": 0.005523,
+            "pole_alpha": -0.013243
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.033978,
+            "cart_vel": -0.044461,
+            "pole_theta": 0.005505,
+            "pole_alpha": -0.000865
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.035012,
+            "cart_vel": -0.051679,
+            "pole_theta": 0.005485,
+            "pole_alpha": -0.000995
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.036547,
+            "cart_vel": -0.076777,
+            "pole_theta": 0.005331,
+            "pole_alpha": -0.007735
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.037526,
+            "cart_vel": -0.048945,
+            "pole_theta": 0.005316,
+            "pole_alpha": -0.000711
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.03871,
+            "cart_vel": -0.059171,
+            "pole_theta": 0.005255,
+            "pole_alpha": -0.003067
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.039853,
+            "cart_vel": -0.057174,
+            "pole_theta": 0.005437,
+            "pole_alpha": 0.009069
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.041084,
+            "cart_vel": -0.061561,
+            "pole_theta": 0.005827,
+            "pole_alpha": 0.019524
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.042439,
+            "cart_vel": -0.067709,
+            "pole_theta": 0.006225,
+            "pole_alpha": 0.019885
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.043833,
+            "cart_vel": -0.069731,
+            "pole_theta": 0.00666,
+            "pole_alpha": 0.021774
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.045092,
+            "cart_vel": -0.06295,
+            "pole_theta": 0.007191,
+            "pole_alpha": 0.026566
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.046427,
+            "cart_vel": -0.066754,
+            "pole_theta": 0.007525,
+            "pole_alpha": 0.016666
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.04765,
+            "cart_vel": -0.061144,
+            "pole_theta": 0.008143,
+            "pole_alpha": 0.030903
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.049093,
+            "cart_vel": -0.07216,
+            "pole_theta": 0.008783,
+            "pole_alpha": 0.032021
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.050474,
+            "cart_vel": -0.069051,
+            "pole_theta": 0.00917,
+            "pole_alpha": 0.019319
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.052224,
+            "cart_vel": -0.087496,
+            "pole_theta": 0.009364,
+            "pole_alpha": 0.009703
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.054091,
+            "cart_vel": -0.093353,
+            "pole_theta": 0.009669,
+            "pole_alpha": 0.015269
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.056649,
+            "cart_vel": -0.127865,
+            "pole_theta": 0.009712,
+            "pole_alpha": 0.002162
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.059235,
+            "cart_vel": -0.12932,
+            "pole_theta": 0.009711,
+            "pole_alpha": -6.6e-05
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.061544,
+            "cart_vel": -0.11545,
+            "pole_theta": 0.009729,
+            "pole_alpha": 0.00089
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.063215,
+            "cart_vel": -0.083568,
+            "pole_theta": 0.009955,
+            "pole_alpha": 0.011309
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": true,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        }
+      ],
+      "episode-2": [
+        {
+          "state": {
+            "cart_pos": -0.043485,
+            "cart_vel": 0.028584,
+            "pole_theta": 0.010015,
+            "pole_alpha": -0.013594
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.042484,
+            "cart_vel": 0.050041,
+            "pole_theta": 0.009495,
+            "pole_alpha": -0.026017
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.0412,
+            "cart_vel": 0.064234,
+            "pole_theta": 0.008792,
+            "pole_alpha": -0.035135
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.040459,
+            "cart_vel": 0.037045,
+            "pole_theta": 0.007912,
+            "pole_alpha": -0.043998
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.039718,
+            "cart_vel": 0.037021,
+            "pole_theta": 0.007264,
+            "pole_alpha": -0.032403
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.038625,
+            "cart_vel": 0.054669,
+            "pole_theta": 0.006511,
+            "pole_alpha": -0.037669
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.036855,
+            "cart_vel": 0.088514,
+            "pole_theta": 0.005922,
+            "pole_alpha": -0.029409
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.035736,
+            "cart_vel": 0.055955,
+            "pole_theta": 0.005346,
+            "pole_alpha": -0.028819
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.034922,
+            "cart_vel": 0.040698,
+            "pole_theta": 0.004456,
+            "pole_alpha": -0.044476
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.033745,
+            "cart_vel": 0.058837,
+            "pole_theta": 0.003666,
+            "pole_alpha": -0.039538
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.03255,
+            "cart_vel": 0.059735,
+            "pole_theta": 0.00324,
+            "pole_alpha": -0.021297
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.030945,
+            "cart_vel": 0.08025,
+            "pole_theta": 0.002937,
+            "pole_alpha": -0.015151
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.029272,
+            "cart_vel": 0.083646,
+            "pole_theta": 0.002738,
+            "pole_alpha": -0.00994
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.027787,
+            "cart_vel": 0.07428,
+            "pole_theta": 0.002458,
+            "pole_alpha": -0.014015
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.026434,
+            "cart_vel": 0.067622,
+            "pole_theta": 0.001983,
+            "pole_alpha": -0.023736
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.02555,
+            "cart_vel": 0.044225,
+            "pole_theta": 0.001608,
+            "pole_alpha": -0.018766
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.025235,
+            "cart_vel": 0.015751,
+            "pole_theta": 0.001426,
+            "pole_alpha": -0.009083
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.025063,
+            "cart_vel": 0.008558,
+            "pole_theta": 0.001488,
+            "pole_alpha": 0.003107
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.025335,
+            "cart_vel": -0.0136,
+            "pole_theta": 0.001443,
+            "pole_alpha": -0.002243
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.025462,
+            "cart_vel": -0.006324,
+            "pole_theta": 0.001128,
+            "pole_alpha": -0.01574
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.025887,
+            "cart_vel": -0.021231,
+            "pole_theta": 0.000966,
+            "pole_alpha": -0.008111
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.026777,
+            "cart_vel": -0.044533,
+            "pole_theta": 0.000586,
+            "pole_alpha": -0.018994
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.027169,
+            "cart_vel": -0.019598,
+            "pole_theta": -0.000209,
+            "pole_alpha": -0.039743
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.027886,
+            "cart_vel": -0.03584,
+            "pole_theta": -0.000727,
+            "pole_alpha": -0.025936
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.028339,
+            "cart_vel": -0.022662,
+            "pole_theta": -0.000926,
+            "pole_alpha": -0.009939
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.029049,
+            "cart_vel": -0.035506,
+            "pole_theta": -0.001316,
+            "pole_alpha": -0.019517
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.029405,
+            "cart_vel": -0.017773,
+            "pole_theta": -0.001486,
+            "pole_alpha": -0.008499
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.029096,
+            "cart_vel": 0.015432,
+            "pole_theta": -0.001517,
+            "pole_alpha": -0.00154
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.028785,
+            "cart_vel": 0.015545,
+            "pole_theta": -0.001456,
+            "pole_alpha": 0.003055
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": -0.02824,
+            "cart_vel": 0.027268,
+            "pole_theta": -0.001581,
+            "pole_alpha": -0.006233
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": true,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        }
+      ],
+      "aggregate": {
+        "mean": {
+          "cart_pos": -0.024458,
+          "cart_vel": -0.04356,
+          "pole_theta": 0.002508,
+          "pole_alpha": -0.000731
+        },
+        "medians": {
+          "cart_pos": -0.02824,
+          "cart_vel": -0.048945,
+          "pole_theta": 0.001983,
+          "pole_alpha": -0.00154
+        },
+        "std_dev": {
+          "cart_pos": 0.020483,
+          "cart_vel": 0.07326,
+          "pole_theta": 0.004741,
+          "pole_alpha": 0.021945
+        },
+        "min": {
+          "cart_pos": -0.063215,
+          "cart_vel": -0.23919,
+          "pole_theta": -0.007918,
+          "pole_alpha": -0.044476
+        },
+        "max": {
+          "cart_pos": 0.015198,
+          "cart_vel": 0.088514,
+          "pole_theta": 0.010015,
+          "pole_alpha": 0.059819
+        }
+      }
+    },
+    "scenario-1": {
+      "scenario_data": "{\"cart_pos_init\": 0.1, \"pole_theta_init\": 0.015000000000000001}",
+      "episode-0": [
+        {
+          "state": {
+            "cart_pos": 0.111356,
+            "cart_vel": -0.006486,
+            "pole_theta": 0.020188,
+            "pole_alpha": 0.015477
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.111689,
+            "cart_vel": 0.016635,
+            "pole_theta": 0.020715,
+            "pole_alpha": 0.026351
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.111887,
+            "cart_vel": 0.009897,
+            "pole_theta": 0.021455,
+            "pole_alpha": 0.036956
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.112105,
+            "cart_vel": 0.010934,
+            "pole_theta": 0.022359,
+            "pole_alpha": 0.045224
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.112491,
+            "cart_vel": 0.01927,
+            "pole_theta": 0.023312,
+            "pole_alpha": 0.047639
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.112961,
+            "cart_vel": 0.023507,
+            "pole_theta": 0.024178,
+            "pole_alpha": 0.043326
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.113154,
+            "cart_vel": 0.009645,
+            "pole_theta": 0.025081,
+            "pole_alpha": 0.045142
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.11346,
+            "cart_vel": 0.015338,
+            "pole_theta": 0.026011,
+            "pole_alpha": 0.046494
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.113453,
+            "cart_vel": -0.00035,
+            "pole_theta": 0.027188,
+            "pole_alpha": 0.058844
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.113486,
+            "cart_vel": 0.001652,
+            "pole_theta": 0.028374,
+            "pole_alpha": 0.05928
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.113309,
+            "cart_vel": -0.008856,
+            "pole_theta": 0.029555,
+            "pole_alpha": 0.059066
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.112668,
+            "cart_vel": -0.032059,
+            "pole_theta": 0.030989,
+            "pole_alpha": 0.071688
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.112757,
+            "cart_vel": 0.004462,
+            "pole_theta": 0.032414,
+            "pole_alpha": 0.071283
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.112541,
+            "cart_vel": -0.010817,
+            "pole_theta": 0.033687,
+            "pole_alpha": 0.06364
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.112292,
+            "cart_vel": -0.012433,
+            "pole_theta": 0.035242,
+            "pole_alpha": 0.077722
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.112002,
+            "cart_vel": -0.014518,
+            "pole_theta": 0.037128,
+            "pole_alpha": 0.094342
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.112098,
+            "cart_vel": 0.00481,
+            "pole_theta": 0.039059,
+            "pole_alpha": 0.096508
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.112653,
+            "cart_vel": 0.027718,
+            "pole_theta": 0.040909,
+            "pole_alpha": 0.092517
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.114031,
+            "cart_vel": 0.068916,
+            "pole_theta": 0.042747,
+            "pole_alpha": 0.091918
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.114773,
+            "cart_vel": 0.037109,
+            "pole_theta": 0.044865,
+            "pole_alpha": 0.105868
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.115999,
+            "cart_vel": 0.061308,
+            "pole_theta": 0.046936,
+            "pole_alpha": 0.103585
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.117121,
+            "cart_vel": 0.056108,
+            "pole_theta": 0.048624,
+            "pole_alpha": 0.084379
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.118879,
+            "cart_vel": 0.08788,
+            "pole_theta": 0.050373,
+            "pole_alpha": 0.087463
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.121231,
+            "cart_vel": 0.117597,
+            "pole_theta": 0.052303,
+            "pole_alpha": 0.096515
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.123519,
+            "cart_vel": 0.114384,
+            "pole_theta": 0.054088,
+            "pole_alpha": 0.089213
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.125734,
+            "cart_vel": 0.110754,
+            "pole_theta": 0.055799,
+            "pole_alpha": 0.085562
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.12782,
+            "cart_vel": 0.104324,
+            "pole_theta": 0.057227,
+            "pole_alpha": 0.071401
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.129799,
+            "cart_vel": 0.098924,
+            "pole_theta": 0.058738,
+            "pole_alpha": 0.075569
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.131486,
+            "cart_vel": 0.084368,
+            "pole_theta": 0.060624,
+            "pole_alpha": 0.094278
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.132723,
+            "cart_vel": 0.06185,
+            "pole_theta": 0.062439,
+            "pole_alpha": 0.090745
+          },
+          "action": 0,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": true,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        }
+      ],
+      "episode-1": [
+        {
+          "state": {
+            "cart_pos": 0.127382,
+            "cart_vel": 0.018056,
+            "pole_theta": -0.017928,
+            "pole_alpha": -0.004981
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.128333,
+            "cart_vel": 0.047553,
+            "pole_theta": -0.018215,
+            "pole_alpha": -0.014365
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.129706,
+            "cart_vel": 0.068676,
+            "pole_theta": -0.018838,
+            "pole_alpha": -0.031143
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.131906,
+            "cart_vel": 0.109969,
+            "pole_theta": -0.019322,
+            "pole_alpha": -0.024174
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.134322,
+            "cart_vel": 0.120805,
+            "pole_theta": -0.019753,
+            "pole_alpha": -0.02157
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.136824,
+            "cart_vel": 0.125139,
+            "pole_theta": -0.020298,
+            "pole_alpha": -0.027237
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.138984,
+            "cart_vel": 0.107979,
+            "pole_theta": -0.020685,
+            "pole_alpha": -0.019357
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.140982,
+            "cart_vel": 0.099877,
+            "pole_theta": -0.021066,
+            "pole_alpha": -0.019053
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.143256,
+            "cart_vel": 0.113701,
+            "pole_theta": -0.021534,
+            "pole_alpha": -0.023382
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.144905,
+            "cart_vel": 0.08246,
+            "pole_theta": -0.02213,
+            "pole_alpha": -0.029836
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.146612,
+            "cart_vel": 0.085339,
+            "pole_theta": -0.022608,
+            "pole_alpha": -0.023869
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.148078,
+            "cart_vel": 0.073313,
+            "pole_theta": -0.0232,
+            "pole_alpha": -0.02963
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.1493,
+            "cart_vel": 0.061109,
+            "pole_theta": -0.023596,
+            "pole_alpha": -0.019796
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.150399,
+            "cart_vel": 0.054924,
+            "pole_theta": -0.024006,
+            "pole_alpha": -0.020488
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.151589,
+            "cart_vel": 0.059514,
+            "pole_theta": -0.024661,
+            "pole_alpha": -0.032738
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.153101,
+            "cart_vel": 0.075634,
+            "pole_theta": -0.025531,
+            "pole_alpha": -0.04351
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.154507,
+            "cart_vel": 0.07028,
+            "pole_theta": -0.026514,
+            "pole_alpha": -0.049134
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.156356,
+            "cart_vel": 0.092447,
+            "pole_theta": -0.027412,
+            "pole_alpha": -0.04492
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.158539,
+            "cart_vel": 0.109148,
+            "pole_theta": -0.028416,
+            "pole_alpha": -0.050219
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.161555,
+            "cart_vel": 0.150806,
+            "pole_theta": -0.029304,
+            "pole_alpha": -0.044405
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.165206,
+            "cart_vel": 0.18255,
+            "pole_theta": -0.030254,
+            "pole_alpha": -0.047473
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.16908,
+            "cart_vel": 0.193701,
+            "pole_theta": -0.031381,
+            "pole_alpha": -0.056336
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.172648,
+            "cart_vel": 0.178392,
+            "pole_theta": -0.032391,
+            "pole_alpha": -0.050507
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.175773,
+            "cart_vel": 0.156237,
+            "pole_theta": -0.033681,
+            "pole_alpha": -0.064535
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.178563,
+            "cart_vel": 0.139507,
+            "pole_theta": -0.034597,
+            "pole_alpha": -0.045776
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.18062,
+            "cart_vel": 0.102878,
+            "pole_theta": -0.035293,
+            "pole_alpha": -0.034825
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.182861,
+            "cart_vel": 0.112015,
+            "pole_theta": -0.036248,
+            "pole_alpha": -0.047713
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.184665,
+            "cart_vel": 0.090204,
+            "pole_theta": -0.036883,
+            "pole_alpha": -0.031774
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.185289,
+            "cart_vel": 0.0312,
+            "pole_theta": -0.037605,
+            "pole_alpha": -0.036091
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.186838,
+            "cart_vel": 0.077482,
+            "pole_theta": -0.038423,
+            "pole_alpha": -0.040912
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": true,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        }
+      ],
+      "episode-2": [
+        {
+          "state": {
+            "cart_pos": 0.098945,
+            "cart_vel": 0.011753,
+            "pole_theta": -0.01255,
+            "pole_alpha": -0.019381
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.099052,
+            "cart_vel": 0.005325,
+            "pole_theta": -0.013089,
+            "pole_alpha": -0.026955
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.098697,
+            "cart_vel": -0.01775,
+            "pole_theta": -0.013688,
+            "pole_alpha": -0.029936
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.098711,
+            "cart_vel": 0.000688,
+            "pole_theta": -0.014743,
+            "pole_alpha": -0.052759
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.098809,
+            "cart_vel": 0.004943,
+            "pole_theta": -0.015468,
+            "pole_alpha": -0.036244
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.098642,
+            "cart_vel": -0.008347,
+            "pole_theta": -0.015651,
+            "pole_alpha": -0.009133
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.099122,
+            "cart_vel": 0.023962,
+            "pole_theta": -0.015783,
+            "pole_alpha": -0.006641
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.099236,
+            "cart_vel": 0.005737,
+            "pole_theta": -0.015622,
+            "pole_alpha": 0.008076
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.099884,
+            "cart_vel": 0.032369,
+            "pole_theta": -0.015536,
+            "pole_alpha": 0.004293
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.099977,
+            "cart_vel": 0.00465,
+            "pole_theta": -0.01545,
+            "pole_alpha": 0.004278
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.099345,
+            "cart_vel": -0.031604,
+            "pole_theta": -0.015048,
+            "pole_alpha": 0.020114
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.098651,
+            "cart_vel": -0.034676,
+            "pole_theta": -0.014548,
+            "pole_alpha": 0.024987
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.09793,
+            "cart_vel": -0.036057,
+            "pole_theta": -0.013959,
+            "pole_alpha": 0.029451
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.096859,
+            "cart_vel": -0.05357,
+            "pole_theta": -0.013328,
+            "pole_alpha": 0.031565
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.095886,
+            "cart_vel": -0.048629,
+            "pole_theta": -0.012569,
+            "pole_alpha": 0.037936
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.095051,
+            "cart_vel": -0.041778,
+            "pole_theta": -0.011742,
+            "pole_alpha": 0.041365
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.094508,
+            "cart_vel": -0.027132,
+            "pole_theta": -0.011226,
+            "pole_alpha": 0.025792
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.094307,
+            "cart_vel": -0.010038,
+            "pole_theta": -0.010996,
+            "pole_alpha": 0.011507
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.094491,
+            "cart_vel": 0.00921,
+            "pole_theta": -0.011099,
+            "pole_alpha": -0.00516
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.093576,
+            "cart_vel": -0.045785,
+            "pole_theta": -0.011455,
+            "pole_alpha": -0.01778
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.092726,
+            "cart_vel": -0.042458,
+            "pole_theta": -0.012107,
+            "pole_alpha": -0.032603
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.091381,
+            "cart_vel": -0.067252,
+            "pole_theta": -0.012574,
+            "pole_alpha": -0.023327
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.089984,
+            "cart_vel": -0.069894,
+            "pole_theta": -0.013151,
+            "pole_alpha": -0.028854
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.088918,
+            "cart_vel": -0.053296,
+            "pole_theta": -0.013912,
+            "pole_alpha": -0.038067
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.087894,
+            "cart_vel": -0.051179,
+            "pole_theta": -0.014604,
+            "pole_alpha": -0.034604
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.086812,
+            "cart_vel": -0.054117,
+            "pole_theta": -0.015575,
+            "pole_alpha": -0.048532
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.085597,
+            "cart_vel": -0.060726,
+            "pole_theta": -0.016154,
+            "pole_alpha": -0.028972
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.084332,
+            "cart_vel": -0.063271,
+            "pole_theta": -0.016962,
+            "pole_alpha": -0.040386
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.083093,
+            "cart_vel": -0.061954,
+            "pole_theta": -0.017717,
+            "pole_alpha": -0.037779
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": false,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        },
+        {
+          "state": {
+            "cart_pos": 0.082225,
+            "cart_vel": -0.043391,
+            "pole_theta": -0.018385,
+            "pole_alpha": -0.033377
+          },
+          "action": 1,
+          "teacher_reward": 1.0,
+          "teacher_success": true,
+          "teacher_terminal": true,
+          "top_selector_action": null,
+          "coordinated_reward": null
+        }
+      ],
+      "aggregate": {
+        "mean": {
+          "cart_pos": 0.122137,
+          "cart_vel": 0.035872,
+          "pole_theta": -0.000821,
+          "pole_alpha": 0.008746
+        },
+        "medians": {
+          "cart_pos": 0.113453,
+          "cart_vel": 0.023507,
+          "pole_theta": -0.013959,
+          "pole_alpha": -0.009133
+        },
+        "std_dev": {
+          "cart_pos": 0.027954,
+          "cart_vel": 0.06509,
+          "pole_theta": 0.029507,
+          "pole_alpha": 0.050336
+        },
+        "min": {
+          "cart_pos": 0.082225,
+          "cart_vel": -0.069894,
+          "pole_theta": -0.038423,
+          "pole_alpha": -0.064535
+        },
+        "max": {
+          "cart_pos": 0.186838,
+          "cart_vel": 0.193701,
+          "pole_theta": 0.062439,
+          "pole_alpha": 0.105868
+        }
+      }
+    }
+  }
+}

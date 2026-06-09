@@ -1,0 +1,2 @@
+"""Selector example package."""
+

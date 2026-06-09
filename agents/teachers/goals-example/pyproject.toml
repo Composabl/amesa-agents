@@ -1,0 +1,12 @@
+[project]
+name = "goals-example"
+version = "0.1.0"
+description = "Example Goal: CoordinatedGoal combining ApproachGoal and AvoidGoal for a soft-landing task."
+authors = [{ name = "Your Name", email = "you@example.com" }]
+dependencies = [
+    "amesa-core",
+]
+
+[amesa]
+type = "skill-teacher"
+entrypoint = "goals_example.goal:LandingGoal"

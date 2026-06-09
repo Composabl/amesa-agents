@@ -1,0 +1,16 @@
+[project]
+name = "perceptors-example"
+version = "0.1.0"
+description = "Example PerceptorImpl: computes velocity and acceleration from consecutive position readings."
+authors = [{ name = "Your Name", email = "you@example.com" }]
+dependencies = [
+    "amesa-core",
+]
+
+[amesa]
+type = "perceptor"
+variables = [
+    "velocity",
+    "acceleration",
+]
+entrypoint = "perceptors_example.perceptor:KinematicsPerceptor"

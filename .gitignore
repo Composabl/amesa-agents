@@ -7,7 +7,11 @@
 # Squad: SubSquad activation file (local to this machine)
 .squad-workstream
 
-.claude/
-CLAUDE.md
-
 **/__pycache__/
+
+# Environments
+.env
+.venv
+venv/
+env.bak/
+venv.bak/

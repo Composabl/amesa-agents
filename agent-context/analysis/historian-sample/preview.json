@@ -1,0 +1,82 @@
+[
+  {
+    "run_id": "run-cartpole-abc123",
+    "source": "sdk",
+    "category": "trainer-lifecycle",
+    "category_sub": "validation-start",
+    "data": {
+      "all_skills": [
+        "pole-balance"
+      ],
+      "training_order": [
+        "pole-balance"
+      ]
+    },
+    "timestamp": "2026-05-27T09:00:00.100000+00:00"
+  },
+  {
+    "run_id": "run-cartpole-abc123",
+    "source": "sdk",
+    "category": "env-lifecycle",
+    "category_sub": "constructor",
+    "data": {
+      "sim_id": "cb0734bc-7f70-445e-8d32-3394bbde5a21",
+      "run_id": "run-cartpole-abc123",
+      "skill_name": "pole-balance",
+      "skill_type": "Skill",
+      "is_selector": false
+    },
+    "timestamp": "2026-05-27T09:00:00.150000+00:00"
+  },
+  {
+    "run_id": "run-cartpole-abc123",
+    "source": "sdk",
+    "category": "env-lifecycle",
+    "category_sub": "sim-spaces-loaded",
+    "data": {
+      "sim_id": "cb0734bc-7f70-445e-8d32-3394bbde5a21",
+      "run_id": "run-cartpole-abc123",
+      "address": "localhost:1337",
+      "sim_sensor_space": "Box(4,)",
+      "sim_action_space": "Discrete(2)"
+    },
+    "timestamp": "2026-05-27T09:00:00.250000+00:00"
+  },
+  {
+    "run_id": "run-cartpole-abc123",
+    "source": "sdk",
+    "category": "env-lifecycle",
+    "category_sub": "reset-start",
+    "data": {
+      "sim_id": "cb0734bc-7f70-445e-8d32-3394bbde5a21",
+      "episode_number": 0,
+      "skill_name": "pole-balance",
+      "skill_type": "Skill",
+      "needs_warmup": false
+    },
+    "timestamp": "2026-05-27T09:00:00.300000+00:00"
+  },
+  {
+    "run_id": "run-cartpole-abc123",
+    "source": "sdk",
+    "category": "env-lifecycle",
+    "category_sub": "reset-complete",
+    "data": {
+      "sim_id": "cb0734bc-7f70-445e-8d32-3394bbde5a21",
+      "episode_number": 0,
+      "amesa_sensors_filtered": {
+        "cart_pos": 0.032717,
+        "cart_vel": 0.009304,
+        "pole_theta": 0.013474,
+        "pole_alpha": -0.016769
+      },
+      "unfiltered_obs": [
+        0.032717,
+        0.009304,
+        0.013474,
+        -0.016769
+      ]
+    },
+    "timestamp": "2026-05-27T09:00:00.350000+00:00"
+  }
+]
