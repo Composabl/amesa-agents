@@ -2,6 +2,27 @@
 
 This is an AI-assisted workspace for building, publishing, and analyzing intelligent control agents using the **AMESA Agent Orchestration Studio**.
 
+---
+
+## Table of Contents
+
+- [What Is This Repo?](#what-is-this-repo)
+- [What Is AMESA?](#what-is-amesa)
+- [The Squad AI Team](#the-squad-ai-team)
+- [Prerequisites](#prerequisites)
+- [Getting Started](#getting-started)
+- [Core Capabilities](#core-capabilities)
+- [Repo Structure](#repo-structure)
+- [CLI Reference](#cli-reference)
+  - [Setup](#setup)
+  - [Skills](#skills)
+  - [Selectors](#selectors)
+  - [Perceptors](#perceptors)
+- [Extending the Workspace](#extending-the-workspace)
+- [Support](#support)
+
+---
+
 ## What Is This Repo?
 
 `amesa-agents` is a development environment where you define control objectives and let the AMESA AI team implement and deploy them. You write natural language specifications, and your AI team:
@@ -24,49 +45,7 @@ This workspace is all about flexibility. You can use your own coding agents to c
 
 AMESA handles the infrastructure; your Squad AI team handles the implementation.
 
-## Core Capabilities
-
-### 1: Build & Publish Agents
-
-Hicks is the Implementation Engineer. Use Hicks to implement agents in Python, then publish to AMESA:
-
-```
-"Hicks, build a SkillTeacher that learns to optimize [control objective] given [sensor inputs]"
-```
-
-Hicks will:
-
-1. Implement a `SkillTeacher` class
-2. Create a project folder with `pyproject.toml`, source code, and tests
-3. Package as `.tar.gz` and publish to AMESA via the AMESA MCP server
-4. Return a project ID and version for your records
-
-You can also ask Hicks to publish a new version of an existing agent
-
-### 2: Analyze Performance
-
-Hudson is the Analyst. Use Hudson to analyze agent training or to evaluate performance against benchmarks:
-
-```
-"Hudson, analyze this benchmark.json and tell me if we met our goals"
-```
-
-Hudson will:
-
-1. Parse benchmark and historian data
-2. Evaluate goal adherence (e.g., "Achieved 95% of target throughput")
-3. Check constraint violations (e.g., "Latency exceeded 500ms in 3% of runs")
-4. Generate actionable recommendations (e.g., "Reduce batch size to improve latency")
-
-You can ask Hudson to:
-
-- Analyze a single benchmark file to understand agent performance
-- Analyze a historian file to understand behavior during training
-- Compare runs (e.g., v1 vs v2 of an agent)
-- Identify performance bottlenecks
-- Suggest tuning parameters
-
-## The AMESA Assist Agents Team
+## The Squad AI Team
 
 Four specialized agents power this workspace:
 
@@ -77,19 +56,11 @@ Four specialized agents power this workspace:
 | **Scribe** | Session Logger          | Maintain project history and documentation                       |
 | **Ralph**  | Work Monitor            | Track progress, manage task dependencies                         |
 
-### How to Interact
+Use GitHub Copilot CLI to talk to any team member by name:
 
-Use GitHub Copilot CLI to talk to any team member:
-
-```bash
-# Talk to Hicks (the Implementation Engineer)
-copilot "Hicks, build a SkillTeacher for robotic arm control"
-
-# Talk to Hudson (the Performance Analyst)
-copilot "Hudson, analyze ./benchmarks/run_001.json"
-
-# Talk to any team member by name
-copilot "Ralph, what's the status of the agent publishing pipeline?"
+```
+"Hicks, build a SkillTeacher for robotic arm control"
+"Hudson, analyze ./benchmarks/run_001.json"
 ```
 
 Each agent has specialized tools and knowledge. Be specific about what you need.
@@ -98,10 +69,9 @@ Each agent has specialized tools and knowledge. Be specific about what you need.
 
 Before you start, ensure you have:
 
-1. **AMESA MCP connection** — configured in `.mcp.json`:
-2. **(Optional) GitHub Copilot CLI** — enables Squad in your workspace
-
-The AMESA MCP server is the communication bridge between your Python code and the AMESA Agent Orchestration Studio.
+1. **AMESA account** — sign up at [amesa.com](https://amesa.com) to get access to the Agent Orchestration Studio.
+2. **AMESA MCP connection** — the `.mcp.json` file in this repo is pre-configured to point at `https://api.amesa.com/v1/mcp`. The AMESA MCP server is the communication bridge between this workspace and the AMESA Agent Orchestration Studio.
+3. **(Optional) GitHub Copilot CLI** — enables the Squad AI team in your workspace.
 
 ## Getting Started
 
@@ -131,45 +101,81 @@ copilot "Hudson, analyze ./benchmarks/agent_v1_run.json. Did we achieve our thro
 copilot "Hudson, compare the benchmarks from agent_v1 and agent_v2. Which version better satisfies our constraints?"
 ```
 
+## Core Capabilities
+
+### Build & Publish Agents
+
+**Hicks** is the Implementation Engineer. Use Hicks to implement agents in Python, then publish to AMESA:
+
+```
+"Hicks, build a SkillTeacher that learns to optimize [control objective] given [sensor inputs]"
+```
+
+Hicks will:
+
+1. Implement the appropriate class (`SkillTeacher`, `SkillController`, `SkillSelector`, `SkillSelectorController`, or `PerceptorImpl`)
+2. Create a project folder with `pyproject.toml`, source code, and tests
+3. Package as `.tar.gz` and publish to AMESA via the AMESA MCP server
+4. Return a project ID and version for your records
+
+You can also ask Hicks to publish a new version of an existing agent.
+
+### Analyze Performance
+
+**Hudson** is the Analyst. Use Hudson to analyze agent training or evaluate performance against benchmarks:
+
+```
+"Hudson, analyze this benchmark.json and tell me if we met our goals"
+```
+
+Hudson will:
+
+1. Parse benchmark and historian data
+2. Evaluate goal adherence (e.g., "Achieved 95% of target throughput")
+3. Check constraint violations (e.g., "Latency exceeded 500ms in 3% of runs")
+4. Generate actionable recommendations (e.g., "Reduce batch size to improve latency")
+
+Hudson can also compare runs (v1 vs v2), identify bottlenecks, and suggest tuning parameters.
+
 ## Repo Structure
 
 ```
 amesa-agents/
+├── AGENTS.md                 # AI agent guidelines (read this if you're an AI agent)
 ├── README.md                 # This file
 ├── .mcp.json                 # AMESA MCP server config
-├── .squad/                   # Squad team setup
-├── agent-context/            # Documentation for agents
-├── agents/                   # Examples and your agents
-│   └── controllers/
-│   └── selectors/
+├── .squad/                   # Squad AI team definitions (Hicks, Hudson, Scribe, Ralph)
+├── agent-context/            # Component specs for AI agents to read before implementing
+│   ├── teacher/              #   SkillTeacher interface, publishing, and quirks
+│   ├── controller/           #   SkillController interface, publishing, and quirks
+│   ├── selectors/            #   SkillSelector / SkillSelectorController specs
+│   ├── perceptors/           #   PerceptorImpl specs
+│   ├── goals/                #   Goal types and coordinated goals
+│   └── analysis/             #   Benchmark JSON and historian data formats
+├── agents/                   # Your implemented agent artifacts
+│   ├── controllers/
+│   ├── selectors/
 │   └── teachers/
-├── perceptors/               # Examples and your perceptors
+└── perceptors/               # Your implemented perceptor artifacts
 ```
 
-## CLI Reference (Human only)
+## CLI Reference
 
-Use the CLI to create and publish agents and perceptors. You can create new artifacts in code or your agents can create them so that you can review, modify and manually publish them to the AMESA Agent Orchestration Studio. The `amesa` CLI manages the full lifecycle of skills, selectors, and perceptors: scaffolding, publishing, listing, and deleting. All commands follow the pattern `amesa <resource> <subcommand>`.
+The `amesa` CLI lets you scaffold, publish, list, and delete skills, selectors, and perceptors without going through the AI team. Use it when you want to review or modify generated artifacts before publishing, or when you prefer direct control over the publish lifecycle. All commands follow the pattern `amesa <resource> <subcommand>`.
 
-### Setup Instructions
+> **AI agents:** The AMESA MCP tools in this workspace handle publishing automatically. The CLI is primarily for human operators.
 
-#### Environment Setup
+### Setup
 
-Python versions allowed: 3.10 <= version < 3.13. Prefer Python 3.11.8.
+**Python:** 3.10–3.12 (prefer 3.11.8)
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-```
-
-#### Install AMESA
-
-```bash
 pip install amesa-cli
 ```
 
-#### Authentication
-
-Before any CLI operation, authenticate with your Amesa account:
+**Authentication** — before any CLI operation, authenticate with your AMESA account:
 
 ```bash
 amesa login
@@ -302,17 +308,31 @@ amesa perceptor delete
 
 ## Extending the Workspace
 
+### Add a New Agent Type
+
+Ask Hicks to scaffold and publish any supported component:
+
+```bash
+copilot "Hicks, build a SkillSelectorController that switches between a heating skill and a cooling skill based on temperature thresholds."
+```
+
 ### Add Benchmarking or Testing
 
-Ask Hudson or Hicks to set up a pipeline:
+Ask Hudson or Hicks to set up an analysis pipeline:
 
 ```bash
 copilot "Hudson, let's set up automated benchmark analysis for every agent we publish. How would we do that?"
 ```
 
+### Customize the Squad
+
+Edit `.squad/agents/<name>/charter.md` to change how a team member behaves, what tools they use, or what they prioritize.
+
+---
+
 ## Support
 
-- **Agent implementation issues**: Ask Hicks
-- **Performance analysis questions**: Ask Hudson
-
-Each agent has specialized knowledge and tools.
+- **Agent implementation issues** — ask Hicks
+- **Performance analysis questions** — ask Hudson
+- **AI agent coding guidelines** — see [`AGENTS.md`](./AGENTS.md)
+- **Component specs and interfaces** — see [`agent-context/`](./agent-context/)
