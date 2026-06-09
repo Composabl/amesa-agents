@@ -3,7 +3,25 @@
     "amesa": {
       "type": "http",
       "url": "https://api.amesa.com/v1/mcp",
-      "tools": ["*"]
+      "tools": [
+        "org_list",
+        "project_list",
+        "teacher_create",
+        "teacher_implementation_publish",
+        "teacher_confirm_upload",
+        "controller_create",
+        "controller_implementation_publish",
+        "controller_confirm_upload",
+        "perceptor_create",
+        "perceptor_implementation_publish",
+        "perceptor_confirm_upload",
+        "selector_teacher_create",
+        "selector_teacher_implementation_publish",
+        "selector_teacher_confirm_upload",
+        "selector_controller_create",
+        "selector_controller_implementation_publish",
+        "selector_controller_confirm_upload"
+      ]
     }
   }
 }

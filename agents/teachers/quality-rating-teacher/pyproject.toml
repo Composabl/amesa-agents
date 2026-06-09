@@ -1,0 +1,12 @@
+[project]
+name = "quality-rating-teacher"
+version = "1.0.0"
+description = "Teacher skill that maximizes Quality_Rating."
+dependencies = ["amesa-core"]
+
+[amesa]
+type = "skill-teacher"
+name = "quality-rating-teacher"
+version = "1.0.0"
+description = "Teacher skill that maximizes Quality_Rating."
+entrypoint = "quality_rating_teacher.teacher:QualityRatingTeacher"
