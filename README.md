@@ -27,7 +27,7 @@ This is an AI-assisted workspace for building, publishing, and analyzing intelli
 
 `amesa-agents` is a development environment where you define control objectives and let the AMESA AI team implement and deploy them. You write natural language specifications, and your AI team:
 
-- Implements AMESA components in Python — skills (`SkillTeacher`, `SkillController`, goal-based teachers, coordinated skills), selectors (`SkillSelector`, `SkillSelectorController`), and perceptors (`PerceptorImpl`)
+- Implements AMESA components in Python — skills (`SkillTeacher`, `SkillController`, `MaximizeGoal`, `CoordinatedGoal`, `SkillCoach`), selectors (`SkillSelector`, `SkillSelectorController`), and perceptors (`PerceptorImpl`)
 - Publishes to the AMESA Agent Orchestration Studio
 - Analyzes performance against benchmarks
 - Recommends improvements
@@ -113,7 +113,7 @@ copilot "Hudson, compare the benchmarks from agent_v1 and agent_v2. Which versio
 
 Hicks will:
 
-1. Implement the appropriate class (`SkillTeacher`, `SkillController`, `SkillSelector`, `SkillSelectorController`, or `PerceptorImpl`)
+1. Implement the appropriate class (`SkillTeacher`, `SkillController`, `MaximizeGoal`, `CoordinatedGoal`, `SkillCoach`, `SkillSelector`, `SkillSelectorController`, or `PerceptorImpl`)
 2. Create a project folder with `pyproject.toml`, source code, and tests
 3. Package as `.tar.gz` and publish to AMESA via the AMESA MCP server
 4. Return a project ID and version for your records
@@ -146,17 +146,28 @@ amesa-agents/
 ├── .mcp.json                 # AMESA MCP server config
 ├── .squad/                   # AI team definitions (Hicks, Hudson, Scribe, Ralph)
 ├── agent-context/            # Component specs for AI agents to read before implementing
-│   ├── teacher/              #   SkillTeacher interface, publishing, and quirks
-│   ├── controller/           #   SkillController interface, publishing, and quirks
+│   ├── teacher/              #   SkillTeacher reference, publishing, and quirks
+│   ├── controller/           #   SkillController reference, publishing, and quirks
 │   ├── selectors/            #   SkillSelector / SkillSelectorController specs
 │   ├── perceptors/           #   PerceptorImpl specs
-│   ├── goals/                #   Goal types and coordinated goals
+│   ├── goals/                #   Goal types (MaximizeGoal, ApproachGoal, AvoidGoal, CoordinatedGoal) and SkillCoach
 │   └── analysis/             #   Benchmark JSON and historian data formats
 ├── agents/                   # Your implemented agent artifacts
 │   ├── controllers/
+│   │   ├── creating-and-publishing-controllers.md
+│   │   └── controller-example/
 │   ├── selectors/
+│   │   ├── creating-and-publishing-selectors.md
+│   │   └── selector-example/
 │   └── teachers/
+│       ├── creating-and-publishing-teachers.md
+│       ├── teacher-example/
+│       ├── coordinated-example/
+│       ├── goals-example/
+│       └── quality-rating-teacher/
 └── perceptors/               # Your implemented perceptor artifacts
+    ├── creating-and-publishing-perceptors.md
+    └── perceptors-example/
 ```
 
 ## CLI Reference

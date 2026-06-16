@@ -22,7 +22,9 @@ This file provides guidance for AI coding agents (GitHub Copilot, Codex, Claude,
 | [`agent-context/goals/`](./agent-context/goals/)           | Using goal types and coordinated goals                    |
 | [`agent-context/analysis/`](./agent-context/analysis/)     | Parsing benchmark JSON and historian data                 |
 
-Each subfolder contains: `overview.md`, `interface.md`, `publishing.md`, `job-json-schema.md`, and `quirks.md`. Always read `quirks.md` — it documents non-obvious behavior that will cause silent failures if ignored.
+Each subfolder contains: `overview.md`, `reference.md`, `publishing.md`, `job-json-schema.md`, and `quirks.md`. Always read `quirks.md` — it documents non-obvious behavior that will cause silent failures if ignored.
+
+The `goals/` subfolder also includes `goal-types.md` (covers `MaximizeGoal`, `ApproachGoal`, `AvoidGoal`) and `coordinated-goal.md` (covers `CoordinatedGoal` and `SkillCoach`).
 
 ---
 
@@ -43,9 +45,20 @@ amesa-agents/
 │   └── analysis/
 ├── agents/                   # Implemented agent artifacts
 │   ├── controllers/
+│   │   ├── creating-and-publishing-controllers.md
+│   │   └── controller-example/
 │   ├── selectors/
+│   │   ├── creating-and-publishing-selectors.md
+│   │   └── selector-example/
 │   └── teachers/
+│       ├── creating-and-publishing-teachers.md
+│       ├── teacher-example/
+│       ├── coordinated-example/
+│       ├── goals-example/
+│       └── quality-rating-teacher/
 └── perceptors/               # Implemented perceptor artifacts
+    ├── creating-and-publishing-perceptors.md
+    └── perceptors-example/
 ```
 
 ---
@@ -87,7 +100,7 @@ The `[tool.amesa]` section in `pyproject.toml` is required for publishing. The `
 
 ### Implementing components
 
-- Read the matching `agent-context/<type>/interface.md` for the exact base class and method signatures
+- Read the matching `agent-context/<type>/reference.md` for the exact base class and method signatures
 - Read `agent-context/<type>/quirks.md` before finalizing any implementation
 - Do not guess interface details — the specs in `agent-context/` are authoritative
 
@@ -112,4 +125,4 @@ The `[tool.amesa]` section in `pyproject.toml` is required for publishing. The `
 - Do not modify `.mcp.json` unless explicitly asked
 - Do not commit secrets or credentials
 - Do not create new artifacts outside `agents/` or `perceptors/` unless directed
-- Do not invent interface signatures — always check `agent-context/<type>/interface.md`
+- Do not invent interface signatures — always check `agent-context/<type>/reference.md`
