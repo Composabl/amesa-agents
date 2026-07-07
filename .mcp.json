@@ -2,26 +2,7 @@
   "mcpServers": {
     "amesa": {
       "type": "http",
-      "url": "https://api.amesa.com/v1/mcp",
-      "tools": [
-        { "name": "org_list" },
-        { "name": "project_list" },
-        { "name": "teacher_create" },
-        { "name": "teacher_implementation_publish" },
-        { "name": "teacher_confirm_upload" },
-        { "name": "controller_create" },
-        { "name": "controller_implementation_publish" },
-        { "name": "controller_confirm_upload" },
-        { "name": "perceptor_create" },
-        { "name": "perceptor_implementation_publish" },
-        { "name": "perceptor_confirm_upload" },
-        { "name": "selector_teacher_create" },
-        { "name": "selector_teacher_implementation_publish" },
-        { "name": "selector_teacher_confirm_upload" },
-        { "name": "selector_controller_create" },
-        { "name": "selector_controller_implementation_publish" },
-        { "name": "selector_controller_confirm_upload" }
-      ]
+      "url": "https://api.amesa.com/v1/mcp"
     }
   }
 }
