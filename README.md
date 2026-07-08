@@ -15,8 +15,8 @@ This is an AI-assisted workspace for building, publishing, and analyzing intelli
 - [Repo Structure](#repo-structure)
 - [CLI Reference](#cli-reference)
   - [Setup](#setup)
-  - [Skills](#skills)
-  - [Selectors](#selectors)
+  - [Agents](#agents)
+  - [Orchestrators](#orchestrators)
   - [Perceptors](#perceptors)
 - [Extending the Workspace](#extending-the-workspace)
 - [Support](#support)
@@ -27,7 +27,7 @@ This is an AI-assisted workspace for building, publishing, and analyzing intelli
 
 `amesa-agents` is a development environment where you define control objectives and let the AMESA AI team implement and deploy them. You write natural language specifications, and your AI team:
 
-- Implements AMESA components in Python — skills (`SkillTeacher`, `SkillController`, `MaximizeGoal`, `CoordinatedGoal`, `SkillCoach`), selectors (`SkillSelector`, `SkillSelectorController`), and perceptors (`PerceptorImpl`)
+- Implements AMESA components in Python — agents (`AgentTeacher`, `AgentController`, `MaximizeGoal`, `CoordinatedGoal`, `AgentCoach`), orchestrators (`AgentOrchestrator`, `AgentOrchestratorController`), and perceptors (`PerceptorImpl`)
 - Publishes to the AMESA Agent Orchestration Studio
 - Analyzes performance against benchmarks
 - Recommends improvements
@@ -59,7 +59,7 @@ Four specialized agents power this workspace:
 Use GitHub Copilot CLI to talk to any team member by name:
 
 ```
-"Hicks, build a SkillTeacher for robotic arm control"
+"Hicks, build a AgentTeacher for robotic arm control"
 "Hudson, analyze ./benchmarks/run_001.json"
 ```
 
@@ -78,7 +78,7 @@ Before you start, ensure you have:
 ### Example 1: Build Your First Agent
 
 ```bash
-copilot "Hicks, build a SkillTeacher that learns to balance a CartPole given joint_angle, cart_position, and pole_velocity sensors. It should maximize stability over 100 timesteps. Publish to the CartPole use case in MyOrganization."
+copilot "Hicks, build a AgentTeacher that learns to balance a CartPole given joint_angle, cart_position, and pole_velocity sensors. It should maximize stability over 100 timesteps. Publish to the CartPole use case in MyOrganization."
 ```
 
 Hicks will create a folder in the workspace, implement the agent, and publish it to AMESA. You'll get back a project ID.
@@ -108,12 +108,12 @@ copilot "Hudson, compare the benchmarks from agent_v1 and agent_v2. Which versio
 **Hicks** is the Implementation Engineer. Use Hicks to implement agents in Python, then publish to AMESA:
 
 ```
-"Hicks, build a SkillTeacher that learns to optimize [control objective] given [sensor inputs]"
+"Hicks, build a AgentTeacher that learns to optimize [control objective] given [sensor inputs]"
 ```
 
 Hicks will:
 
-1. Implement the appropriate class (`SkillTeacher`, `SkillController`, `MaximizeGoal`, `CoordinatedGoal`, `SkillCoach`, `SkillSelector`, `SkillSelectorController`, or `PerceptorImpl`)
+1. Implement the appropriate class (`AgentTeacher`, `AgentController`, `MaximizeGoal`, `CoordinatedGoal`, `AgentCoach`, `AgentOrchestrator`, `AgentOrchestratorController`, or `PerceptorImpl`)
 2. Create a project folder with `pyproject.toml`, source code, and tests
 3. Package as `.tar.gz` and publish to AMESA via the AMESA MCP server
 4. Return a project ID and version for your records
@@ -146,19 +146,19 @@ amesa-agents/
 ├── .mcp.json                 # AMESA MCP server config
 ├── .squad/                   # AI team definitions (Hicks, Hudson, Scribe, Ralph)
 ├── agent-context/            # Component specs for AI agents to read before implementing
-│   ├── teacher/              #   SkillTeacher reference, publishing, and quirks
-│   ├── controller/           #   SkillController reference, publishing, and quirks
-│   ├── selectors/            #   SkillSelector / SkillSelectorController specs
+│   ├── teacher/              #   AgentTeacher reference, publishing, and quirks
+│   ├── controller/           #   AgentController reference, publishing, and quirks
+│   ├── orchestrators/            #   AgentOrchestrator / AgentOrchestratorController specs
 │   ├── perceptors/           #   PerceptorImpl specs
-│   ├── goals/                #   Goal types (MaximizeGoal, ApproachGoal, AvoidGoal, CoordinatedGoal) and SkillCoach
+│   ├── goals/                #   Goal types (MaximizeGoal, ApproachGoal, AvoidGoal, CoordinatedGoal) and AgentCoach
 │   └── analysis/             #   Benchmark JSON and historian data formats
 ├── agents/                   # Your implemented agent artifacts
 │   ├── controllers/
 │   │   ├── creating-and-publishing-controllers.md
 │   │   └── controller-example/
-│   ├── selectors/
-│   │   ├── creating-and-publishing-selectors.md
-│   │   └── selector-example/
+│   ├── orchestrators/
+│   │   ├── creating-and-publishing-orchestrators.md
+│   │   └── orchestrator-example/
 │   └── teachers/
 │       ├── creating-and-publishing-teachers.md
 │       ├── teacher-example/
@@ -172,7 +172,7 @@ amesa-agents/
 
 ## CLI Reference
 
-The `amesa` CLI lets you scaffold, publish, list, and delete skills, selectors, and perceptors without going through the AI team. Use it when you want to review or modify generated artifacts before publishing, or when you prefer direct control over the publish lifecycle. All commands follow the pattern `amesa <resource> <subcommand>`.
+The `amesa` CLI lets you scaffold, publish, list, and delete agents, orchestrators, and perceptors without going through the AI team. Use it when you want to review or modify generated artifacts before publishing, or when you prefer direct control over the publish lifecycle. All commands follow the pattern `amesa <resource> <subcommand>`.
 
 > **AI agents:** The AMESA MCP tools in this workspace handle publishing automatically. The CLI is primarily for human operators.
 
@@ -196,84 +196,84 @@ This opens your browser to complete the OAuth flow. On success, a token is saved
 
 ---
 
-### Skills
+### Agents
 
-#### Create a new skill scaffold
+#### Create a new agent scaffold
 
 ```bash
-amesa skill new \
-  --name my-skill \
+amesa agent new \
+  --name my-agent \
   --type teacher \
-  --description "Short description of what this skill teaches" \
+  --description "Short description of what this agent teaches" \
   --location ./
 ```
 
 | Option          | Short | Default         | Description                                           |
 | --------------- | ----- | --------------- | ----------------------------------------------------- |
-| `--name`        | `-n`  | `my-skill`      | Name for the skill (used as the outer directory name) |
-| `--type`        | `-t`  | _(interactive)_ | Skill type: `controller`, `teacher`                   |
-| `--description` | `-d`  | `My demo skill` | Human-readable description                            |
+| `--name`        | `-n`  | `my-agent`      | Name for the agent (used as the outer directory name) |
+| `--type`        | `-t`  | _(interactive)_ | Agent type: `controller`, `teacher`                   |
+| `--description` | `-d`  | `My demo agent` | Human-readable description                            |
 | `--location`    | `-l`  | `./`            | Directory where the scaffold is created               |
 
 If `--type` is omitted, the CLI presents an interactive menu to select the type.
 
-#### Publish a skill
+#### Publish a agent
 
 ```bash
-amesa skill publish ./my-skill/
+amesa agent publish ./my-agent/
 ```
 
-#### List skills in a project
+#### List agents in a project
 
 ```bash
-amesa skill list
+amesa agent list
 ```
 
-#### Delete a skill
+#### Delete a agent
 
 ```bash
-amesa skill delete
+amesa agent delete
 ```
 
 ---
 
-### Selectors
+### Orchestrators
 
-Selectors are the agent components that choose which skill to activate at each step. They follow the same artifact structure and lifecycle as skills.
+Orchestrators are the agent orchestration components that choose which agent to activate at each step. They follow the same artifact structure and lifecycle as agents.
 
-#### Create a new selector scaffold
+#### Create a new orchestrator scaffold
 
 ```bash
-amesa selector new \
-  --name my-selector \
+amesa orchestrator new \
+  --name my-orchestrator \
   --type teacher \
-  --description "Short description of what this selector does" \
+  --description "Short description of what this orchestrator does" \
   --location ./
 ```
 
 | Option          | Short | Default            | Description                             |
 | --------------- | ----- | ------------------ | --------------------------------------- |
-| `--name`        | `-n`  | `my-selector`      | Name for the selector                   |
-| `--type`        | `-t`  | _(interactive)_    | Selector type: `controller`, `teacher`  |
-| `--description` | `-d`  | `My demo selector` | Human-readable description              |
+| `--name`        | `-n`  | `my-orchestrator`      | Name for the orchestrator                   |
+| `--type`        | `-t`  | _(interactive)_    | Orchestrator type: `controller`, `teacher`  |
+| `--description` | `-d`  | `My demo orchestrator` | Human-readable description              |
 | `--location`    | `-l`  | `./`               | Directory where the scaffold is created |
 
-#### Publish a selector
+#### Publish a orchestrator
 
 ```bash
-amesa selector publish ./my-selector/
+amesa orchestrator publish ./my-orchestrator/
 ```
 
-#### List selectors in a project
+#### List orchestrators in a project
 
 ```bash
-amesa selector list
+amesa orchestrator list
 ```
 
-#### Delete a selector
+#### Delete a orchestrator
 
 ```bash
-amesa selector delete
+amesa orchestrator delete
 ```
 
 ---
@@ -324,7 +324,7 @@ amesa perceptor delete
 Ask Hicks to scaffold and publish any supported component:
 
 ```bash
-copilot "Hicks, build a SkillSelectorController that switches between a heating skill and a cooling skill based on temperature thresholds."
+copilot "Hicks, build a AgentOrchestratorController that switches between a heating agent and a cooling agent based on temperature thresholds."
 ```
 
 ### Add Benchmarking or Testing
