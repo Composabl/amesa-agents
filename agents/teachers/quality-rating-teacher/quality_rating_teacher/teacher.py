@@ -1,13 +1,13 @@
 from typing import Dict, List
 
-from amesa_core.agent.skill.goals.maximize_goal import MaximizeGoal
+from amesa_core.orchestration.agent.goals.maximize_goal import MaximizeGoal
 
 QUALITY_RATING = "Quality_Rating"
 
 
 class QualityRatingTeacher(MaximizeGoal):
     """
-    Teacher skill that maximizes Quality_Rating.
+    Teacher agent that maximizes Quality_Rating.
     """
 
     def __init__(self):
