@@ -6,9 +6,9 @@ This guide walks you through everything you need to build a Perceptor from scrat
 
 ## What Is a Perceptor?
 
-A **Perceptor** transforms raw sensor observations into derived, computed features. It sits between the sensor layer and your skills: it receives the raw sensor dictionary, computes new values from it, and injects those new keys into the observation namespace before any skill sees the data.
+A **Perceptor** transforms raw sensor observations into derived, computed features. It sits between the sensor layer and your agents: it receives the raw sensor dictionary, computes new values from it, and injects those new keys into the observation namespace before any agent sees the data.
 
-Skills can reference perceptor outputs the same way they reference sensor names — by listing the key in `filtered_sensor_space()`. Perceptors are registered on the Agent and run for every skill.
+Agents can reference perceptor outputs the same way they reference sensor names — by listing the key in `filtered_sensor_space()`. Perceptors are registered on the Orchestration and run for every agent.
 
 **Common use cases:**
 
@@ -30,7 +30,7 @@ Perceptor pipeline  (registered order; each adds new keys)
     │  perceptor 1 adds { "efficiency_ratio": 0.91 }
     │  perceptor 2 adds { "quality_index": 0.87 }
     ▼
-Skill teachers and controllers  (can reference all keys, including perceptor outputs)
+Agent teachers and controllers  (can reference all keys, including perceptor outputs)
 ```
 
 ---
@@ -316,26 +316,26 @@ This prints a table of all perceptors in the selected project:
 
 ---
 
-## Attaching a Perceptor to an Agent
+## Attaching a Perceptor to an Orchestration
 
 Once published, a perceptor can also be used in-process (before packaging) while developing:
 
 ```python
-from amesa_core import Agent, Sensor, Perceptor
+from amesa_core import Orchestration, Sensor, Perceptor
 from process_monitor.perceptor import ProcessMonitorPerceptor
 
-agent = Agent(id="process-agent")
+orchestration = Orchestration(id="process-orchestration")
 
-agent.add_sensors([
+orchestration.add_sensors([
     Sensor("throughput",  "Process throughput [0..1]"),
     Sensor("output_rate", "Output units per step"),
     Sensor("input_rate",  "Input units per step"),
 ])
 
 # Pass the CLASS — not an instance
-agent.add_perceptor(Perceptor("process-monitor", ProcessMonitorPerceptor))
+orchestration.add_perceptor(Perceptor("process-monitor", ProcessMonitorPerceptor))
 
-# Skills can now reference "efficiency_ratio" and "quality_index"
+# Agents can now reference "efficiency_ratio" and "quality_index"
 # in their filtered_sensor_space()
 ```
 
@@ -365,7 +365,7 @@ The CLI presents an interactive list. Select the perceptor to remove and confirm
 
 ### Output keys don't match `variables` in `pyproject.toml`
 
-The `variables` list in `[amesa]` must exactly match the dict keys returned by `compute()`. A mismatch causes training initialization to fail when the agent tries to resolve perceptor outputs by name.
+The `variables` list in `[amesa]` must exactly match the dict keys returned by `compute()`. A mismatch causes training initialization to fail when the orchestration tries to resolve perceptor outputs by name.
 
 ```toml
 # pyproject.toml declares:
@@ -399,7 +399,7 @@ def filtered_sensor_space(self, obs) -> list:
 
 ### Key collision with existing sensor name
 
-If `compute()` returns a key that already exists in the sensor dict, AMESA raises an error at training initialization. Choose output key names that are distinct from all sensor names registered on the Agent.
+If `compute()` returns a key that already exists in the sensor dict, AMESA raises an error at training initialization. Choose output key names that are distinct from all sensor names registered on the Orchestration.
 
 ### Legacy import error
 
