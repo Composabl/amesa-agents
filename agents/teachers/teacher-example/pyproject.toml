@@ -1,12 +1,12 @@
 [project]
 name = "teacher-example"
 version = "0.1.0"
-description = "Example SkillTeacher: regulates reactor temperature toward a setpoint."
+description = "Example AgentTeacher: regulates reactor temperature toward a setpoint."
 authors = [{ name = "Your Name", email = "you@example.com" }]
 dependencies = [
     "amesa-core",
 ]
 
 [amesa]
-type = "skill-teacher"
+type = "agent-teacher"
 entrypoint = "teacher_example.teacher:ReactorTemperatureTeacher"

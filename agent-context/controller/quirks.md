@@ -1,4 +1,4 @@
-# SkillController Quirks
+# AgentController Quirks
 
 - `compute_termination` is required.
 - `transform_sensors(self, sensors)` signature differs from teacher signature.

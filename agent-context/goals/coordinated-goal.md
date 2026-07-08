@@ -19,8 +19,8 @@ CoordinatedGoal(
 ## Scaffolded teacher example
 
 ```python
-from amesa_core.agent.skill.goals.coordinated_goal import CoordinatedGoal, GoalCoordinationStrategy
-from amesa_core.agent.skill.goals.maintain_goal import MaintainGoal
+from amesa_core.orchestration.agent.goals.coordinated_goal import CoordinatedGoal, GoalCoordinationStrategy
+from amesa_core.orchestration.agent.goals.maintain_goal import MaintainGoal
 from typing import Dict, List
 
 class CartpoleTeacher(CoordinatedGoal):

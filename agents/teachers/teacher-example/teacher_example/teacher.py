@@ -1,9 +1,9 @@
 from typing import Dict, List
 
-from amesa_core import SkillTeacher
+from amesa_core import AgentTeacher
 
 
-class ReactorTemperatureTeacher(SkillTeacher):
+class ReactorTemperatureTeacher(AgentTeacher):
     """
     Regulates a reactor's temperature toward a target setpoint.
 

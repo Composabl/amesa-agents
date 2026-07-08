@@ -1,11 +1,11 @@
 # Perceptor Interface
 
-`PerceptorImpl` transforms raw observations into derived features consumed by skills.
+`PerceptorImpl` transforms raw observations into derived features consumed by agents.
 
 ## Full scaffold
 
 ```python
-from amesa_core.agent.perceptor.perceptor_impl import PerceptorImpl
+from amesa_core.orchestration.perceptor.perceptor_impl import PerceptorImpl
 
 class MyPerceptor(PerceptorImpl):
     # required

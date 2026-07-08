@@ -8,5 +8,5 @@ dependencies = [
 ]
 
 [amesa]
-type = "skill-teacher"
+type = "agent-teacher"
 entrypoint = "goals_example.goal:LandingGoal"

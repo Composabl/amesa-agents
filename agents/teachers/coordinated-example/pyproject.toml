@@ -1,12 +1,12 @@
 [project]
 name = "coordinated-example"
 version = "0.1.0"
-description = "Example SkillCoach (coordinated set): coach directing a navigator and an avoider sub-skill."
+description = "Example AgentCoach (coordinated set): coach directing a navigator and an avoider sub-agent."
 authors = [{ name = "Your Name", email = "you@example.com" }]
 dependencies = [
     "amesa-core",
 ]
 
 [amesa]
-type = "skill-coordinated-set"
+type = "agent-coordinated-set"
 entrypoint = "coordinated_example.coach:DriveCoach"

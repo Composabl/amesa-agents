@@ -1,16 +1,16 @@
-# SkillController Job JSON Schema
+# AgentController Job JSON Schema
 
-Controller skills are serialized similarly to teachers, but with controller type metadata.
+Controller agents are serialized similarly to teachers, but with controller type metadata.
 
 ## Core shape
 
 ```json
 {
-  "name": "my-controller-skill",
-  "type": "SkillController",
+  "name": "my-controller-agent",
+  "type": "AgentController",
   "config": {
     "remote_address": null,
-    "impl_cls": { "cls_name": "MyController", "cls_module": "my_agent.controller", "cls_src": "<base64-pickle>", "cls_deps": [] },
+    "impl_cls": { "cls_name": "MyController", "cls_module": "my_orchestration.controller", "cls_src": "<base64-pickle>", "cls_deps": [] },
     "impl_cls_data": { "guidance": null, "goals": [], "constraints": null },
     "scenarios": []
   }

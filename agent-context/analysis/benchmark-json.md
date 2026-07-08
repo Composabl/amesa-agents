@@ -17,7 +17,7 @@ The default filename is `benchmark.json`. It is a plain UTF-8 JSON file — no c
 
 ```
 {
-  "<skill_name>": {
+  "<agent_name>": {
     "scenario-0": { ... },
     "scenario-1": { ... },
     ...
@@ -25,7 +25,7 @@ The default filename is `benchmark.json`. It is a plain UTF-8 JSON file — no c
 }
 ```
 
-The top-level key is the name of the agent's top skill as returned by `skill.get_name()`. Only one skill is benchmarked per file — the agent's top skill. If the agent uses a `SkillSelector` or coordinated skill, the selector itself is the top skill and its name is the key.
+The top-level key is the name of the orchestration's top agent as returned by `agent.get_name()`. Only one agent is benchmarked per file — the orchestration's top agent. If the orchestration uses a `AgentOrchestrator` or coordinated agent, the orchestrator itself is the top agent and its name is the key.
 
 ---
 
@@ -35,7 +35,7 @@ Each `scenario-N` key maps to an object with the following fields:
 
 | Field | Type | Description |
 |---|---|---|
-| `scenario_data` | `string` (JSON-encoded) | The scenario configuration serialized as a JSON string. If no scenarios were defined on the skill, this is an empty string `""`. The content is whatever was passed to `skill.add_scenario(...)` — typically a dict of initial condition overrides. |
+| `scenario_data` | `string` (JSON-encoded) | The scenario configuration serialized as a JSON string. If no scenarios were defined on the agent, this is an empty string `""`. The content is whatever was passed to `agent.add_scenario(...)` — typically a dict of initial condition overrides. |
 | `episode-0` … `episode-N` | `array` | Per-episode step arrays. The number of episodes is controlled by `BenchmarkConfig.num_episodes_per_scenario` (default: `1`). |
 | `aggregate` | `object` | Cross-episode statistics over all sensor values. See the [Aggregate block](#aggregate-block) section. |
 
@@ -56,8 +56,8 @@ Each `episode-N` is an array of step objects. The maximum number of steps per ep
 | `teacher_reward` | `float` | The reward computed by the teacher's `compute_reward()` at this step. |
 | `teacher_success` | `bool` | Whether `compute_success_criteria()` returned `True` at this step. A `True` value ends the episode. |
 | `teacher_terminal` | `bool` | Whether `compute_termination()` returned `True` at this step. A `True` value also ends the episode. The last step of a normally-running episode will have `teacher_terminal: true`. |
-| `top_selector_action` | `int \| null` | For `SkillSelector` agents: the index of the child skill selected at this step. `null` for non-selector agents. |
-| `coordinated_reward` | `object \| null` | For `SkillCoordinatedSet`/`SkillCoordinatedPopulation` agents: a dict mapping agent name → reward for this step. `null` for non-coordinated agents. |
+| `top_orchestrator_action` | `int \| null` | For `orchestrationOrchestrator` orchestrations: the index of the child agent selected at this step. `null` for non-orchestrator orchestrations. |
+| `coordinated_reward` | `object \| null` | For `AgentCoordinatedSet`/`AgentCoordinatedPopulation` orchestrations: a dict mapping orchestration name → reward for this step. `null` for non-coordinated orchestrations. |
 
 ### Example step
 
@@ -73,7 +73,7 @@ Each `episode-N` is an array of step objects. The maximum number of steps per ep
   "teacher_reward": 1.0,
   "teacher_success": true,
   "teacher_terminal": false,
-  "top_selector_action": null,
+  "top_orchestrator_action": null,
   "coordinated_reward": null
 }
 ```
@@ -112,16 +112,16 @@ Sensors that produce non-numeric values (e.g. string or dict sensors) are silent
 
 Count the steps in each episode array. Episodes that end well before `num_steps_per_episode` (default 3600) either succeeded or failed early.
 
-- **Short episodes with `teacher_success: true` on the last step** — the agent met its success criteria quickly. Healthy for convergence-type tasks.
-- **Short episodes where every step has `teacher_success: false` and the last has `teacher_terminal: true`** — the agent terminated due to unsafe state or constraint violation.
-- **Full-length episodes** — the agent ran the maximum steps. For tasks where success is required (e.g. reaching a setpoint), this may indicate the agent never converged.
+- **Short episodes with `teacher_success: true` on the last step** — the orchestration met its success criteria quickly. Healthy for convergence-type tasks.
+- **Short episodes where every step has `teacher_success: false` and the last has `teacher_terminal: true`** — the orchestration terminated due to unsafe state or constraint violation.
+- **Full-length episodes** — the orchestration ran the maximum steps. For tasks where success is required (e.g. reaching a setpoint), this may indicate the orchestration never converged.
 
 ### Reward signal
 
 Examine `teacher_reward` across steps:
 
 - **Consistently positive and constant (e.g. `1.0` every step)** — the teacher is returning a binary survival reward. This is typical for balance/control tasks.
-- **Declining over the episode** — the agent may be drifting away from the goal.
+- **Declining over the episode** — the orchestration may be drifting away from the goal.
 - **Spiking rewards near terminal steps** — success bonuses built into the teacher's reward function.
 - **All rewards near zero** — possible reward shaping issue or teacher misconfiguration.
 
@@ -145,21 +145,21 @@ Compute `teacher_success` rate as:
 success_rate = sum(1 for step in episode if step["teacher_success"]) / len(episode)
 ```
 
-For tasks where success is defined per-step (e.g. "within tolerance"), a high success rate indicates the agent is spending most of the episode on-target. For tasks where success is a terminal condition, only the last step should have `teacher_success: true`.
+For tasks where success is defined per-step (e.g. "within tolerance"), a high success rate indicates the orchestration is spending most of the episode on-target. For tasks where success is a terminal condition, only the last step should have `teacher_success: true`.
 
 ### Scenario comparison
 
-Compare aggregate `mean` and `std_dev` values across `scenario-0`, `scenario-1`, etc. If mean sensor values differ significantly between scenarios but aggregate `std_dev` is similar, the agent is adapting correctly to different initial conditions. If `std_dev` is much higher in one scenario, the policy is less stable there.
+Compare aggregate `mean` and `std_dev` values across `scenario-0`, `scenario-1`, etc. If mean sensor values differ significantly between scenarios but aggregate `std_dev` is similar, the orchestration is adapting correctly to different initial conditions. If `std_dev` is much higher in one scenario, the policy is less stable there.
 
 ---
 
 ## Replay
 
-To replay a benchmark episode through a packaged agent, use `replay_export_with_benchmark.py`:
+To replay a benchmark episode through a packaged orchestration, use `replay_export_with_benchmark.py`:
 
 ```bash
 python replay_export_with_benchmark.py \
-    --agent-json export/7/agent.json \
+    --orchestration-json export/7/orchestration.json \
     --benchmark-json export/7/benchmark.json \
     --scenario 0 --episode 1
 ```
@@ -168,7 +168,7 @@ The replay script resolves `sim_sensors` from benchmark steps in this order:
 
 1. `step["sim_obs"]` — raw simulator observation exported directly (preferred path).
 2. `step["state"]` as a flat `list` or digit-keyed dict — treated as the raw sensor vector.
-3. `step["state"]` as a named dict + `agent.sensors` — reconstructs raw sim input by inverting sensor lambdas.
+3. `step["state"]` as a named dict + `orchestration.sensors` — reconstructs raw sim input by inverting sensor lambdas.
 
 The `--compare-actions` flag compares the replayed model's actions to the recorded `action` field. Use `--check-constant-model-actions` to diagnose whether the policy is outputting the same action regardless of observation variation.
 
@@ -204,6 +204,6 @@ BenchmarkConfig(
 
 **`teacher_terminal` on non-terminal steps** — the field name `teacher_terminal` comes from `TeacherStepData`; it reflects what `compute_termination()` returned at that step, not whether the episode ended. If `compute_termination()` returns `True` mid-episode, the episode stops, so in practice `teacher_terminal: true` appears only on the last step of a terminated episode. However, `teacher_success: true` can appear on earlier steps if the teacher signals success but the episode is not cut off immediately (depends on trainer configuration).
 
-**No `sim_obs` field in standard benchmarks** — unless the agent was exported with `export_local()` which preserves raw sim observations, the `state` dict will not contain a `sim_obs` key. Replay that depends on raw sim sensors requires either a locally-exported agent or sensors with single-subscript lambdas.
+**No `sim_obs` field in standard benchmarks** — unless the orchestration was exported with `export_local()` which preserves raw sim observations, the `state` dict will not contain a `sim_obs` key. Replay that depends on raw sim sensors requires either a locally-exported orchestration or sensors with single-subscript lambdas.
 
 **Missing sensors in aggregate are silently dropped** — sensors whose values cannot be converted to a float array by `numpy.mean()` are skipped without warning. Check that all expected sensor names appear as keys in `aggregate.mean`.

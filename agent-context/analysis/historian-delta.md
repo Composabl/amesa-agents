@@ -67,7 +67,7 @@ Every row represents one telemetry event emitted by the SDK.
 | Column | Type | Description |
 |---|---|---|
 | `run_id` | `string` | Identifies the training run. Matches the `run_id` passed to `TelemetryHistorian.enable()`. Used to correlate events across workers and components. |
-| `source` | `string` | Which component emitted the event. `"sdk"` for all standard SDK events. Remote skills or controllers may use a different source string. |
+| `source` | `string` | Which component emitted the event. `"sdk"` for all standard SDK events. Remote agents or controllers may use a different source string. |
 | `category` | `string` | High-level event category. See the [Event catalog](#event-catalog) section for all known values. |
 | `category_sub` | `string` | Sub-category that narrows the event type within a `category`. Together with `category` this uniquely identifies the event type. |
 | `data` | `string` | JSON-encoded payload for the event. The schema of this object varies by `category`/`category_sub`. Must be parsed with `json.loads()`. |
@@ -79,27 +79,27 @@ Every row represents one telemetry event emitted by the SDK.
 
 ### `trainer-lifecycle`
 
-Emitted by the `Trainer` and `SkillTrainer` during initialization and training loop management.
+Emitted by the `Trainer` and `AgentTrainer` during initialization and training loop management.
 
 | `category_sub` | When emitted | Notable `data` fields |
 |---|---|---|
-| `validation-start` | Before training begins; after the agent graph is validated. | `all_skills` (list of skill names), `training_order` (ordered list) |
-| `validation-skill-result` | After each skill is validated. | `skill_name`, `skill_type`, validation errors if any |
-| `validation-complete` | After full agent validation. | `success` (bool), `errors` (list) |
-| `skill-transition` | When the trainer moves from one skill to the next in the training order. | `skill_name`, `skill_sequence_idx` |
+| `validation-start` | Before training begins; after the orchestration graph is validated. | `all_agent` (list of agent names), `training_order` (ordered list) |
+| `validation-agent-result` | After each agent is validated. | `agent_name`, `agent_type`, validation errors if any |
+| `validation-complete` | After full orchestration validation. | `success` (bool), `errors` (list) |
+| `agent-transition` | When the trainer moves from one agent to the next in the training order. | `agent_name`, `agent_sequence_idx` |
 | `initialized` | After `Trainer.__init__` completes. | `target` (target type: `"local"`, `"docker"`, etc.) |
 
-### `skill-trainer`
+### `agent-trainer`
 
-Emitted by `SkillTrainer` (the per-skill PPO wrapper).
+Emitted by `AgentTrainer` (the per-agent PPO wrapper).
 
 | `category_sub` | When emitted | Notable `data` fields |
 |---|---|---|
-| `checkpoint-check` | Before loading or initializing the policy. | `skill_name`, `checkpoint_uri`, `checkpoint_dir_exists`, `checkpoint_contents` (list of files) |
-| `checkpoint-restored` | When a prior checkpoint is successfully loaded. | `skill_name`, `checkpoint_uri`, `restored: true` |
-| `checkpoint-restore-failed` | When checkpoint loading throws. | `skill_name`, `checkpoint_uri`, `error` (exception message) |
-| `checkpoint-dir-missing` | When a checkpoint URI is set but the directory is absent. | `skill_name`, `checkpoint_uri` |
-| `checkpoint-none` | When no checkpoint is configured; training from scratch. | `skill_name`, `starting_from_scratch: true` |
+| `checkpoint-check` | Before loading or initializing the policy. | `agent_name`, `checkpoint_uri`, `checkpoint_dir_exists`, `checkpoint_contents` (list of files) |
+| `checkpoint-restored` | When a prior checkpoint is successfully loaded. | `agent_name`, `checkpoint_uri`, `restored: true` |
+| `checkpoint-restore-failed` | When checkpoint loading throws. | `agent_name`, `checkpoint_uri`, `error` (exception message) |
+| `checkpoint-dir-missing` | When a checkpoint URI is set but the directory is absent. | `agent_name`, `checkpoint_uri` |
+| `checkpoint-none` | When no checkpoint is configured; training from scratch. | `agent_name`, `starting_from_scratch: true` |
 
 ### `env-lifecycle`
 
@@ -107,12 +107,12 @@ Emitted by the RLlib environment wrapper (`Env`) for each worker environment ins
 
 | `category_sub` | When emitted | Notable `data` fields |
 |---|---|---|
-| `constructor` | When the environment object is instantiated. | `sim_id`, `run_id`, `skill_name`, `skill_type`, `is_selector` |
+| `constructor` | When the environment object is instantiated. | `sim_id`, `run_id`, `agent_name`, `agent_type`, `is_orchestrator` |
 | `sim-spaces-loaded` | After the sim's `sensor_space_info()` and `action_space_info()` have been retrieved. | `sim_id`, `address`, `sim_sensor_space` (string repr), `sim_action_space` (string repr) |
-| `create-client-complete` | After a gRPC/WebSocket client connection to the sim is established. | `sim_id`, `address`, `skill_name`, `skill_type` |
-| `reset-start` | At the beginning of each episode reset. | `sim_id`, `episode_number`, `skill_name`, `needs_warmup` |
+| `create-client-complete` | After a gRPC/WebSocket client connection to the sim is established. | `sim_id`, `address`, `agent_name`, `agent_type` |
+| `reset-start` | At the beginning of each episode reset. | `sim_id`, `episode_number`, `agent_name`, `needs_warmup` |
 | `reset-sim-returned` | After the sim's `reset()` call returns. | `sim_id`, `episode_number`, `sim_sensors` (raw obs), `info` |
-| `reset-warmup-complete` | After warmup steps finish (if the skill has a warmup phase). | `sim_id`, `episode_number`, `warmup_retries`, `sim_sensors_post_warmup` |
+| `reset-warmup-complete` | After warmup steps finish (if the agent has a warmup phase). | `sim_id`, `episode_number`, `warmup_retries`, `sim_sensors_post_warmup` |
 | `reset-complete` | After the full reset pipeline completes, sensors transformed and filtered. | `sim_id`, `episode_number`, `amesa_sensors_filtered`, `unfiltered_obs` |
 
 ### `env-step`
@@ -121,14 +121,14 @@ Emitted by the RLlib environment wrapper for each step within an episode. Multip
 
 | `category_sub` | When emitted | Notable `data` fields |
 |---|---|---|
-| `start` | At the beginning of each step before any processing. | `sim_id`, `episode_number`, `skill_name`, `step_number`, `is_selector` |
-| `selector-pre-process` | For selector skills: before the selector resolves the child action. | `sim_id`, `selector_action_from_ray`, `prev_sim_sensors`, `prev_amesa_obs` |
-| `selector-post-process` | For selector skills: after the child action is resolved. | `sim_id`, `selector_action_index`, `child_action_processed` |
-| `selector-validation-action` | For selector skills in validation mode. | `sim_id`, `action_processed` |
+| `start` | At the beginning of each step before any processing. | `sim_id`, `episode_number`, `agent_name`, `step_number`, `is_orchestrator` |
+| `orchestrator-pre-process` | For orchestrator agents: before the orchestrator resolves the child action. | `sim_id`, `orchestrator_action_from_ray`, `prev_sim_sensors`, `prev_amesa_obs` |
+| `orchestrator-post-process` | For orchestrator agents: after the child action is resolved. | `sim_id`, `orchestrator_action_index`, `child_action_processed` |
+| `orchestrator-validation-action` | For orchestrator agents in validation mode. | `sim_id`, `action_processed` |
 | `action-processed` | After the teacher's `transform_action()` runs. | `sim_id`, `raw_action`, `action_processed` |
 | `action-coerced` | After the action is coerced to the sim's action space. | `sim_id`, `action_before_coerce`, `action_after_coerce` |
 | `sim-step-returned` | After the sim's `step()` call returns. | `sim_id`, `episode_number`, `sim_sensors`, `sim_reward`, `sim_terminated`, `sim_truncated`, `sensors_in_range`, `info` |
-| `complete` | After the teacher has scored the step and terminal status is determined. | `sim_id`, `episode_number`, `skill_name`, `teacher_reward`, `teacher_success`, `teacher_terminated`, `sim_terminated`, `sensors_in_range`, `final_terminated`, `final_truncated`, `success_counter` |
+| `complete` | After the teacher has scored the step and terminal status is determined. | `sim_id`, `episode_number`, `agent_name`, `teacher_reward`, `teacher_success`, `teacher_terminated`, `sim_terminated`, `sensors_in_range`, `final_terminated`, `final_truncated`, `success_counter` |
 | `episode-end` | Only emitted when the episode terminates or truncates. Includes reason breakdown. | `sim_id`, `episode_number`, `reason` (`teacher_terminated`, `teacher_success`, `sim_terminated`, `sensors_out_of_range`), `unfiltered_obs` |
 
 ### `training_result`
@@ -148,14 +148,14 @@ Emitted by the multi-agent environment wrapper at episode boundaries.
 |---|---|---|
 | `episode_end` | At the end of each episode in a multi-agent environment. | One key per sensor name, with the final observation value for that episode. |
 
-### `agent`
+### `orchestration`
 
-Emitted by the `Agent` class.
+Emitted by the `Orchestration` class.
 
 | `category_sub` | When emitted | Notable `data` fields |
 |---|---|---|
-| `export` | When `agent.export()` is called. | `json` (the full serialized agent JSON as a string) |
-| `skill-training` | When a skill begins its training phase. | `name` (skill name), `type` (skill class type) |
+| `export` | When `orchestration.export()` is called. | `json` (the full serialized orchestration JSON as a string) |
+| `agent-training` | When an agent begins its training phase. | `name` (agent name), `type` (agent class type) |
 
 ### `trainer`
 
@@ -239,11 +239,11 @@ Query `env-step / complete` and plot `teacher_reward` over time. Warning signs:
 
 - **`teacher_reward` is `0.0` on every step** — the teacher's reward function is returning zero (possibly a missing sensor key defaulting to 0.0 in `dict.get()`).
 - **`success_counter` never increases** — `teacher_success` is never `True`. The policy has not learned to meet success criteria.
-- **`success_counter` at `0` because it is decremented on `teacher_terminated`** — the agent is getting penalized frequently. Check how often `teacher_terminated` is `True` in step-complete events.
+- **`success_counter` at `0` because it is decremented on `teacher_terminated`** — the orchestration is getting penalized frequently. Check how often `teacher_terminated` is `True` in step-complete events.
 
 ### Checkpoint health
 
-Query `skill-trainer / checkpoint-*` events to confirm checkpoints are being saved and loaded correctly:
+Query `agent-trainer / checkpoint-*` events to confirm checkpoints are being saved and loaded correctly:
 
 - `checkpoint-restored` should appear at training resumption.
 - `checkpoint-restore-failed` or `checkpoint-dir-missing` at the start of a resumed run means the model is training from scratch despite a prior run existing. Check `checkpoint_uri` in the event payload against the actual filesystem path.
@@ -320,7 +320,7 @@ print(sorted(steps_per_episode.values()))
 
 | | `benchmark.json` | Historian Delta Lake |
 |---|---|---|
-| **Purpose** | Inference-time evaluation of a trained agent. | Real-time capture of the full training process. |
+| **Purpose** | Inference-time evaluation of a trained orchestration. | Real-time capture of the full training process. |
 | **Format** | Plain JSON file. | Delta Lake (Parquet + transaction log). |
 | **Contents** | Per-step teacher state, actions, rewards, success flags. | All lifecycle, step, reward, and training result events across the entire run. |
 | **When written** | Once, after training, during `postprocess()`. | Continuously throughout training, flushed in batches. |
@@ -333,7 +333,7 @@ print(sorted(steps_per_episode.values()))
 
 ## ⚠️ Quirks
 
-**Events from parallel workers are interleaved** — when `workers > 1` in the skill configuration, multiple RLlib rollout workers each emit their own `env-lifecycle` and `env-step` events simultaneously. Use `sim_id` (present in most event payloads) to group events belonging to the same environment instance. Do not assume that rows with consecutive timestamps belong to the same episode.
+**Events from parallel workers are interleaved** — when `workers > 1` in the agent configuration, multiple RLlib rollout workers each emit their own `env-lifecycle` and `env-step` events simultaneously. Use `sim_id` (present in most event payloads) to group events belonging to the same environment instance. Do not assume that rows with consecutive timestamps belong to the same episode.
 
 **`data` is always a JSON string** — even for numeric payloads. Always call `json.loads(row["data"])` before accessing fields. The value is never a raw int or dict directly in the column.
 

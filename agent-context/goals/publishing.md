@@ -6,8 +6,8 @@ Publish them through a teacher package:
 
 ```toml
 [amesa]
-type = "skill-teacher"
+type = "agent-teacher"
 entrypoint = "my_module.goal_teacher:MyGoalBasedTeacher"
 ```
 
-If your class subclasses `Goal`/`CoordinatedGoal`, it is still published as `skill-teacher`.
+If your class subclasses `Goal`/`CoordinatedGoal`, it is still published as `agent-teacher`.

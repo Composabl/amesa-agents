@@ -1,6 +1,6 @@
 # Goals Job JSON Schema
 
-Goals serialize inside a skill's teacher payload under `impl_cls_data.goals`.
+Goals serialize inside a agent's teacher payload under `impl_cls_data.goals`.
 
 ## Example shape
 

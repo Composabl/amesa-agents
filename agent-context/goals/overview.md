@@ -1,6 +1,6 @@
 # Goals Overview
 
-Goals are reusable `SkillTeacher` subclasses that package reward, success, and termination behavior into reusable scaffolding.
+Goals are reusable `AgentTeacher` subclasses that package reward, success, and termination behavior into reusable scaffolding.
 
 Common goals:
 

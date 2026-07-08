@@ -1,4 +1,4 @@
-# SkillController Publishing
+# AgentController Publishing
 
 Portable controller package example:
 
@@ -9,12 +9,12 @@ version = "0.1.0"
 dependencies = ["amesa-core"]
 
 [amesa]
-type = "skill-controller"
+type = "agent-controller"
 entrypoint = "my_module.controller:MyController"
 ```
 
 ## Requirements
 
-- `type` must be `"skill-controller"`.
+- `type` must be `"agent-controller"`.
 - `entrypoint` must be `"module.path:ClassName"`.
 - Use top-level `[amesa]` (not `[tool.amesa]`).

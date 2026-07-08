@@ -1,15 +1,15 @@
-# SkillTeacher Interface
+# AgentTeacher Interface
 
-`SkillTeacher` is the ML-training interface for a `Skill`.
+`AgentTeacher` is the ML-training interface for a `Agent`.
 
 ## Full scaffold
 
 ```python
 import numpy as np
-from amesa_core.agent.skill.skill_teacher import SkillTeacher
+from amesa_core.orchestration.agent.agent_teacher import AgentTeacher
 from typing import Dict, List
 
-class MyTeacher(SkillTeacher):
+class MyTeacher(AgentTeacher):
     # required
     async def compute_reward(self, transformed_sensors: Dict, action, sim_reward: float) -> float:
         """Shape the learning signal used by the trainer.
@@ -125,7 +125,7 @@ class MyTeacher(SkillTeacher):
 
     # optional
     async def get_custom_action_space(self):
-        """Return a custom action space for this skill's policy.
+        """Return a custom action space for this agent's policy.
 
         When provided, the policy trains against this space instead of the
         simulator's native action space. :meth:`transform_action` is then

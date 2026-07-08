@@ -1,8 +1,8 @@
 from typing import Dict, List
 
-from amesa_core.agent.skill.goals.approach_goal import ApproachGoal
-from amesa_core.agent.skill.goals.avoid_goal import AvoidGoal
-from amesa_core.agent.skill.goals.coordinated_goal import CoordinatedGoal, GoalCoordinationStrategy
+from amesa_core.orchestration.agent.goals.approach_goal import ApproachGoal
+from amesa_core.orchestration.agent.goals.avoid_goal import AvoidGoal
+from amesa_core.orchestration.agent.goals.coordinated_goal import CoordinatedGoal, GoalCoordinationStrategy
 
 
 class LandingGoal(CoordinatedGoal):
@@ -28,7 +28,7 @@ class LandingGoal(CoordinatedGoal):
     the primary objective; avoiding a crash is a hard constraint via termination.
 
     Usage:
-        skill = Skill("landing", LandingGoal, training_cycles=150)
+        agent = Agent("landing", LandingGoal, training_cycles=150)
     """
 
     def __init__(self):

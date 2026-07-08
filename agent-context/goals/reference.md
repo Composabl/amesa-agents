@@ -1,12 +1,12 @@
 # Goal Interface
 
-Goals are reusable `SkillTeacher` subclasses that provide reward/success/termination logic.
+Goals are reusable `AgentTeacher` subclasses that provide reward/success/termination logic.
 
 ## Full scaffold
 
 ```python
 import numpy as np
-from amesa_core.agent.skill.goals.maintain_goal import MaintainGoal
+from amesa_core.orchestration.agent.goals.maintain_goal import MaintainGoal
 from typing import Dict, List
 
 class BalanceTeacher(MaintainGoal):

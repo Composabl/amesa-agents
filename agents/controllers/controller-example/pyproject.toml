@@ -1,12 +1,12 @@
 [project]
 name = "controller-example"
 version = "0.1.0"
-description = "Example SkillController: proportional-derivative controller for a position servo."
+description = "Example AgentController: proportional-derivative controller for a position servo."
 authors = [{ name = "Your Name", email = "you@example.com" }]
 dependencies = [
     "amesa-core",
 ]
 
 [amesa]
-type = "skill-controller"
+type = "agent-controller"
 entrypoint = "controller_example.controller:PDController"

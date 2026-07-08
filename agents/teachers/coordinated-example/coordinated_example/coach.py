@@ -1,15 +1,15 @@
 from typing import Dict
 
-from amesa_core.agent.skill.skill_coach import SkillCoach
+from amesa_core.orchestration.agent.agent_coach import AgentCoach
 
 
-class DriveCoach(SkillCoach):
+class DriveCoach(AgentCoach):
     """
-    Coordinates two sub-skills for autonomous driving:
+    Coordinates two sub-agents for autonomous driving:
         navigate — steers toward the goal position.
         avoid    — keeps clear of nearby obstacles.
 
-    The coach distributes independent rewards to each sub-skill so their
+    The coach distributes independent rewards to each sub-agent so their
     policies can specialise without interfering with each other's gradient.
 
     Sensors expected from the sim:
@@ -18,7 +18,7 @@ class DriveCoach(SkillCoach):
         obstacle_proximity   (float): Distance to the nearest obstacle (metres).
                                       Higher is safer.
 
-    Child skill names (must match keys in compute_reward):
+    Child agent names (must match keys in compute_reward):
         "navigate"
         "avoid"
 
@@ -26,20 +26,20 @@ class DriveCoach(SkillCoach):
     Termination: obstacle closer than 0.2 m (collision imminent).
 
     Usage:
-        coordinated = SkillCoordinatedSet("drive", DriveCoach)
-        coordinated.add_skill(Skill("navigate", NavigateTeacher, training_cycles=50))
-        coordinated.add_skill(Skill("avoid",    AvoidTeacher,    training_cycles=50))
-        agent.add_coordinated_skill(coordinated)
+        coordinated = AgentCoordinatedSet("drive", DriveCoach)
+        coordinated.add_agent(Agent("navigate", NavigateTeacher, training_cycles=50))
+        coordinated.add_agent(Agent("avoid",    AvoidTeacher,    training_cycles=50))
+        orchestration.add_coordinated_agent(coordinated)
     """
 
     async def compute_reward(self, transformed_sensors: Dict, action, sim_reward) -> Dict[str, float]:
         distance = float(transformed_sensors["distance_to_goal"])
         proximity = float(transformed_sensors["obstacle_proximity"])
 
-        # Navigate sub-skill: reward decreases linearly with remaining distance.
+        # Navigate sub-agent: reward decreases linearly with remaining distance.
         navigate_reward = float(max(0.0, 1.0 - distance / 10.0))
 
-        # Avoid sub-skill: reward increases with clearance from obstacles.
+        # Avoid sub-agent: reward increases with clearance from obstacles.
         # Penalise sharply when inside the 1 m safety margin.
         if proximity < 1.0:
             avoid_reward = float(proximity - 1.0)   # negative in the danger zone

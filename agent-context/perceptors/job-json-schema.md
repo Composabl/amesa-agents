@@ -1,6 +1,6 @@
 # Perceptor Job JSON Schema
 
-Perceptors are serialized in the agent JSON perceptor list.
+Perceptors are serialized in the orchestration JSON perceptor list.
 
 ## Core shape
 
@@ -10,7 +10,7 @@ Perceptors are serialized in the agent JSON perceptor list.
   "type": "Perceptor",
   "config": {
     "remote_address": null,
-    "impl_cls": { "cls_name": "MyPerceptor", "cls_module": "my_agent.perceptor", "cls_src": "<base64-pickle>", "cls_deps": [] },
+    "impl_cls": { "cls_name": "MyPerceptor", "cls_module": "my_orchestration.perceptor", "cls_src": "<base64-pickle>", "cls_deps": [] },
     "variables": ["velocity", "acceleration"]
   }
 }

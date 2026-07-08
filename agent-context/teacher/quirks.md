@@ -1,4 +1,4 @@
-# SkillTeacher Quirks
+# AgentTeacher Quirks
 
 - `compute_success_criteria` can end episodes immediately.
 - `compute_termination` defaults to `False` (unlike controllers where termination is required).

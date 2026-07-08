@@ -1,14 +1,14 @@
-# SkillController Interface
+# AgentController Interface
 
-`SkillController` is the deterministic/rule-based interface for a `Skill`.
+`AgentController` is the deterministic/rule-based interface for an `Agent`.
 
 ## Full scaffold
 
 ```python
-from amesa_core.agent.skill.skill_controller import SkillController
+from amesa_core.orchestration.agent.agent_controller import AgentController
 from typing import Dict
 
-class MyController(SkillController):
+class MyController(AgentController):
     # required
     async def compute_action(self, transformed_sensors: Dict, action):
         """Produce the simulator action from transformed sensors.
@@ -39,7 +39,7 @@ class MyController(SkillController):
 
         :param transformed_sensors: Post-:meth:`transform_sensors` sensor dict.
         :type transformed_sensors: Dict
-        :param action: Current action taken by the agent.
+        :param action: Current action taken by the orchestration.
         :returns: ``True`` when the success condition is met.
         :rtype: bool
         :raises NotImplementedError: if not overridden in the subclass.
@@ -52,7 +52,7 @@ class MyController(SkillController):
 
         :param transformed_sensors: Post-:meth:`transform_sensors` sensor dict.
         :type transformed_sensors: Dict
-        :param action: Current action taken by the agent.
+        :param action: Current action taken by the orchestration.
         :returns: ``True`` when the episode should end.
         :rtype: bool
         :raises NotImplementedError: if not overridden in the subclass.
