@@ -1,9 +1,9 @@
 from typing import Dict, List
 
-from amesa_core import OrchestrationController
+from amesa_core import AgentController
 
 
-class PDController(OrchestrationController):
+class PDController(AgentController):
     """
     Proportional-derivative controller for a 1-D position servo.
 
