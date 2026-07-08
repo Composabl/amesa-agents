@@ -15,16 +15,16 @@ This file provides guidance for AI coding agents (GitHub Copilot, Codex, Claude,
 
 | Folder                                                     | When to read it                                           |
 | ---------------------------------------------------------- | --------------------------------------------------------- |
-| [`agent-context/teacher/`](./agent-context/teacher/)       | Implementing `SkillTeacher` or goal-based teachers        |
-| [`agent-context/controller/`](./agent-context/controller/) | Implementing `SkillController`                            |
-| [`agent-context/selectors/`](./agent-context/selectors/)   | Implementing `SkillSelector` or `SkillSelectorController` |
+| [`agent-context/teacher/`](./agent-context/teacher/)       | Implementing `AgentTeacher` or goal-based teachers        |
+| [`agent-context/controller/`](./agent-context/controller/) | Implementing `AgentController`                            |
+| [`agent-context/orchestrators/`](./agent-context/orchestrators/)   | Implementing `AgentOrchestrator` or `AgentOrchestratorController` |
 | [`agent-context/perceptors/`](./agent-context/perceptors/) | Implementing `PerceptorImpl`                              |
 | [`agent-context/goals/`](./agent-context/goals/)           | Using goal types and coordinated goals                    |
 | [`agent-context/analysis/`](./agent-context/analysis/)     | Parsing benchmark JSON and historian data                 |
 
 Each subfolder contains: `overview.md`, `reference.md`, `publishing.md`, `job-json-schema.md`, and `quirks.md`. Always read `quirks.md` — it documents non-obvious behavior that will cause silent failures if ignored.
 
-The `goals/` subfolder also includes `goal-types.md` (covers `MaximizeGoal`, `ApproachGoal`, `AvoidGoal`) and `coordinated-goal.md` (covers `CoordinatedGoal` and `SkillCoach`).
+The `goals/` subfolder also includes `goal-types.md` (covers `MaximizeGoal`, `ApproachGoal`, `AvoidGoal`) and `coordinated-goal.md` (covers `CoordinatedGoal` and `AgentCoach`).
 
 ---
 
@@ -39,7 +39,7 @@ amesa-agents/
 ├── agent-context/            # Component specs for agents to read before implementing
 │   ├── teacher/
 │   ├── controller/
-│   ├── selectors/
+│   ├── orchestrators/
 │   ├── perceptors/
 │   ├── goals/
 │   └── analysis/
@@ -47,9 +47,9 @@ amesa-agents/
 │   ├── controllers/
 │   │   ├── creating-and-publishing-controllers.md
 │   │   └── controller-example/
-│   ├── selectors/
-│   │   ├── creating-and-publishing-selectors.md
-│   │   └── selector-example/
+│   ├── orchestrators/
+│   │   ├── creating-and-publishing-orchestrators.md
+│   │   └── orchestrator-example/
 │   └── teachers/
 │       ├── creating-and-publishing-teachers.md
 │       ├── teacher-example/
@@ -87,7 +87,7 @@ This workspace uses a AMESA assist agents (Squad). Address them by name:
 
 ### Project layout (per artifact)
 
-Each skill, selector, or perceptor lives in its own folder with:
+Each agent, orchestrator, or perceptor lives in its own folder with:
 
 ```
 my-artifact/
@@ -96,7 +96,7 @@ my-artifact/
     └── ...             # Implementation
 ```
 
-The `[tool.amesa]` section in `pyproject.toml` is required for publishing. The `type` field must match the artifact type (e.g., `"skill-teacher"`, `"skill-controller"`, `"selector-teacher"`, `"selector-controller"`).
+The `[tool.amesa]` section in `pyproject.toml` is required for publishing. The `type` field must match the artifact type (e.g., `"agent-teacher"`, `"agent-controller"`, `"orchestrator-teacher"`, `"orchestrator-controller"`).
 
 ### Implementing components
 
@@ -106,7 +106,7 @@ The `[tool.amesa]` section in `pyproject.toml` is required for publishing. The `
 
 ### Publishing
 
-- Use the AMESA MCP tools or the `amesa` CLI (`amesa skill publish ./my-artifact/`)
+- Use the AMESA MCP tools or the `amesa` CLI (`amesa agent publish ./my-artifact/`)
 - Authenticate first: `amesa login`
 - After publishing, confirm the upload and record the returned project/implementation IDs
 
