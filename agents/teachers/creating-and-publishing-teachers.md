@@ -1,15 +1,15 @@
 # Creating and Publishing Teachers
 
-This guide walks you through everything you need to build a Skill Teacher from scratch and publish it to Amesa Orchestration Studio using the `amesa` CLI. By the end, you will have a working teacher packaged as an artifact and registered in the AMESA registry.
+This guide walks you through everything you need to build an Agent Teacher from scratch and publish it to Amesa Orchestration Studio using the `amesa` CLI. By the end, you will have a working teacher packaged as an artifact and registered in the AMESA registry.
 
 ---
 
 ## What Is a Teacher?
 
-A **Teacher** is a Python class that defines how an agent learns a skill. When an agent trains a skill with reinforcement learning, it needs to know three things:
+A **Teacher** is a Python class that defines how an agent learns. When an agent trains with reinforcement learning, it needs to know three things:
 
 - **What is a good outcome?** — the reward signal
-- **When has the skill succeeded?** — the success condition
+- **When has the agent succeeded?** — the success condition
 - **When should training stop early?** — the failure/termination condition
 
 Your Teacher class answers all three. It also controls which sensors the agent pays attention to and how actions are processed before being sent to the simulation.
@@ -20,16 +20,16 @@ You write the domain logic. AMESA handles the RL training engine, the simulator 
 
 ## Step 1: Understand the Teacher Methods
 
-A Teacher is a subclass of `SkillTeacher` from `amesa_core`. You must implement four methods. Two more are optional but useful.
+A Teacher is a subclass of `AgentTeacher` from `amesa_core`. You must implement four methods. Two more are optional but useful.
 
 ### Required Methods
 
 | Method                     | What it does                                                                                                                               |
 | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
 | `compute_reward`           | Returns a `float` reward for each training step. Higher is better. This is your primary teaching signal.                                   |
-| `compute_success_criteria` | Returns `True` when the skill has achieved its goal for this episode.                                                                      |
+| `compute_success_criteria` | Returns `True` when the agent has achieved its goal for this episode.                                                                      |
 | `transform_action`         | Pre-processes the raw action from the RL model before it is sent to the simulator. Return the action unchanged if no processing is needed. |
-| `filtered_sensor_space`    | Returns a list of sensor name strings that this skill observes. Only listed sensors are visible to the RL policy.                          |
+| `filtered_sensor_space`    | Returns a list of sensor name strings that this agent observes. Only listed sensors are visible to the RL policy.                          |
 
 ### Optional Methods
 
@@ -42,9 +42,9 @@ A Teacher is a subclass of `SkillTeacher` from `amesa_core`. You must implement 
 
 ```python
 from typing import Dict, List
-from amesa_core import SkillTeacher
+from amesa_core import AgentTeacher
 
-class MyTeacher(SkillTeacher):
+class MyTeacher(AgentTeacher):
 
     # Required — called once at startup; result is cached
     async def filtered_sensor_space(self) -> List[str]:
@@ -54,7 +54,7 @@ class MyTeacher(SkillTeacher):
     async def compute_reward(self, transformed_sensors: Dict, action, sim_reward: float) -> float:
         ...
 
-    # Required — called every step; return True when the skill has succeeded
+    # Required — called every step; return True when the agent has succeeded
     async def compute_success_criteria(self, transformed_sensors: Dict, action) -> bool:
         ...
 
@@ -87,16 +87,16 @@ There are two approaches: writing a **custom teacher** from scratch, or using a 
 
 Use a custom teacher when your reward logic or success criteria are specific to your domain.
 
-The example below trains a skill to maintain a process temperature near a target setpoint. The reward decreases the further the temperature drifts from the target. The episode succeeds when temperature is within tolerance and terminates early if it goes too far off.
+The example below trains a agent to maintain a process temperature near a target setpoint. The reward decreases the further the temperature drifts from the target. The episode succeeds when temperature is within tolerance and terminates early if it goes too far off.
 
 ```python
 # temperature_teacher/teacher.py
 
 from typing import Dict, List
-from amesa_core import SkillTeacher
+from amesa_core import AgentTeacher
 
 
-class TemperatureTeacher(SkillTeacher):
+class TemperatureTeacher(AgentTeacher):
     """
     Trains an agent to maintain process temperature near a setpoint.
 
@@ -145,7 +145,7 @@ class TemperatureTeacher(SkillTeacher):
 
 ### Option B: Goal-Based Teacher (Less Code)
 
-If your objective fits one of the built-in patterns — maximize, minimize, maintain, approach, or avoid a sensor value — use a **Goal class** instead of writing reward logic by hand. Goal classes are subclasses of `SkillTeacher` and satisfy the full teacher contract automatically.
+If your objective fits one of the built-in patterns — maximize, minimize, maintain, approach, or avoid a sensor value — use a **Goal class** instead of writing reward logic by hand. Goal classes are subclasses of `AgentTeacher` and satisfy the full teacher contract automatically.
 
 | Goal Class        | Use when you want to...                         |
 | ----------------- | ----------------------------------------------- |
@@ -162,8 +162,8 @@ The example below reproduces the temperature setpoint objective above using `Mai
 # temperature_teacher/teacher.py
 
 from typing import Dict
-from amesa_core.agent.skill.goals.coordinated_goal import CoordinatedGoal
-from amesa_core.agent.skill.goals.maintain_goal import MaintainGoal
+from amesa_core.orchestration.agent.goals.coordinated_goal import CoordinatedGoal
+from amesa_core.orchestration.agent.goals.maintain_goal import MaintainGoal
 
 
 class TemperatureTeacher(CoordinatedGoal):
@@ -195,12 +195,12 @@ Use `CoordinatedGoal` when you have one or more goal objectives. Pass all goal i
 
 ## Step 3: Create the Artifact Directory
 
-A published teacher must be packaged in a specific directory layout. The `amesa skill new` command scaffolds this for you automatically, or you can create it manually.
+A published teacher must be packaged in a specific directory layout. The `amesa agent new` command scaffolds this for you automatically, or you can create it manually.
 
 ### Using the CLI Scaffold (Recommended)
 
 ```bash
-amesa skill new \
+amesa agent new \
   --name temperature-teacher \
   --type teacher \
   --description "Maintains process temperature near setpoint" \
@@ -213,7 +213,7 @@ This creates the following directory:
 temperature-teacher/
   temperature_teacher/
     __init__.py        ← empty; required
-    teacher.py         ← your SkillTeacher subclass goes here
+    teacher.py         ← your AgentTeacher subclass goes here
   pyproject.toml       ← artifact metadata; CLI reads this on publish
 ```
 
@@ -267,7 +267,7 @@ dependencies = [
 ]
 
 [amesa]
-type = "skill-teacher"
+type = "agent-teacher"
 entrypoint = "temperature_teacher.teacher:TemperatureTeacher"
 ```
 
@@ -279,7 +279,7 @@ entrypoint = "temperature_teacher.teacher:TemperatureTeacher"
 | `version`      | `[project]` | Yes      | Semantic version string (e.g. `0.1.0`).                                               |
 | `description`  | `[project]` | Yes      | Short human-readable description.                                                     |
 | `dependencies` | `[project]` | Yes      | Must include `"amesa-core"`. Add any other packages your teacher imports.             |
-| `type`         | `[amesa]`   | Yes      | Must be `"skill-teacher"` for a teacher.                                              |
+| `type`         | `[amesa]`   | Yes      | Must be `"agent-teacher"` for a teacher.                                              |
 | `entrypoint`   | `[amesa]`   | Yes      | `module_name.file_name:ClassName` — resolves your class from inside the inner module. |
 
 ### Entrypoint Format
@@ -290,7 +290,7 @@ The entrypoint string follows the pattern: `inner_module.filename:ClassName`
 | -------------- | --------------------------------------------------------------- |
 | `inner_module` | `temperature_teacher` (the snake_case inner directory)          |
 | `filename`     | `teacher` (the `.py` file, without extension)                   |
-| `ClassName`    | `TemperatureTeacher` (the class that subclasses `SkillTeacher`) |
+| `ClassName`    | `TemperatureTeacher` (the class that subclasses `AgentTeacher`) |
 
 **Full entrypoint:** `temperature_teacher.teacher:TemperatureTeacher`
 
@@ -314,7 +314,7 @@ Quick checklist:
 
 - [ ] `__init__.py` exists and is empty
 - [ ] `pyproject.toml` is in the **outer** directory (same level as `temperature_teacher/`)
-- [ ] `type` in `[amesa]` is `"skill-teacher"`
+- [ ] `type` in `[amesa]` is `"agent-teacher"`
 - [ ] `entrypoint` uses the **inner snake_case** module name, not the outer kebab-case name
 - [ ] The class name in `entrypoint` exactly matches the class name in `teacher.py`
 - [ ] All imports in `teacher.py` use `from amesa_core import ...`
@@ -327,13 +327,13 @@ Quick checklist:
 From the directory that **contains** your artifact folder, run:
 
 ```bash
-amesa skill publish ./temperature-teacher/
+amesa agent publish ./temperature-teacher/
 ```
 
 You can also use the `--path` flag:
 
 ```bash
-amesa skill publish --path ./temperature-teacher/
+amesa agent publish --path ./temperature-teacher/
 ```
 
 The CLI will:
@@ -341,7 +341,7 @@ The CLI will:
 1. Ask you to select a project (if you have more than one)
 2. Package the directory as a compressed archive
 3. Read `pyproject.toml` to extract the name, description, and type
-4. Create the skill entry in the AMESA registry
+4. Create the agent entry in the AMESA registry
 5. Upload the artifact
 
 A successful publish prints the artifact name and confirms the upload. The teacher is now registered and available to training jobs in your selected project.
@@ -350,25 +350,25 @@ A successful publish prints the artifact name and confirms the upload. The teach
 
 ## Step 7: Confirm the Publish
 
-List your project's skills to confirm the teacher appeared:
+List your project's agents to confirm the teacher appeared:
 
 ```bash
-amesa skill list
+amesa agent list
 ```
 
-This prints a table of all skills registered to the project, including:
+This prints a table of all agents registered to the project, including:
 
 | Name                | Type    | Version | Description                                 | UUID |
 | ------------------- | ------- | ------- | ------------------------------------------- | ---- |
 | temperature-teacher | teacher | 1       | Maintains process temperature near setpoint | ...  |
 
-Copy the UUID if you need to reference this teacher in an agent configuration.
+Copy the UUID if you need to reference this teacher in an agent orchestration.
 
 ---
 
 ## Updating a Published Teacher
 
-To publish a new version of a teacher, increment the `version` field in `pyproject.toml` and run `amesa skill publish` again:
+To publish a new version of a teacher, increment the `version` field in `pyproject.toml` and run `amesa agent publish` again:
 
 ```toml
 [project]
@@ -376,7 +376,7 @@ version = "0.2.0"   # ← increment before re-publishing
 ```
 
 ```bash
-amesa skill publish ./temperature-teacher/
+amesa agent publish ./temperature-teacher/
 ```
 
 Each publish creates a new version entry in the registry. Prior versions remain available.
@@ -388,10 +388,10 @@ Each publish creates a new version entry in the registry. Prior versions remain 
 To remove a teacher from the registry:
 
 ```bash
-amesa skill delete
+amesa agent delete
 ```
 
-The CLI presents an interactive list of your project's skills. Select the one you want to remove and confirm. Deletion is permanent and cannot be undone.
+The CLI presents an interactive list of your project's agents. Select the one you want to remove and confirm. Deletion is permanent and cannot be undone.
 
 ---
 
@@ -429,11 +429,11 @@ These are legacy package names. Update all imports to use `amesa_core`:
 
 ```python
 # WRONG
-from composabl import SkillTeacher
-from composabl_core import SkillTeacher
+from composabl import AgentTeacher
+from composabl_core import AgentTeacher
 
 # CORRECT
-from amesa_core import SkillTeacher
+from amesa_core import AgentTeacher
 ```
 
 Also update `pyproject.toml`:
