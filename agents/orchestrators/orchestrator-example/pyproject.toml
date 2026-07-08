@@ -1,0 +1,12 @@
+[project]
+name = "orchestrator-example"
+version = "0.1.0"
+description = "Example orchestrator-teacher: chooses between two child skills from demand and error signals."
+authors = [{ name = "Your Name", email = "you@example.com" }]
+dependencies = [
+    "amesa-core",
+]
+
+[amesa]
+type = "orchestrator-teacher"
+entrypoint = "orchestrator.teacher:CounterOrchestratorTeacher"

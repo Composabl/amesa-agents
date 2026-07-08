@@ -1,11 +1,11 @@
 from typing import Dict, List
 
-from amesa_core import SkillTeacher
+from amesa_core import AgentTeacher
 
 
-class CounterSelectorTeacher(SkillTeacher):
+class CounterOrchestratorTeacher(AgentTeacher):
     """
-    Selector teacher that chooses a child skill index based on demand and error.
+    Orchestrator teacher that chooses a child agent index based on demand and error.
 
     Expected child mapping:
         index 0 -> "stabilize"
@@ -33,7 +33,7 @@ class CounterSelectorTeacher(SkillTeacher):
         return bool(error > 5.0)
 
     async def transform_action(self, transformed_sensors: Dict, action):
-        # Selector actions must resolve to a valid child index.
+        # Orchestrator actions must resolve to a valid child index.
         if isinstance(action, (list, tuple)):
             action = action[0]
         return int(action)
@@ -52,4 +52,3 @@ class CounterSelectorTeacher(SkillTeacher):
         if demand > 0.8:
             return [1, 0]
         return [1, 1]
-
