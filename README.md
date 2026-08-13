@@ -178,7 +178,7 @@ The `amesa` CLI lets you scaffold, publish, list, and delete agents, orchestrato
 
 ### Setup
 
-**Python:** 3.10–3.12 (prefer 3.11.8)
+**Python:** 3.10–3.11 (prefer 3.11.8)
 
 ```bash
 python -m venv .venv
