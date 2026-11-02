@@ -2,9 +2,11 @@
   <img src="assets/amesa-wordmark.gif" alt="AMESA" width="600">
 </p>
 
-<h1 align="center">From a Dataset to Autonomous Operational Agents</h1>
+<h1 align="center">From Dataset to Autonomous Operational Agents</h1>
 
-![AMESA Autonomy Studio overview](assets/amesa-autonomy-studio-overview.gif)
+<p align="center">
+  <img src="assets/amesa-autonomy-studio-overview.gif" alt="AMESA Autonomy Studio overview">
+</p>
 
 The AMESA MCP server lets an AI assistant such as Claude run the whole AMESA platform for you. It turns plant data into a simulator, builds and trains agents against that simulator, and leaves you with agents that run your process.
 

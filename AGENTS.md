@@ -1,6 +1,6 @@
 # AGENTS.md — AI Agent Guidelines for amesa-agents
 
-## From a dataset to autonomous operational agents
+## From Dataset to Autonomous Operational Agents
 
 The AMESA MCP server lets an AI assistant such as Claude run the whole AMESA platform for you. It turns plant data into a simulator, builds and trains agents against that simulator, and leaves you with agents that run your process.
 
