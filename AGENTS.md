@@ -1,5 +1,25 @@
 # AGENTS.md — AI Agent Guidelines for amesa-agents
 
+## From a dataset to autonomous operational agents
+
+The AMESA MCP server lets an AI assistant such as Claude run the whole AMESA platform for you. It turns plant data into a simulator, builds and trains agents against that simulator, and leaves you with agents that run your process.
+
+The platform's work follows nine lifecycle stages, each with its own set of MCP tools:
+
+| # | Stage | Produces |
+| - | ----- | -------- |
+| 1 | Set up the use case | A use case with a KPI and a journey stage |
+| 2 | Prepare the data | A scored dataset with clear column roles |
+| 3 | Fit a simulator | A validated data-driven model (DDM) |
+| 4 | Capture domain knowledge | A domain graph |
+| 5 | Design the agent system | A decomposition of orchestrators and skills |
+| 6 | Build the components | Validated skills, perceptors and orchestrators |
+| 7 | Assemble the orchestration | An orchestration ready for training |
+| 8 | Train and evaluate | Trained agents with benchmark evidence against the KPI |
+| 9 | Operate the agents | Agents in service |
+
+The AMESA MCP server is configured as `amesa` in [`.mcp.json`](./.mcp.json). The [README](./README.md) walks each stage and names its tools; [`doc/tools.md`](./doc/tools.md) lists every tool with its purpose. When unsure which tool fits a task, search the catalog with `mcp_tools_search`.
+
 This file provides guidance for AI coding agents (GitHub Copilot, Codex, Claude, etc.) working in this repository. Read this file first, then consult the resources below before writing any code.
 
 ---
@@ -8,7 +28,8 @@ This file provides guidance for AI coding agents (GitHub Copilot, Codex, Claude,
 
 | Resource                             | Purpose                                                                                             |
 | ------------------------------------ | --------------------------------------------------------------------------------------------------- |
-| [`README.md`](./README.md)           | Full project overview, CLI reference, and getting-started examples                                  |
+| [`README.md`](./README.md)           | AMESA MCP tools: lifecycle stage walkthrough, autonomous loops, jobs and diagnostics                |
+| [`doc/tools.md`](./doc/tools.md)     | Index of every AMESA MCP tool, grouped by lifecycle stage                                           |
 | [`agent-context/`](./agent-context/) | Detailed specs for every AMESA component type — **read the relevant subfolder before implementing** |
 
 ### agent-context subfolders
