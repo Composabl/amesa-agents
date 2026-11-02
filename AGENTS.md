@@ -54,9 +54,8 @@ The `goals/` subfolder also includes `goal-types.md` (covers `MaximizeGoal`, `Ap
 ```
 amesa-agents/
 ├── AGENTS.md                 # This file
-├── README.md                 # Project overview and CLI reference
+├── README.md                 # AMESA MCP tools guide
 ├── .mcp.json                 # AMESA MCP server config
-├── .squad/                   # AI team definitions (Hicks, Hudson, Scribe, Ralph)
 ├── agent-context/            # Component specs for agents to read before implementing
 │   ├── teacher/
 │   ├── controller/
@@ -75,25 +74,13 @@ amesa-agents/
 │       ├── creating-and-publishing-teachers.md
 │       ├── teacher-example/
 │       ├── coordinated-example/
-│       ├── goals-example/
-│       └── quality-rating-teacher/
+│       └── goals-example/
+├── datasets/                 # Sample CSV datasets (concrete, fusion, mixer) to stage with `amesa data stage`
+├── doc/                      # tools.md: index of every AMESA MCP tool
 └── perceptors/               # Implemented perceptor artifacts
     ├── creating-and-publishing-perceptors.md
     └── perceptors-example/
 ```
-
----
-
-## AI Team
-
-This workspace uses a AMESA assist agents (Squad). Address them by name:
-
-| Agent      | Role                    | What to ask them                                        |
-| ---------- | ----------------------- | ------------------------------------------------------- |
-| **Hicks**  | Implementation Engineer | Write Python code, scaffold artifacts, publish to AMESA |
-| **Hudson** | Performance Analyst     | Parse benchmarks, evaluate constraints, compare runs    |
-| **Scribe** | Session Logger          | Maintain project history and documentation              |
-| **Ralph**  | Work Monitor            | Track task progress and dependencies                    |
 
 ---
 

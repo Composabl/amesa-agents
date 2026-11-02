@@ -1,9 +1,0 @@
-[project]
-name = "quality-rating-teacher"
-version = "1.0.0"
-description = "Teacher agent that maximizes Quality_Rating."
-dependencies = ["amesa-core"]
-
-[amesa]
-type = "agent-teacher"
-entrypoint = "quality_rating_teacher.teacher:QualityRatingTeacher"
