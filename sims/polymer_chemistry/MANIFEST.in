@@ -1,0 +1,3 @@
+recursive-include polymer_production/config *.yaml
+recursive-include polymer_production/config *.yml
+recursive-include polymer_production/config *.json

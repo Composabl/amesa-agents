@@ -1,0 +1,64 @@
+# Polymer Production Configuration
+# Example: Chemical batch plant with reactors, separators, purifiers
+
+# --- Stages & Equipment ---
+stages:
+  - name: "react"
+    machine_count: 2
+    machine_prefix: "reactor"
+  - name: "separate"
+    machine_count: 3
+    machine_prefix: "centrifuge"
+  - name: "purify"
+    machine_count: 2
+    machine_prefix: "column"
+
+# --- Products ---
+products:
+  - id: "polymer_A"
+    batch_yield: 1000  # kg per batch
+    stage_times: [120, 45, 30]  # [react, separate, purify] minutes
+    price: 500  # $/kg
+    base_demand: 5  # batches per shift
+    cost: 200  # $/kg
+  - id: "polymer_B"
+    batch_yield: 500
+    stage_times: [90, 60, 40]
+    price: 400
+    base_demand: 8
+    cost: 150
+  - id: "polymer_C"
+    batch_yield: 2000
+    stage_times: [180, 90, 60]
+    price: 300
+    base_demand: 3
+    cost: 100
+
+# --- Workers ---
+workers:
+  - id: "chemist_1"
+    skills: ["react", "separate", "purify"]
+    shift_start: 0
+    shift_end: 480
+  - id: "chemist_2"
+    skills: ["react", "separate"]
+    shift_start: 0
+    shift_end: 480
+  - id: "operator_1"
+    skills: ["separate", "purify"]
+    shift_start: 0
+    shift_end: 480
+  - id: "operator_2"
+    skills: ["purify"]
+    shift_start: 240
+    shift_end: 480
+
+# --- Episode ---
+episode_minutes: 480
+demand_noise: 0.25
+
+# --- Reward ---
+reward:
+  type: "profit"
+  opportunity_cost: true
+  waste_cost: true

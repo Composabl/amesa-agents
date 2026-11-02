@@ -1,0 +1,71 @@
+# Production Scheduling Configuration
+# This config replicates the original bakery simulation exactly
+
+# --- Stages & Equipment ---
+stages:
+  - name: "prep"           # Stage 1: Mixing
+    machine_count: 2
+    machine_prefix: "prep_station"
+  - name: "process"        # Stage 2: Baking
+    machine_count: 3
+    machine_prefix: "process_unit"
+  - name: "finish"         # Stage 3: Decorating
+    machine_count: 2
+    machine_prefix: "finish_station"
+
+# --- Products ---
+products:
+  - id: "A"                # Cookies
+    batch_yield: 12
+    stage_times: [5, 13, 10]    # [prep, process, finish] minutes
+    price: 5
+    base_demand: 30
+    cost: 2
+  - id: "B"                # Cupcakes
+    batch_yield: 6
+    stage_times: [7, 30, 20]
+    price: 7
+    base_demand: 10
+    cost: 5
+  - id: "C"                # Cake
+    batch_yield: 1
+    stage_times: [10, 40, 30]
+    price: 10
+    base_demand: 20
+    cost: 7
+
+# --- Workers ---
+workers:
+  - id: "worker_1"         # Chip
+    skills: ["prep", "process", "finish"]
+    shift_start: 0
+    shift_end: 480
+  - id: "worker_2"         # Coco
+    skills: ["prep", "process"]
+    shift_start: 0
+    shift_end: 480
+  - id: "worker_3"         # Eclair
+    skills: ["prep", "process", "finish"]
+    shift_start: 0
+    shift_end: 480
+  - id: "worker_4"         # Reese
+    skills: ["finish"]
+    shift_start: 240
+    shift_end: 480
+
+# --- Episode ---
+episode_minutes: 480
+demand_noise: 0.3          # ±30%
+
+# --- Reward ---
+reward:
+  type: "profit"
+  opportunity_cost: true
+  waste_cost: true
+
+# --- Action Mapping (auto-generated, but can be overridden) ---
+# Actions are generated as: for each stage, for each worker with that skill, for each machine, for each product
+# Stage 0 (prep): worker × product × machine
+# Stage 1 (process): worker × product × machine (dependency on prep output)
+# Stage 2 (finish): worker × product × machine (dependency on process output)
+# Plus action 0 = wait
