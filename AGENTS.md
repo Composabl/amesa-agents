@@ -76,9 +76,10 @@ amesa-agents/
 │       ├── coordinated-example/
 │       └── goals-example/
 ├── datasets/                 # Sample CSV datasets (concrete, fusion, mixer) to stage with `amesa data stage`
-└── perceptors/               # Implemented perceptor artifacts
-    ├── creating-and-publishing-perceptors.md
-    └── perceptors-example/
+├── perceptors/               # Implemented perceptor artifacts
+│   ├── creating-and-publishing-perceptors.md
+│   └── perceptors-example/
+└── sims/                     # Simulators: demo_sim, polymer_chemistry, polymer_production
 ```
 
 ---

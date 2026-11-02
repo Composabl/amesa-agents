@@ -1,0 +1,29 @@
+[project]
+name = "polymer-chemistry"
+version = "0.1.2"
+description = "Polymer batch production simulation (react/separate/purify) with configurable processes"
+authors = [{ name = "Amesa", email = "amesa@example.com" }]
+dependencies = [
+    "gymnasium",
+    "numpy",
+    "simpy==4.1.2",
+    "pyyaml",
+]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[amesa]
+type = "sim"
+entrypoint = "polymer_production.sim_impl:SimImpl"
+dependencies_system = []
+
+# Include additional data files
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["polymer_production*"]
+exclude = ["polymer_production.rllib*"]
+
+[tool.setuptools.package-data]
+"polymer_production" = ["config/*.yaml", "config/*.yml", "config/*.json", "*.pkl"]

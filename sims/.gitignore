@@ -1,0 +1,8 @@
+# Build and test artifacts produced when packaging or testing a sim
+__pycache__/
+*.egg-info/
+build/
+dist/
+*.whl
+.pytest_cache/
+.DS_Store
