@@ -103,7 +103,7 @@ This workspace uses a AMESA assist agents (Squad). Address them by name:
 
 - **Python version:** 3.10–3.11 (prefer 3.11.8)
 - Use a virtual environment: `python -m venv .venv && source .venv/bin/activate`
-- Install the AMESA CLI: `pip install amesa-cli`
+- Install AMESA (includes AMESA Compute and the `amesa` CLI): `pip install amesa`
 - Dependency declarations go in `pyproject.toml` — do not use bare `requirements.txt` for new artifacts
 
 ### Project layout (per artifact)
