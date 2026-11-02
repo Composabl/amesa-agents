@@ -5,7 +5,7 @@ Every tool of the AMESA MCP server, grouped by the lifecycle stage it belongs to
 - **Inputs** come from each tool's input schema in the server catalog. Required inputs are listed first; optional inputs end in `?`. Types: `uuid` is a UUID string; `object` and `array` arguments have nested structure that the server's schema defines.
 - **Before calling a tool you haven't used, read its full schema.** `mcp_tools_search` returns each match's description and complete input schema, including nested objects and field descriptions. This file doesn't copy those.
 - **Outputs** are not listed: tool results are JSON documents described in each tool's description.
-- The [README](../README.md) walks the stages in order, and [`doc/tools.md`](../doc/tools.md) is the short index.
+- The [README](../README.md) walks the stages in order and lists every tool with a one-line purpose.
 - Tool availability depends on your organization's permissions, and the catalog can differ between the production and staging servers.
 
 ## Calling conventions

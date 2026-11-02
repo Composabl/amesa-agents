@@ -18,7 +18,7 @@ The platform's work follows nine lifecycle stages, each with its own set of MCP 
 | 8 | Train and evaluate | Trained agents with benchmark evidence against the KPI |
 | 9 | Operate the agents | Agents in service |
 
-The AMESA MCP server is configured as `amesa` in [`.mcp.json`](./.mcp.json). The [README](./README.md) walks each stage and names its tools; [`doc/tools.md`](./doc/tools.md) lists every tool with its purpose. When unsure which tool fits a task, search the catalog with `mcp_tools_search`.
+The AMESA MCP server is configured as `amesa` in [`.mcp.json`](./.mcp.json). The [README](./README.md) walks each stage and lists every tool with its purpose. When unsure which tool fits a task, search the catalog with `mcp_tools_search`.
 
 This file provides guidance for AI coding agents (GitHub Copilot, Codex, Claude, etc.) working in this repository. Read this file first, then consult the resources below before writing any code.
 
@@ -28,8 +28,7 @@ This file provides guidance for AI coding agents (GitHub Copilot, Codex, Claude,
 
 | Resource                             | Purpose                                                                                             |
 | ------------------------------------ | --------------------------------------------------------------------------------------------------- |
-| [`README.md`](./README.md)           | AMESA MCP tools: lifecycle stage walkthrough, autonomous loops, jobs and diagnostics                |
-| [`doc/tools.md`](./doc/tools.md)     | Index of every AMESA MCP tool, grouped by lifecycle stage                                           |
+| [`README.md`](./README.md)           | AMESA MCP tools: lifecycle stage walkthrough and every tool by stage, autonomous loops, jobs and diagnostics |
 | [`agent-context/`](./agent-context/) | Detailed specs for every AMESA component type — **read the relevant subfolder before implementing** |
 
 ### agent-context subfolders
@@ -54,8 +53,9 @@ The `goals/` subfolder also includes `goal-types.md` (covers `MaximizeGoal`, `Ap
 ```
 amesa-agents/
 ├── AGENTS.md                 # This file
-├── README.md                 # AMESA MCP tools guide
+├── README.md                 # AMESA MCP tools: lifecycle walkthrough and every tool by stage
 ├── .mcp.json                 # AMESA MCP server config
+├── assets/                   # Images used in the README
 ├── agent-context/            # Component specs for agents to read before implementing
 │   ├── teacher/
 │   ├── controller/
@@ -76,7 +76,6 @@ amesa-agents/
 │       ├── coordinated-example/
 │       └── goals-example/
 ├── datasets/                 # Sample CSV datasets (concrete, fusion, mixer) to stage with `amesa data stage`
-├── doc/                      # tools.md: index of every AMESA MCP tool
 └── perceptors/               # Implemented perceptor artifacts
     ├── creating-and-publishing-perceptors.md
     └── perceptors-example/
