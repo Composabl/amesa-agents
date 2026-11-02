@@ -1,4 +1,8 @@
-# AMESA MCP Tools: From a Dataset to Autonomous Operational Agents
+<p align="center">
+  <img src="assets/amesa-wordmark.gif" alt="AMESA" width="600">
+</p>
+
+<h1 align="center">From a Dataset to Autonomous Operational Agents</h1>
 
 ![AMESA Autonomy Studio overview](assets/amesa-autonomy-studio-overview.gif)
 
