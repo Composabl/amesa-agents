@@ -449,11 +449,10 @@ amesa-agents/
 ├── AGENTS.md                 # AI agent guidelines (read this if you're an AI agent)
 ├── README.md                 # This file
 ├── .mcp.json                 # AMESA MCP server config
-├── .squad/                   # AI team definitions (Hicks, Hudson, Scribe, Ralph)
 ├── agent-context/            # Component specs for AI agents to read before implementing
 │   ├── teacher/              #   AgentTeacher reference, publishing, and quirks
 │   ├── controller/           #   AgentController reference, publishing, and quirks
-│   ├── orchestrators/            #   AgentOrchestrator / AgentOrchestratorController specs
+│   ├── orchestrators/        #   Orchestrator specs (AgentTeacher / AgentController subclasses)
 │   ├── perceptors/           #   PerceptorImpl specs
 │   ├── goals/                #   Goal types (MaximizeGoal, ApproachGoal, AvoidGoal, CoordinatedGoal) and AgentCoach
 │   └── analysis/             #   Benchmark JSON and historian data formats
@@ -468,8 +467,9 @@ amesa-agents/
 │       ├── creating-and-publishing-teachers.md
 │       ├── teacher-example/
 │       ├── coordinated-example/
-│       ├── goals-example/
-│       └── quality-rating-teacher/
+│       └── goals-example/
+├── datasets/                 # Sample CSV datasets (concrete, fusion, mixer) to stage with `amesa data stage`
+├── doc/                      # tools.md: index of every AMESA MCP tool
 └── perceptors/               # Your implemented perceptor artifacts
     ├── creating-and-publishing-perceptors.md
     └── perceptors-example/
