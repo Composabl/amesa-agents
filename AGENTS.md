@@ -38,7 +38,7 @@ This file provides guidance for AI coding agents (GitHub Copilot, Codex, Claude,
 | ---------------------------------------------------------- | --------------------------------------------------------- |
 | [`agent-context/teacher/`](./agent-context/teacher/)       | Implementing `AgentTeacher` or goal-based teachers        |
 | [`agent-context/controller/`](./agent-context/controller/) | Implementing `AgentController`                            |
-| [`agent-context/orchestrators/`](./agent-context/orchestrators/)   | Implementing `AgentOrchestrator` or `AgentOrchestratorController` |
+| [`agent-context/orchestrators/`](./agent-context/orchestrators/)   | Implementing an orchestrator (an `AgentTeacher` or `AgentController` subclass that picks the child skill) |
 | [`agent-context/perceptors/`](./agent-context/perceptors/) | Implementing `PerceptorImpl`                              |
 | [`agent-context/goals/`](./agent-context/goals/)           | Using goal types and coordinated goals                    |
 | [`agent-context/analysis/`](./agent-context/analysis/)     | Parsing benchmark JSON and historian data                 |
@@ -112,12 +112,12 @@ Each agent, orchestrator, or perceptor lives in its own folder with:
 
 ```
 my-artifact/
-├── pyproject.toml      # [tool.amesa] section required — name, version, description, type
+├── pyproject.toml      # top-level [amesa] section required — type, entrypoint
 └── my_artifact/
     └── ...             # Implementation
 ```
 
-The `[tool.amesa]` section in `pyproject.toml` is required for publishing. The `type` field must match the artifact type (e.g., `"agent-teacher"`, `"agent-controller"`, `"orchestrator-teacher"`, `"orchestrator-controller"`).
+The top-level `[amesa]` section in `pyproject.toml` is required for publishing (not `[tool.amesa]`, which the SDK does not read). It holds `type` and `entrypoint`; the name, version and description go in `[project]`. The `type` field must match the artifact type (e.g., `"agent-teacher"`, `"agent-controller"`, `"orchestrator-teacher"`, `"orchestrator-controller"`).
 
 ### Implementing components
 
@@ -136,7 +136,7 @@ The `[tool.amesa]` section in `pyproject.toml` is required for publishing. The `
 ## Testing & Validation
 
 - Run existing tests with whatever test runner is already configured in the artifact's `pyproject.toml`; do not introduce new test frameworks
-- Validate the `pyproject.toml` `[tool.amesa]` section is complete before attempting a publish
+- Validate the `pyproject.toml` `[amesa]` section is complete before attempting a publish
 - Check `agent-context/<type>/job-json-schema.md` to validate job payload structure before submitting
 
 ---

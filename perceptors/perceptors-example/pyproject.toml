@@ -5,12 +5,19 @@ description = "Example PerceptorImpl: computes velocity and acceleration from co
 authors = [{ name = "Your Name", email = "you@example.com" }]
 dependencies = [
     "amesa-core",
+    "numpy",
 ]
 
+# Top-level [amesa] (not [tool.amesa]) — read by amesa_core.utils.plugin_util.
 [amesa]
 type = "perceptor"
+entrypoint = "perceptors_example.perceptor:KinematicsPerceptor"
+# Output keys returned by compute(); the platform registers these as the perceptor's sensors.
 variables = [
     "velocity",
     "acceleration",
 ]
-entrypoint = "perceptors_example.perceptor:KinematicsPerceptor"
+# Sensors compute() reads; checked by `amesa data perceive` before a rollout.
+inputs = [
+    "position",
+]

@@ -28,7 +28,7 @@ A Controller is a subclass of `AgentController` from `amesa_core`. You must impl
 | Method                     | What it does                                                                                                 |
 | -------------------------- | ------------------------------------------------------------------------------------------------------------ |
 | `compute_action`           | Returns the action to send to the simulator. This is your core control logic — called once per timestep.     |
-| `filtered_sensor_space`    | Returns the list of sensor names this controller reads. Only listed sensors are visible in `compute_action`. |
+| `filtered_sensor_space`    | Returns the list of sensor names this controller reads. Each name must exist on the sim (or a perceptor).    |
 | `compute_success_criteria` | Returns `True` when the current episode should be considered a success.                                      |
 | `compute_termination`      | Returns `True` to end the episode early as a failure.                                                        |
 
@@ -49,35 +49,36 @@ class MyController(AgentController):
         # All self.* state is wiped at every episode reset
         pass
 
-    async def filtered_sensor_space(self, obs_spec) -> List[str]:
-        # Declare which sensors this controller observes
-        # Called once at startup; result is cached
+    async def filtered_sensor_space(self) -> List[str]:
+        # Declare which sensors this controller observes (no arguments)
         ...
 
-    async def compute_action(self, obs_spec: Dict, action) -> any:
+    async def compute_action(self, transformed_sensors: Dict, action) -> any:
         # Core control logic — called every timestep
-        # obs_spec: filtered sensor dict (keys match filtered_sensor_space)
-        # action:   previous action sent to the sim (None on first step)
+        # transformed_sensors: AMESA sensor dict (sim sensors + perceptor outputs)
+        # action:   previous action returned by this controller (None on first step)
         # Returns:  the action to send to the simulator
         ...
 
-    async def compute_success_criteria(self, obs_spec: Dict, action) -> bool:
+    async def compute_success_criteria(self, transformed_sensors: Dict, action) -> bool:
         # Return True when the episode should end as a success
         ...
 
-    async def compute_termination(self, obs_spec: Dict, action) -> bool:
+    async def compute_termination(self, transformed_sensors: Dict, action) -> bool:
         # Return True to end the episode early as a failure
         ...
 ```
 
+`transform_sensors(self, sensors)` is an optional fifth method (default: return `sensors`), but the runtime never calls it for controllers — put derived-feature logic in `compute_action`.
+
 ### `compute_action` Parameters
 
-| Parameter  | Type   | Description                                                                                           |
-| ---------- | ------ | ----------------------------------------------------------------------------------------------------- |
-| `obs_spec` | `Dict` | Filtered sensor observations for this step. Keys match the names returned by `filtered_sensor_space`. |
-| `action`   | any    | The action sent to the simulator on the **previous** step. `None` on the first step of each episode.  |
+| Parameter             | Type   | Description                                                                                                                                                  |
+| --------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `transformed_sensors` | `Dict` | Sensor values for this step, as raw AMESA sensors. Not passed through `transform_sensors` and not reduced to `filtered_sensor_space` — read the keys you need. |
+| `action`              | any    | The action this controller returned on the **previous** step. `None` on the first step of each episode.                                                      |
 
-**Return value:** The action to send to the simulator. Must match the simulator's expected action format.
+**Return value:** The action to send to the simulator. Must match the simulator's action space and must not be `None`.
 
 ---
 
@@ -107,12 +108,12 @@ class FermentationController(AgentController):
         # No required arguments — called with no args at every episode reset
         self.prev_error = 0.0
 
-    async def filtered_sensor_space(self, obs_spec) -> List[str]:
-        # Expose only the sensors this controller actually reads
+    async def filtered_sensor_space(self) -> List[str]:
+        # Declare the sensors this controller actually reads
         return ["dissolved_oxygen", "agitation_rpm"]
 
-    async def compute_action(self, obs_spec: Dict, action) -> List[float]:
-        do_level = obs_spec["dissolved_oxygen"]
+    async def compute_action(self, transformed_sensors: Dict, action) -> List[float]:
+        do_level = transformed_sensors["dissolved_oxygen"]
         error = self.TARGET_DO - do_level
 
         # Proportional control: positive error → increase agitation
@@ -121,23 +122,18 @@ class FermentationController(AgentController):
 
         return [float(delta_rpm)]
 
-    async def compute_success_criteria(self, obs_spec: Dict, action) -> bool:
-        do_level = obs_spec["dissolved_oxygen"]
-        return abs(do_level - self.TARGET_DO) <= self.TOLERANCE
+    async def compute_success_criteria(self, transformed_sensors: Dict, action) -> bool:
+        do_level = transformed_sensors["dissolved_oxygen"]
+        return bool(abs(do_level - self.TARGET_DO) <= self.TOLERANCE)
 
-    async def compute_termination(self, obs_spec: Dict, action) -> bool:
-        do_level = obs_spec["dissolved_oxygen"]
-        return do_level < self.FAIL_DO_LOW
+    async def compute_termination(self, transformed_sensors: Dict, action) -> bool:
+        do_level = transformed_sensors["dissolved_oxygen"]
+        return bool(do_level < self.FAIL_DO_LOW)
 ```
 
-### Accessing Full Sensor List
+### Accessing the Full Sensor Dict
 
-To expose all orchestration sensors to the controller rather than a subset:
-
-```python
-async def filtered_sensor_space(self, obs_spec) -> List[str]:
-    return obs_spec   # pass through — observe everything
-```
+`compute_action`, `compute_success_criteria` and `compute_termination` already receive every sensor (sim sensors plus perceptor outputs), whatever `filtered_sensor_space` returns. `filtered_sensor_space` takes no arguments and must return a list of names that exist on the sim; `amesa agent validate` fails with "the sim has no sensors named ..." otherwise.
 
 ---
 
@@ -158,7 +154,7 @@ This creates:
 ```text
 fermentation-controller/
   fermentation_controller/
-    __init__.py        ← empty; required
+    __init__.py        ← required
     controller.py      ← your AgentController subclass goes here
   pyproject.toml
 ```
@@ -181,7 +177,7 @@ touch fermentation-controller/pyproject.toml
 | Outer directory     | kebab-case    | `fermentation-controller` |
 | Inner Python module | snake_case    | `fermentation_controller` |
 | Source file         | by convention | `controller.py`           |
-| `__init__.py`       | always empty  | _(no content)_            |
+| `__init__.py`       | required      | _(may be empty)_          |
 
 The outer kebab-case directory is used by the CLI only. The inner snake_case directory is the importable Python module referenced in `pyproject.toml`. Never use the kebab-case outer name in your entrypoint.
 
@@ -190,10 +186,6 @@ The outer kebab-case directory is used by the CLI only. The inner snake_case dir
 ## Step 4: Configure `pyproject.toml`
 
 ```toml
-[build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.backends.legacy:build"
-
 [project]
 name = "fermentation-controller"
 version = "0.1.0"
@@ -213,12 +205,14 @@ entrypoint = "fermentation_controller.controller:FermentationController"
 | -------------- | ----------- | -------- | ------------------------------------------------------------ |
 | `name`         | `[project]` | Yes      | Artifact name as it will appear in the registry. Kebab-case. |
 | `version`      | `[project]` | Yes      | Semantic version string.                                     |
-| `description`  | `[project]` | Yes      | Short human-readable description.                            |
-| `dependencies` | `[project]` | Yes      | Must include `"amesa-core"`.                                 |
+| `description`  | `[project]` | No       | Short human-readable description (used on first publish).    |
+| `dependencies` | `[project]` | No       | Recommended; include `"amesa-core"` (as the scaffold does).  |
 | `type`         | `[amesa]`   | Yes      | Must be `"agent-controller"`.                                |
 | `entrypoint`   | `[amesa]`   | Yes      | `inner_module.filename:ClassName`                            |
 
-> **Do not add a `variables` field.** The `variables` field is for perceptors only. Including it in a agent `pyproject.toml` causes a validation error on publish.
+> **Do not add a `variables` field.** The `variables` field is for perceptors only.
+
+> **Use top-level `[amesa]`, not `[tool.amesa]`.** The validator only reads `[amesa]` (or the legacy `[composabl]`).
 
 ### Entrypoint Format
 
@@ -237,26 +231,35 @@ entrypoint = "fermentation_controller.controller:FermentationController"
 ```text
 fermentation-controller/
 ├── fermentation_controller/
-│   ├── __init__.py        ← must exist; must be empty
+│   ├── __init__.py        ← must exist (may be empty)
 │   └── controller.py      ← contains FermentationController class
 └── pyproject.toml         ← contains [amesa] section with type and entrypoint
 ```
 
 Checklist:
 
-- [ ] `__init__.py` exists and is empty
+- [ ] `__init__.py` exists
 - [ ] `pyproject.toml` is in the outer directory (same level as `fermentation_controller/`)
 - [ ] `type` in `[amesa]` is `"agent-controller"`
 - [ ] `entrypoint` uses the inner snake_case module name
 - [ ] `entrypoint` class name matches the class in `controller.py`
 - [ ] All four required methods are implemented with `async def`
+- [ ] `filtered_sensor_space(self)` takes no arguments and returns a list
 - [ ] `__init__` takes no required arguments
 - [ ] No `variables` field in `[amesa]`
 - [ ] All imports use `from amesa_core import ...`
 
 ---
 
-## Step 6: Publish
+## Step 6: Validate and Publish
+
+Validate first (static checks plus a run against a mock of the project's sim; add `--static` to skip the sim run):
+
+```bash
+amesa agent validate ./fermentation-controller/
+```
+
+Then publish:
 
 ```bash
 amesa agent publish ./fermentation-controller/
@@ -268,7 +271,9 @@ Or using the flag form:
 amesa agent publish --path ./fermentation-controller/
 ```
 
-The path must point to the **outer kebab-case directory** containing `pyproject.toml`.
+The path must point to the **outer kebab-case directory** containing `pyproject.toml`. The CLI prompts for the project, reuses the agent with the same `[project].name` (or creates it), and uploads the code as a new version of type `controller`.
+
+To publish with the AMESA MCP tools instead (`operational_agent_create` with `type: "controller"`, upload, `operational_agent_confirm_upload`, then `amesa_agent_validate`), see [`agent-context/controller/publishing.md`](../../agent-context/controller/publishing.md). Controllers do not accept guidance.
 
 ---
 
@@ -307,7 +312,7 @@ orchestration.add_agent(agent)
 
 ## Updating a Published Controller
 
-Increment `version` in `pyproject.toml` and republish:
+Republish with the same `[project].name`; each publish adds a new version to the existing agent (bumping `version` in `pyproject.toml` is good practice):
 
 ```bash
 amesa agent publish ./fermentation-controller/
@@ -325,7 +330,7 @@ amesa agent delete
 
 ### `TypeError` during episode reset
 
-Your `__init__` has a required argument. The framework calls `MyController()` with no arguments at every episode boundary:
+Your `__init__` has a required argument. The framework calls `MyController()` with no arguments when it loads the controller and again at every episode reset:
 
 ```python
 # WRONG — threshold has no default, raises TypeError on reset

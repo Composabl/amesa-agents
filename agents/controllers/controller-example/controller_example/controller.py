@@ -42,5 +42,7 @@ class PDController(AgentController):
     async def filtered_sensor_space(self) -> List[str]:
         return ["position", "velocity"]
 
+    # Optional. The runtime does not call transform_sensors for controllers:
+    # compute_action receives the raw sensors, so keep feature logic there.
     async def transform_sensors(self, sensors) -> Dict:
         return sensors

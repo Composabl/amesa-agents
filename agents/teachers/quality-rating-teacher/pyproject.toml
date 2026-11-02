@@ -6,7 +6,4 @@ dependencies = ["amesa-core"]
 
 [amesa]
 type = "agent-teacher"
-name = "quality-rating-teacher"
-version = "1.0.0"
-description = "Teacher agent that maximizes Quality_Rating."
 entrypoint = "quality_rating_teacher.teacher:QualityRatingTeacher"

@@ -5,8 +5,9 @@ description = "Example orchestrator-teacher: chooses between two child skills fr
 authors = [{ name = "Your Name", email = "you@example.com" }]
 dependencies = [
     "amesa-core",
+    "numpy",
 ]
 
 [amesa]
 type = "orchestrator-teacher"
-entrypoint = "orchestrator.teacher:CounterOrchestratorTeacher"
+entrypoint = "orchestrator_example.teacher:CounterOrchestratorTeacher"

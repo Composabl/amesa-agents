@@ -8,7 +8,7 @@ This guide walks you through everything you need to build a Perceptor from scrat
 
 A **Perceptor** transforms raw sensor observations into derived, computed features. It sits between the sensor layer and your agents: it receives the raw sensor dictionary, computes new values from it, and injects those new keys into the observation namespace before any agent sees the data.
 
-Agents can reference perceptor outputs the same way they reference sensor names — by listing the key in `filtered_sensor_space()`. Perceptors are registered on the Orchestration and run for every agent.
+Agents can reference perceptor outputs the same way they reference sensor names — by listing the key in `filtered_sensor_space()`. Perceptors are registered on the Orchestration and run once per step, before any agent sees the observation.
 
 **Common use cases:**
 
@@ -26,7 +26,7 @@ Simulator
 Sensor mapping  →  { "temperature": 82.3, "pressure": 1.1, ... }
     │
     ▼
-Perceptor pipeline  (registered order; each adds new keys)
+Perceptors  (each adds new keys; see note on ordering below)
     │  perceptor 1 adds { "efficiency_ratio": 0.91 }
     │  perceptor 2 adds { "quality_index": 0.87 }
     ▼
@@ -44,11 +44,11 @@ A Perceptor is a subclass of `PerceptorImpl` from `amesa_core`. You must impleme
 | Method                       | Sync/Async | What it does                                                                                           |
 | ---------------------------- | ---------- | ------------------------------------------------------------------------------------------------------ |
 | `compute(obs_spec, obs)`     | **async**  | Called every step. Returns a `dict` of new keys to inject into the observation namespace.              |
-| `filtered_sensor_space(obs)` | **sync**   | Returns the list of raw sensor names this perceptor reads. Used for shape inference at initialization. |
+| `filtered_sensor_space(obs)` | **sync**   | Returns the list of sensor names this perceptor reads. Abstract (must exist), but not called by the SDK on perceptors today. |
 
-> **`filtered_sensor_space` must be sync.** Do **not** declare it `async`. Declaring it async will break space construction at training initialization.
+> **`compute` must be async.** Declare it with `async def` — `amesa perceptor validate` rejects a sync `compute`.
 
-> **`compute` must be async.** Declare it with `async def`.
+> **`filtered_sensor_space` is sync** in the base class. Keep it a plain `def`.
 
 ### Method Signatures
 
@@ -59,11 +59,11 @@ class MyPerceptor(PerceptorImpl):
 
     def __init__(self):
         # Must accept zero required arguments
-        # All self.* state is wiped at every episode reset
+        # A fresh instance is created at every episode reset
         pass
 
     async def compute(self, obs_spec, obs) -> dict:
-        # obs is the full sensor dict: { "sensor_name": value, ... }
+        # obs is the sensor dict: { "sensor_name": np.array([value]), ... }
         # Return a dict of NEW keys to add to the observation namespace
         ...
 
@@ -77,15 +77,19 @@ class MyPerceptor(PerceptorImpl):
 
 | Parameter  | Type            | Description                                                                                                    |
 | ---------- | --------------- | -------------------------------------------------------------------------------------------------------------- |
-| `obs_spec` | `Space \| None` | Gymnasium Space spec. May be `None` in some call paths — do not depend on it being a valid Space object.       |
-| `obs`      | `dict`          | The full named sensor dict after lambda extraction, plus outputs from any perceptors that ran before this one. |
+| `obs_spec` | `Space \| None` | The sim's sensor space. May be `None` (always `None` in `amesa data perceive`) — do not depend on it. |
+| `obs`      | `dict`          | Orchestration sensor name → value after sensor mapping. Values are **numpy arrays** (a scalar sensor is shape `(1,)` float32), not Python floats. |
 
 **Return value:** a `dict` of new `{ key: value }` pairs. Every key must:
 
-1. **Not** already exist in the observation dict — a collision with an existing sensor name raises an error at training initialization
-2. **Match** the `variables` list declared in `pyproject.toml`
+1. **Not** already exist in the observation dict — a collision with an existing sensor name raises an error on the first step
+2. **Match** the `variables` list declared in `pyproject.toml` (the platform registers these as the perceptor's sensors on publish)
 
-> **Episode state:** `__init__` is called fresh at the start of each episode. All `self.*` state is wiped at every episode reset. Do not rely on state persisting across episodes.
+Each value should be a single number (a size-1 array is fine).
+
+> **Episode state:** on every episode reset the runtime discards the instance and calls `__init__` again (`Perceptor.reset()` in `amesa_core`). Do not rely on state persisting across episodes.
+
+> **Ordering:** in training, perceptors run concurrently and their outputs are merged afterwards, so one perceptor must not read another perceptor's outputs. A perceptor that raises is logged and skipped for that step — its keys are silently missing.
 
 ---
 
@@ -96,10 +100,17 @@ The example below computes two derived metrics from raw process sensors: an `eff
 ```python
 # process_monitor/perceptor.py
 
+import numpy as np
+
 from amesa_core import PerceptorImpl
 
 
 EFFICIENCY_THRESHOLD = 0.75
+
+
+def _scalar(value) -> float:
+    # Sensors arrive as numpy arrays of shape (1,)
+    return float(np.asarray(value).reshape(-1)[0])
 
 
 class ProcessMonitorPerceptor(PerceptorImpl):
@@ -117,9 +128,9 @@ class ProcessMonitorPerceptor(PerceptorImpl):
         self._efficient_steps = 0
 
     async def compute(self, obs_spec, obs) -> dict:
-        throughput = obs["throughput"]
-        output_rate = obs["output_rate"]
-        input_rate = obs["input_rate"]
+        throughput = _scalar(obs["throughput"])
+        output_rate = _scalar(obs["output_rate"])
+        input_rate = _scalar(obs["input_rate"])
 
         self._total_steps += 1
         if throughput >= EFFICIENCY_THRESHOLD:
@@ -144,7 +155,7 @@ class ProcessMonitorPerceptor(PerceptorImpl):
 
 ```python
 async def compute(self, obs_spec, obs) -> dict:
-    current = obs["process_var"]
+    current = _scalar(obs["process_var"])
     delta = current - self._last if self._last is not None else 0.0
     self._last = current
     return {"process_var_delta": delta}
@@ -154,7 +165,7 @@ async def compute(self, obs_spec, obs) -> dict:
 
 ```python
 async def compute(self, obs_spec, obs) -> dict:
-    self._window.append(obs["temperature"])
+    self._window.append(_scalar(obs["temperature"]))
     if len(self._window) > self._window_size:
         self._window.pop(0)
     return {"temperature_avg": sum(self._window) / len(self._window)}
@@ -164,7 +175,7 @@ async def compute(self, obs_spec, obs) -> dict:
 
 ```python
 async def compute(self, obs_spec, obs) -> dict:
-    in_spec = 1.0 if 0.08 <= obs["output_metric"] <= 0.09 else 0.0
+    in_spec = 1.0 if 0.08 <= _scalar(obs["output_metric"]) <= 0.09 else 0.0
     return {"in_spec_flag": in_spec}
 ```
 
@@ -186,12 +197,13 @@ This creates:
 ```text
 process-monitor/
   process_monitor/
-    __init__.py        ← empty; required
-    perceptor.py       ← your PerceptorImpl subclass goes here
+    __init__.py
+    perceptor.py       ← DemoPerceptor placeholder; replace with your class
   pyproject.toml
+  README.md
 ```
 
-Replace the placeholder `perceptor.py` with your implementation from Step 2.
+Replace the placeholder `perceptor.py` with your implementation from Step 2, and update `entrypoint` and `variables` in `pyproject.toml` (the template points at `DemoPerceptor` and declares `counter_derived`).
 
 ### Creating Manually
 
@@ -209,7 +221,7 @@ touch process-monitor/pyproject.toml
 | Outer directory     | kebab-case    | `process-monitor` |
 | Inner Python module | snake_case    | `process_monitor` |
 | Source file         | by convention | `perceptor.py`    |
-| `__init__.py`       | always empty  | _(no content)_    |
+| `__init__.py`       | required      | _(may be empty)_  |
 
 The outer directory is used by the CLI only. The inner snake_case directory is the Python module referenced in `pyproject.toml`. Do not use the kebab-case outer name in your entrypoint — it is not a valid Python identifier.
 
@@ -218,10 +230,6 @@ The outer directory is used by the CLI only. The inner snake_case directory is t
 ## Step 4: Configure `pyproject.toml`
 
 ```toml
-[build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.backends.legacy:build"
-
 [project]
 name = "process-monitor"
 version = "0.1.0"
@@ -234,7 +242,10 @@ dependencies = [
 type = "perceptor"
 entrypoint = "process_monitor.perceptor:ProcessMonitorPerceptor"
 variables = ["efficiency_ratio", "quality_index"]
+inputs = ["throughput", "output_rate", "input_rate"]
 ```
+
+Use a top-level `[amesa]` table — **not** `[tool.amesa]`, which the loader does not read (legacy `[composabl]` is still accepted).
 
 ### Field Reference
 
@@ -242,13 +253,14 @@ variables = ["efficiency_ratio", "quality_index"]
 | -------------- | ----------- | ------------------------- | ------------------------------------------------------------------------------ |
 | `name`         | `[project]` | Yes                       | Artifact name as it will appear in the registry. Kebab-case.                   |
 | `version`      | `[project]` | Yes                       | Semantic version string.                                                       |
-| `description`  | `[project]` | Yes                       | Short human-readable description.                                              |
-| `dependencies` | `[project]` | Yes                       | Must include `"amesa-core"`.                                                   |
+| `description`  | `[project]` | Recommended               | Short human-readable description (used as the registry description).          |
+| `dependencies` | `[project]` | Recommended               | Include `"amesa-core"` plus anything `compute()` imports (installed at validation/run time). |
 | `type`         | `[amesa]`   | Yes                       | Must be `"perceptor"`.                                                         |
 | `entrypoint`   | `[amesa]`   | Yes                       | `inner_module.filename:ClassName`                                              |
 | `variables`    | `[amesa]`   | **Yes — perceptors only** | List of output key names. Must exactly match the keys returned by `compute()`. |
+| `inputs`       | `[amesa]`   | Optional                  | Sensor names `compute()` reads. `amesa data perceive` checks them against the dataset before running. |
 
-> **`variables` is required for perceptors.** This is what the AMESA registry uses to know what named outputs the perceptor exposes. Missing or mismatched `variables` causes publish validation to fail or training initialization to fail.
+> **`variables` is required for perceptors.** The SDK loader does not check it, but the platform publish tools (`perceptor_create`, `perceptor_implementation_publish`) take the perceptor's sensors exclusively from `[amesa].variables`. Keep it equal to the keys `compute()` returns — agents select perceptor outputs by name.
 
 ### Entrypoint Format
 
@@ -267,26 +279,35 @@ variables = ["efficiency_ratio", "quality_index"]
 ```text
 process-monitor/
 ├── process_monitor/
-│   ├── __init__.py        ← must exist; must be empty
+│   ├── __init__.py        ← must exist
 │   └── perceptor.py       ← contains ProcessMonitorPerceptor class
 └── pyproject.toml         ← contains [amesa] section with type, entrypoint, and variables
 ```
 
 Checklist:
 
-- [ ] `__init__.py` exists and is empty
+- [ ] `__init__.py` exists
 - [ ] `pyproject.toml` is in the outer directory (same level as `process_monitor/`)
+- [ ] `pyproject.toml` uses top-level `[amesa]`, not `[tool.amesa]`
 - [ ] `type` in `[amesa]` is `"perceptor"`
 - [ ] `variables` list matches the dict keys returned by `compute()`
 - [ ] `entrypoint` uses the inner snake_case module name
-- [ ] `filtered_sensor_space` is declared `def`, **not** `async def`
 - [ ] `compute` is declared `async def`
+- [ ] `filtered_sensor_space` is implemented (plain `def`)
+- [ ] sensor values are unwrapped from numpy arrays before scalar math
+- [ ] `amesa perceptor validate ./process-monitor/` reports no issues
 - [ ] `__init__` takes no required arguments
 - [ ] All imports use `from amesa_core import ...`
 
 ---
 
-## Step 6: Publish
+## Step 6: Validate and Publish
+
+```bash
+amesa perceptor validate ./process-monitor/
+```
+
+This installs the declared dependencies in isolation, loads the entrypoint, and checks it subclasses `PerceptorImpl` with both methods implemented and `compute` async.
 
 ```bash
 amesa perceptor publish ./process-monitor/
@@ -298,7 +319,16 @@ Or using the flag form:
 amesa perceptor publish --path ./process-monitor/
 ```
 
-The path must point to the **outer kebab-case directory** containing `pyproject.toml`.
+The path must point to the **outer kebab-case directory** containing `pyproject.toml`. The CLI prompts for the project (use case). If a perceptor with the same `[project].name` already exists there, the upload becomes its next version.
+
+### Publishing via the AMESA MCP tools
+
+1. `organization_list` → `use_case_list` to get the `projectId`.
+2. First version: `perceptor_create` with `name`, `description` and `sensors` = `[amesa].variables`. Later versions: `perceptor_implementation_publish` with `perceptorId` and `sensors`.
+3. PUT the `.tar.gz` of the outer directory to the returned `uploadUrl` (with the returned headers), then call `perceptor_confirm_upload` with the `implementationId`.
+   (Alternatively `submit_code_file` with `artifactType: "perceptor"` and `perceptorSensors` packages the files into a new version.)
+4. `amesa_perceptor_validate` → poll the jobId with `component_validation_status`.
+5. `perceptor_list` / `perceptor_get` to confirm and record the perceptor and implementation IDs.
 
 ---
 
@@ -324,7 +354,7 @@ Once published, a perceptor can also be used in-process (before packaging) while
 from amesa_core import Orchestration, Sensor, Perceptor
 from process_monitor.perceptor import ProcessMonitorPerceptor
 
-orchestration = Orchestration(id="process-orchestration")
+orchestration = Orchestration()
 
 orchestration.add_sensors([
     Sensor("throughput",  "Process throughput [0..1]"),
@@ -339,13 +369,23 @@ orchestration.add_perceptor(Perceptor("process-monitor", ProcessMonitorPerceptor
 # in their filtered_sensor_space()
 ```
 
-Perceptors run in registration order. Each receives the full observation dict including outputs from perceptors that ran before it.
+Do not make one perceptor depend on another's outputs: in training perceptors run concurrently on the same sensor dict and outputs are merged after all finish (local inference runs them sequentially, so behavior would differ).
+
+---
+
+## Trying a Perceptor on a Dataset
+
+```bash
+amesa data perceive <dataset> --use-case <use-case> --perceptor process-monitor --version latest --name <new-dataset>
+```
+
+(MCP: `amesa_data_perceive`.) Rolls the published perceptor over a staged dataset, one fresh instance per episode, and writes each output as a `p_<output>` column of a new dataset; the source is untouched. `p_` columns hold no role: `amesa data score`, `integrity` and `stats` count them, training ignores them.
 
 ---
 
 ## Updating a Published Perceptor
 
-Increment the `version` in `pyproject.toml` and republish:
+Republish; the platform numbers the new version automatically (bumping `[project].version` is still good practice):
 
 ```bash
 amesa perceptor publish ./process-monitor/
@@ -365,7 +405,7 @@ The CLI presents an interactive list. Select the perceptor to remove and confirm
 
 ### Output keys don't match `variables` in `pyproject.toml`
 
-The `variables` list in `[amesa]` must exactly match the dict keys returned by `compute()`. A mismatch causes training initialization to fail when the orchestration tries to resolve perceptor outputs by name.
+The `variables` list in `[amesa]` must exactly match the dict keys returned by `compute()`. The platform registers `variables` as the perceptor's sensors; an agent that selects a declared name `compute()` never returns trains without that input (unknown `filtered_sensor_space()` keys are reported as missing).
 
 ```toml
 # pyproject.toml declares:
@@ -380,26 +420,28 @@ return {
 }
 
 # NOT:
-return {"efficiency": 0.91}     # ✗ wrong key name — training init will fail
+return {"efficiency": 0.91}     # ✗ wrong key name — agents won't find "efficiency_ratio"
 ```
 
-### `filtered_sensor_space` is async — training fails at init
+### `compute` is not async — validation fails
 
-`filtered_sensor_space` must be a regular synchronous method. Making it `async` breaks the space construction step that runs before training starts.
+`amesa perceptor validate` reports `does not mark method 'compute' as async as required by 'PerceptorImpl'`.
 
 ```python
 # WRONG
-async def filtered_sensor_space(self, obs) -> list:
-    return ["throughput"]
+def compute(self, obs_spec, obs) -> dict: ...
 
 # CORRECT
-def filtered_sensor_space(self, obs) -> list:
-    return ["throughput"]
+async def compute(self, obs_spec, obs) -> dict: ...
 ```
+
+### Math on sensor values behaves oddly
+
+Sensor values are numpy arrays of shape `(1,)`. Unwrap them (`float(np.asarray(v).reshape(-1)[0])`) before comparisons, `min`/`max`, or appending to Python lists.
 
 ### Key collision with existing sensor name
 
-If `compute()` returns a key that already exists in the sensor dict, AMESA raises an error at training initialization. Choose output key names that are distinct from all sensor names registered on the Orchestration.
+If `compute()` returns a key that already exists in the sensor dict, AMESA raises `Perceptor X has a key Y that already exists in the sensor space dictionary!` on the first step. Choose output key names that are distinct from all sensor names registered on the Orchestration.
 
 ### Legacy import error
 
