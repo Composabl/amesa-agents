@@ -8,26 +8,30 @@ This README walks the lifecycle stage by stage and names the tools used at each 
 
 ```mermaid
 flowchart LR
-  S1["1 · Set up<br/><i>use case</i>"]:::setup
-  S2["2 · Prepare data<br/><i>scored dataset</i>"]:::data
-  S3["3 · Fit simulator<br/><i>validated DDM</i>"]:::data
-  S4["4 · Capture knowledge<br/><i>domain graph</i>"]:::know
-  S5["5 · Design agents<br/><i>decomposition</i>"]:::know
-  S6["6 · Build components<br/><i>skills, perceptors</i>"]:::know
-  S7["7 · Assemble<br/><i>orchestration</i>"]:::train
-  S8["8 · Train and evaluate<br/><i>trained agents</i>"]:::train
-  S9["9 · Operate<br/><i>agents in service</i>"]:::done
+		S1("1 · Set up<br/>use case")
+		S2("2 · Prepare data<br/>scored dataset")
+		S3("3 · Fit simulator<br/>validated DDM")
+		S4("4 · Capture knowledge<br/>domain graph")
+		S5("5 · Design agents<br/>decomposition")
+		S6("6 · Build components<br/>skills, perceptors")
+		S7("7 · Assemble<br/>orchestration")
+		S8("8 · Train and evaluate<br/>trained agents")
+		S9(["9 · Operate<br/>agents in service"])
 
-  S1 --> S2 --> S3 --> S4 --> S5 --> S6 --> S7 --> S8 --> S9
+		S1 --> S2 --> S3 --> S4 --> S5 --> S6 --> S7 --> S8 --> S9
 
-  classDef setup fill:#dbeafe,stroke:#1d4ed8,color:#0f172a
-  classDef data fill:#dcfce7,stroke:#15803d,color:#0f172a
-  classDef know fill:#ede9fe,stroke:#6d28d9,color:#0f172a
-  classDef train fill:#e0f2fe,stroke:#0369a1,color:#0f172a
-  classDef done fill:#fef9c3,stroke:#a16207,color:#0f172a
+		style S1 stroke:#000000,fill:#E1F0D4
+		style S2 stroke:#000000,fill:#A3E9CC
+		style S3 stroke:#000000,fill:#A3E9CC
+		style S4 stroke:#000000,fill:#DBCDF8
+		style S5 stroke:#000000,fill:#DBCDF8
+		style S6 stroke:#000000,fill:#DBCDF8
+		style S7 stroke:#000000,fill:#D4EFF0
+		style S8 stroke:#000000,fill:#D4EFF0
+		style S9 stroke:#000000,fill:#C2C4B3
 ```
 
-Colors mark the platform's journey stages: setup (blue), data (green), knowledge (purple), training (light blue) and complete (yellow).
+Colors group the stages by the platform's journey stage: setup, data, knowledge, training and complete.
 
 ---
 
@@ -267,18 +271,20 @@ AMESA agents are modular. Each *skill* handles one task, and an *orchestrator* d
 A typical reactor decomposition:
 
 ```mermaid
-flowchart TD
-  R["Reactor Selector<br/><i>orchestrator · variable sequence</i>"]:::orch
-  A["Steady State Start<br/><i>skill · teacher</i>"]:::skill
-  B["Grade Transition<br/><i>skill · teacher</i>"]:::skill
-  C["Steady State Product<br/><i>skill · teacher</i>"]:::skill
+flowchart TB
+		R{"Reactor Selector<br/>orchestrator"}
+		A("Steady State Start<br/>skill · teacher")
+		B("Grade Transition<br/>skill · teacher")
+		C("Steady State Product<br/>skill · teacher")
 
-  R -->|child 0| A
-  R -->|child 1| B
-  R -->|child 2| C
+		R -- "child 0" --> A
+		R -- "child 1" --> B
+		R -- "child 2" --> C
 
-  classDef orch fill:#dbeafe,stroke:#1d4ed8,color:#0f172a
-  classDef skill fill:#ede9fe,stroke:#6d28d9,color:#0f172a
+		style R stroke:#000000,fill:#F2F7D2
+		style A stroke:#000000,fill:#C3EFE0
+		style B stroke:#000000,fill:#C3EFE0
+		style C stroke:#000000,fill:#C3EFE0
 ```
 
 Reusable shapes are saved as *orchestration patterns*: `orchestration_pattern_create`, `orchestration_pattern_list`, `orchestration_pattern_get`, `orchestration_pattern_update`, and `orchestration_pattern_apply` to stamp a pattern onto an orchestration.
@@ -419,35 +425,25 @@ Some stages take many cycles of trying something, checking the result and adjust
 | `training-recovery` | A failed training job is assessed, fixed and restarted. The platform starts this one when a job fails; you can't start it yourself. | [8](#8-train-and-evaluate) |
 
 ```mermaid
-stateDiagram-v2
-  direction LR
-  Previewed: Previewed
-  Running: Running
-  WaitingForYou: Waiting for you
-  Paused: Paused
-  Done: Done
+flowchart LR
+		P("Previewed<br/>agent_loop_preview")
+		R("Running")
+		W("Waiting for you")
+		PA("Paused")
+		OUT(["Done"])
 
-  [*] --> Previewed: agent_loop_preview
-  Previewed --> Running: agent_loop_start
-  Running --> WaitingForYou: needs a decision
-  WaitingForYou --> Running: agent_loop_message / agent_loop_approve
-  Running --> Paused: agent_loop_stop
-  Paused --> Running: agent_loop_message
-  Running --> Done: target reached
-  Running --> Done: agent_loop_complete
-  Done --> [*]
+		P -- "agent_loop_start" --> R
+		R -- "needs a decision" --> W
+		W -- "agent_loop_message<br/>or agent_loop_approve" --> R
+		R -- "agent_loop_stop" --> PA
+		PA -- "agent_loop_message" --> R
+		R -- "target reached or<br/>agent_loop_complete" --> OUT
 
-  classDef preview fill:#f1f5f9,stroke:#475569,color:#0f172a
-  classDef active fill:#dcfce7,stroke:#15803d,color:#0f172a
-  classDef waiting fill:#fef9c3,stroke:#a16207,color:#0f172a
-  classDef paused fill:#ffedd5,stroke:#c2410c,color:#0f172a
-  classDef finished fill:#dbeafe,stroke:#1d4ed8,color:#0f172a
-
-  class Previewed preview
-  class Running active
-  class WaitingForYou waiting
-  class Paused paused
-  class Done finished
+		style P stroke:#000000,fill:#E1F0D4
+		style R stroke:#000000,fill:#A3E9CC
+		style W stroke:#000000,fill:#F2F7D2
+		style PA stroke:#000000,fill:#E9A3B2
+		style OUT stroke:#000000,fill:#C2C4B3
 ```
 
 1. Preview the loop with `agent_loop_preview`, then start it with `agent_loop_start`. In review mode the assistant shows you the preview and waits for your approval before starting. When a `training-kpi` loop's only problem is an incomplete KPI, `agent_loop_kpi_interview` asks you the KPI questions in the conversation and starts the loop once you confirm.
