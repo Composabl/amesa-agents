@@ -1,44 +1,63 @@
 # Perceptor Interface
 
-`PerceptorImpl` transforms raw observations into derived features consumed by agents.
+`PerceptorImpl` transforms mapped sensor observations into derived features consumed by agents.
+
+Source: `amesa_core/amesa_core/orchestration/perceptor/perceptor_impl.py`. Both methods below are `@abc.abstractmethod`; `compute` is async, `filtered_sensor_space` is sync. `amesa perceptor validate` checks the entrypoint subclasses `PerceptorImpl`, implements both, and that `compute` is async (`amesa_core/utils/validate_util.py`, `validate_abstract_class_implementation`).
 
 ## Full scaffold
 
 ```python
-from amesa_core.orchestration.perceptor.perceptor_impl import PerceptorImpl
+import numpy as np
+
+from amesa_core import PerceptorImpl  # same class as amesa_core.orchestration.perceptor.perceptor_impl.PerceptorImpl
+
 
 class MyPerceptor(PerceptorImpl):
+    def __init__(self):
+        """Must be callable with no arguments: the runtime instantiates ``MyPerceptor()``
+        and builds a fresh instance at every episode reset."""
+        pass
+
     # required
     async def compute(self, obs_spec, obs) -> dict:
-        """Produce derived variables from raw observations.
+        """Produce derived variables from the sensor dict.
 
-        :param obs_spec: Observation space specification.
-        :param obs: Raw observation dict from the simulator.
-        :returns: Dict of derived feature key/value pairs.
+        :param obs_spec: The sim's sensor space. May be ``None`` (always ``None``
+            in ``amesa data perceive`` rollouts) — do not rely on it.
+        :param obs: Dict of orchestration sensor name -> value. In training and
+            inference each value is a numpy array (a scalar sensor has shape
+            ``(1,)``, float32), not a Python float.
+        :returns: Dict of new output key -> value.
         :rtype: dict
-        :raises NotImplementedError: if not overridden in the subclass.
         :raises Exception: if a returned key collides with a key already present
-            in the sensor space (``"Perceptor X has a key Y that already exists
-            in the sensor space dictionary"``).
-        :raises ValueError: if a returned value is ``None``; the framework calls
-            ``flatten_object_numpy`` on each value when building the observation
-            space and ``None`` is not a valid leaf (``"flatten_object_numpy: None
-            is not a valid leaf value"``).
-        :note: Returned keys should be stable and documented in component
-            metadata (``variables`` in publish config).
+            in the sensor dict (``"Perceptor X has a key Y that already exists
+            in the sensor space dictionary!"``, ``amesa_core/utils/space_utils.py``).
+        :note: Returned keys should be stable and listed in ``[amesa].variables``
+            of ``pyproject.toml`` (the platform registers them as the perceptor's
+            sensors on publish).
         """
-        return {
-            "derived_value": float(obs["a"]) - float(obs["b"]),
-        }
+        a = float(np.asarray(obs["a"]).reshape(-1)[0])
+        b = float(np.asarray(obs["b"]).reshape(-1)[0])
+        return {"derived_value": a - b}
 
-    # required
+    # required (abstract), sync
     def filtered_sensor_space(self, obs) -> list[str]:
-        """Declare which raw sensor keys this perceptor depends on.
+        """Declare which sensor keys this perceptor depends on.
 
-        :param obs: Raw observation dict (used for dynamic inspection if needed).
-        :returns: List of raw sensor key strings.
-        :rtype: list[str]
-        :raises NotImplementedError: if not overridden in the subclass.
+        :note: Required by the ABC, but no SDK training/inference path calls it on
+            perceptors today. For the platform-side input check, declare inputs in
+            ``[amesa].inputs`` of ``pyproject.toml`` as well.
         """
         return ["a", "b"]
 ```
+
+## Wrapper and registration
+
+```python
+from amesa_core import Orchestration, Perceptor
+
+orchestration = Orchestration()
+orchestration.add_perceptor(Perceptor("my-perceptor", MyPerceptor))  # pass the class, not an instance
+```
+
+`Perceptor(perceptor_name, impl_cls, description=None, config=PerceptorOptions())` — `impl_cls` may also be a local plugin path or an `http(s)` package URL (`amesa_core/orchestration/perceptor/perceptor.py`). `PerceptorOptions` fields: `remote_address`, `sensor_space`, `action_space` (all optional strings).

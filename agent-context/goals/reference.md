@@ -1,6 +1,8 @@
 # Goal Interface
 
-Goals are reusable `AgentTeacher` subclasses that provide reward/success/termination logic.
+Goals are reusable `AgentTeacher` subclasses (through the abstract `Goal` base in `amesa_core/orchestration/agent/goals/goal.py`) that provide reward/success/termination logic. All hooks are `async`.
+
+The platform instantiates your entrypoint class with **no arguments** (`agent.py:get_impl_cls_instance`, `validate_util.py`), so subclass a goal and configure it inside a zero-argument `__init__`.
 
 ## Full scaffold
 
@@ -10,7 +12,8 @@ from amesa_core.orchestration.agent.goals.maintain_goal import MaintainGoal
 from typing import Dict, List
 
 class BalanceTeacher(MaintainGoal):
-    def __init__(self):        super().__init__(
+    def __init__(self):
+        super().__init__(
             sensor="pole_theta",
             target=0.0,
             boundary_left=-0.418,
@@ -18,7 +21,7 @@ class BalanceTeacher(MaintainGoal):
             scale=1.0,
         )
 
-    # required
+    # optional (Goal default returns None; override to declare sensors)
     async def filtered_sensor_space(self) -> List[str]:
         """Declare the sensors this goal-backed teacher reads.
 
@@ -27,7 +30,7 @@ class BalanceTeacher(MaintainGoal):
         """
         return ["pole_theta", "pole_alpha", "cart_pos", "cart_vel"]
 
-    # required
+    # optional (Goal default returns action unchanged)
     async def transform_action(self, transformed_sensors: Dict, action):
         """Convert policy output to simulator action format.
 
@@ -105,28 +108,34 @@ class BalanceTeacher(MaintainGoal):
 
 ## Base `Goal` constructor parameters
 
-All goal types share these constructor parameters:
+All goal types share these constructor parameters (`Goal.__init__`; defaults shown):
 
-- `sensor`: required sensor name or `Sensor`
-- `name`: optional display name
-- `target`: number, sensor name, `Sensor`, or `None`
-- `tolerance`: success band width
-- `stop_value`: optional value-driven termination
-- `stop_steps`: optional step-driven termination
-- `boundary_left` / `boundary_right`: optional bounds used for boundary checks
-- `boundary_is_relative`: apply boundary to error (`sensor - target`) instead of raw sensor
-- `scale`: reward scaling factor
+- `sensor`: required sensor name (`str`) or `Sensor`; anything else raises `TypeError`
+- `name=""`: optional display name (used as the key in `CoordinatedGoal` individual rewards)
+- `target=None`: number, sensor name, `Sensor`, or `None` (`MaximizeGoal` defaults to `np.inf`, `MinimizeGoal` to `-np.inf`)
+- `tolerance=0.1`: must be a number; only used by the base `Goal.compute_termination`, which every concrete goal overrides — it does **not** define the success band
+- `stop_value=None`, `stop_steps=None`: only read by the base `Goal.compute_termination`; no effect on the concrete goals
+- `boundary_left=None` / `boundary_right=None`: bounds used by `is_in_boundary` (success for `ApproachGoal`, bonus/penalty for Approach/Maintain/Avoid, termination for `AvoidGoal`)
+- `boundary_is_relative=False`: apply boundary to `sensor - target` instead of the raw sensor
+- `scale=1.0`: bonus (Approach/Maintain) or penalty (Avoid) applied while in boundary; unused by Maximize/Minimize reward
+
+`AvoidGoal` adds `should_terminate_in_boundary=False`.
 
 ## Shared helper methods
 
 ```python
 async def is_in_boundary(self, transformed_sensors: dict) -> bool
-async def compute_error(self, transformed_sensors: dict) -> float
-async def get_sensor_value(self, transformed_sensors: dict) -> float
+async def compute_error(self, transformed_sensors: dict) -> float   # (sensor - target) ** 2
+async def get_sensor_value(self, transformed_sensors: dict) -> float  # sums iterables (arrays)
 async def get_target_value(self, transformed_sensors: dict) -> float
+def can_terminate(self) -> bool   # sync; True for Approach/Avoid, False for Maintain/Maximize/Minimize
+def to_json(self) -> dict          # sync; see job-json-schema.md
 ```
+
+Inherited `AgentTeacher` hooks you may still override: `compute_action_mask`, `compute_scenario_advancement`, `get_custom_action_space`, `reset` (all `async`).
 
 ## Important behaviors
 
-- `target=None` requires both boundaries and resolves to midpoint.
-- `steps_taken` increments on reward calls and is not auto-reset per episode.
+- `target=None` requires both boundaries (else `ValueError`), resolves to their midpoint, and forces `boundary_is_relative=False`.
+- `steps_taken` only increments in `Goal.compute_reward`; of the concrete goals only `MinimizeGoal` calls it, and it is never reset per episode.
+- Success/termination per goal: Approach succeeds in boundary; Avoid terminates in boundary when `should_terminate_in_boundary=True`; Maintain/Maximize/Minimize never succeed or terminate.

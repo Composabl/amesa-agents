@@ -1,5 +1,11 @@
 # AgentController Quirks
 
-- `compute_termination` is required.
-- `transform_sensors(self, sensors)` signature differs from teacher signature.
-- Controllers can also be used as selector implementations in selector workflows.
+- `compute_action`, `filtered_sensor_space`, `compute_success_criteria` and `compute_termination` are all `@abstractmethod` and must be `async def`; validation rejects a missing or non-async override (`amesa_core/.../agent/agent_controller.py`, `utils/validate_util.py` `validate_abstract_class_implementation`).
+- `transform_sensors(self, sensors)` signature differs from the teacher's (`transform_sensors(self, sensors, action)`). More importantly, **the runtime never calls a controller's `transform_sensors`**: `compute_action` receives the raw AMESA sensors (sim sensors plus perceptor outputs) directly (`amesa_train/amesa_train/v2/agent_processor_component.py`, `_compute_controller_step`; the mock-sim validator does the same, `validate_util.run_against_mock_sim`). Compute derived features inside `compute_action`, not in `transform_sensors`.
+- `compute_action` gets the **full** sensor dict, not just the keys from `filtered_sensor_space`; that list only builds the filtered observation. Every name it returns must exist on the sim (or a perceptor), otherwise validation fails with "the sim has no sensors named ...".
+- `filtered_sensor_space(self)` takes no arguments and must return a list (a bare string is rejected).
+- The controller is instantiated with **no arguments** (`agent.py` `get_impl_cls_instance`) and **re-instantiated at every episode reset** (`agent_processor_component.py` `reset`; `amesa_inference/.../agent_processor_base.py` `reset`). `__init__` must not require arguments, and instance state does not survive episodes.
+- `action` passed to `compute_action` is the controller's previous action, `None` on the first step of an episode. Returning `None` fails validation; the returned action is checked against the sim's action space.
+- `compute_success_criteria` / `compute_termination` must return a Python `bool` (validation calls them every step and rejects non-bools).
+- Controllers can also be used as selector implementations (`orchestrator-controller`): then the returned action is the index of the child to run (`agent_processor_component.py` `_compute_controller_step`, `child_index`).
+- The CLI scaffold template (`amesa_cli/template/agent_controller/.../controller.py`) declares `transform_sensors(self, sensors, action)` and a `transform_action` method; neither is part of the `AgentController` interface nor called for controllers — don't copy them.

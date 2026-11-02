@@ -2,6 +2,26 @@
 
 `AgentTeacher` is the ML-training interface for a `Agent`.
 
+Source of truth: `amesa_core/orchestration/agent/agent_teacher.py`. It is also exported at the top
+level (`from amesa_core import AgentTeacher`). Abstract (must override, as `async def`):
+`compute_reward`, `compute_success_criteria`, `transform_action`, `filtered_sensor_space`.
+`amesa agent validate` fails if one is missing or not `async` (`utils/validate_util.py`,
+`validate_abstract_class_implementation`).
+
+## Call order per step (V2 trainer, `amesa_train/v2/agent_processor_component.py` `compute_step`)
+
+1. `transform_sensors(sensors, None)` — the action argument is always `None` here.
+2. `compute_reward` / `compute_success_criteria` / `compute_termination` are called with the
+   **previous** action (the one that produced this observation). Skipped on the reset step.
+3. If success **or** termination is `True`, the episode ends on this observation and no new action
+   is computed.
+4. Otherwise `compute_action_mask(transformed_sensors, previous_action)`, policy inference, then
+   `transform_action(transformed_sensors, action)` (action already rescaled to the action-space bounds).
+
+`reset()` runs at the start of every episode; `filtered_sensor_space()`,
+`get_custom_action_space()` and `compute_scenario_advancement()` are read once when the
+observation/action schema is built. `is_compute_done()` is **not** called by the V2 training loop.
+
 ## Full scaffold
 
 ```python
@@ -53,32 +73,31 @@ class MyTeacher(AgentTeacher):
 
     # required
     async def filtered_sensor_space(self) -> List[str]:
-        """Declare which sensor keys this teacher reads.
+        """Declare which sensor keys the policy observes.
+
+        Every key must be a sim sensor or a perceptor output. Keys derived only
+        inside :meth:`transform_sensors` (like ``error`` below) are NOT part of
+        the observation space and are reported as missing.
 
         :returns: List of sensor key strings.
         :rtype: List[str]
         :raises NotImplementedError: if not overridden in the subclass.
         """
-        return ["value", "target", "error"]
+        return ["value", "target"]
 
     # optional
     async def transform_sensors(self, sensors, action) -> Dict:
         """Build derived sensor features before teacher logic runs.
 
-        Wraps each sensor listed in :meth:`filtered_sensor_space` in a
-        ``np.ndarray`` so the framework can call ``.flatten()`` when building
-        the observation vector. Also derives ``error`` so reward and success
-        logic can read a single key.
+        Sensors arrive as ``np.ndarray`` values (usually shape ``(1,)``).
+        Keep every key listed in :meth:`filtered_sensor_space` and keep its
+        shape matching the sensor space; extra derived keys (``error``) are
+        visible to reward/success logic but not to the policy.
 
-        :param sensors: Raw sensor dict from the environment.
-        :param action: Current action (may influence feature construction).
+        :param sensors: Sensor dict (sim sensors + perceptor outputs).
+        :param action: Always ``None`` when called by the trainer.
         :returns: Transformed sensor dict.
         :rtype: Dict
-        :raises AttributeError: if a key listed in :meth:`filtered_sensor_space`
-            is returned as a plain ``float`` or ``int`` rather than a
-            ``np.ndarray``; the framework calls ``.flatten()`` on those values
-            when building the observation vector
-            (``"'float' object has no attribute 'flatten'"``).
         """
         value = float(sensors["value"])
         target = float(sensors["target"])
@@ -112,7 +131,8 @@ class MyTeacher(AgentTeacher):
         :param transformed_sensors: Post-:meth:`transform_sensors` sensor dict.
         :type transformed_sensors: Dict
         :param action: Current action.
-        :returns: Boolean mask of length ``n_actions`` (``Discrete`` example).
+        :returns: Boolean mask of length ``n_actions`` (``Discrete`` example),
+            or ``None`` (the default) for no mask.
         :rtype: List[bool]
         :raises ValueError: if the returned mask length differs from the action
             space size (e.g., ``n`` for ``Discrete(n)``, ``N*2`` for
@@ -138,12 +158,29 @@ class MyTeacher(AgentTeacher):
         return None  # replace with e.g. Box(low=-1, high=1, shape=(1,))
 
     # optional
-    async def is_compute_done(self, transformed_sensors: Dict, action) -> bool:
-        """Combined done signal for the training loop.
+    async def compute_scenario_advancement(self) -> Dict:
+        """When a scenario is mastered and training moves to the next one.
 
-        Returns ``True`` when both :meth:`compute_success_criteria` **and**
-        :meth:`compute_termination` return ``True``. Override only when you
-        need custom gate logic beyond their conjunction.
+        Default: success rate >= 0.8 over the last 100 completed episodes.
+        ``amesa agent validate`` checks the returned dict: only these two
+        keys, ``0 < scenario_success_rate <= 1``, ``scenario_success_window``
+        an ``int > 0``; invalid values are dropped for the defaults at
+        training time (``networking/remote_agent/curriculum.py``).
+        """
+        return {"scenario_success_rate": 0.8, "scenario_success_window": 100}
+
+    # optional
+    async def reset(self):
+        """Called at the start of each episode; clear per-episode state here."""
+        pass
+
+    # optional (legacy)
+    async def is_compute_done(self, transformed_sensors: Dict, action) -> bool:
+        """Combined done signal (legacy).
+
+        The base returns ``True`` only when both :meth:`compute_success_criteria`
+        **and** :meth:`compute_termination` are ``True``. The V2 trainer does
+        not call it: it ends the episode when either one is ``True``.
 
         :param transformed_sensors: Post-:meth:`transform_sensors` sensor dict.
         :type transformed_sensors: Dict
@@ -160,7 +197,7 @@ class MyTeacher(AgentTeacher):
     def add_scenario(self, scenario) -> None:
         """Associate a scenario with this teacher.
 
-        Called by the framework before training begins. Stores ``scenario``
+        Stores ``scenario``
         on ``self.scenario``. Override to react to scenario changes at setup
         time; most teachers can use the default.
 

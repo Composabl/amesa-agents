@@ -20,12 +20,16 @@ class LandingGoal(CoordinatedGoal):
         descent_velocity  (float): Downward speed in m/s (positive = descending).
                                    Must stay below 5.0 m/s for a safe landing.
 
-    Success: altitude within 0.5 m of 0.0 (ApproachGoal boundary satisfied).
-    Termination: descent_velocity >= 5.0 m/s (AvoidGoal boundary breached
-                 with should_terminate_in_boundary=True).
+    Success: altitude inside [-0.5, 0.5] (ApproachGoal.compute_success_criteria
+             is is_in_boundary; `tolerance` is not used for success).
+    Termination: descent_velocity inside the AvoidGoal boundary [5.0, 100.0]
+                 (the region to avoid) with should_terminate_in_boundary=True.
 
-    Scale weights: approach_altitude gets 2× weight — reaching the pad is
-    the primary objective; avoiding a crash is a hard constraint via termination.
+    Weights: approach_altitude gets 2x weight in the AND (weighted-sum) reward;
+    avoiding a crash is a hard constraint via termination.
+
+    The teacher is instantiated with no arguments by the platform, so all goal
+    configuration lives in __init__.
 
     Usage:
         agent = Agent("landing", LandingGoal, training_cycles=150)
@@ -36,20 +40,22 @@ class LandingGoal(CoordinatedGoal):
             sensor="altitude",
             name="reach landing pad",
             target=0.0,
-            tolerance=0.5,
             boundary_left=-0.5,
             boundary_right=0.5,
             scale=2.0,
         )
 
+        # AvoidGoal boundaries mark the region to AVOID: being inside them
+        # subtracts `scale` from the reward and, with
+        # should_terminate_in_boundary=True, ends the episode.
         avoid_crash = AvoidGoal(
             sensor="descent_velocity",
             name="avoid hard landing",
-            target=0.0,
-            boundary_left=0.0,
-            boundary_right=5.0,
+            target=5.0,
+            boundary_left=5.0,
+            boundary_right=100.0,
             scale=1.0,
-            should_terminate_in_boundary=False,   # reward penalty, not hard stop
+            should_terminate_in_boundary=True,
         )
 
         super().__init__(

@@ -1,6 +1,12 @@
 from typing import Dict, List
 
+import numpy as np
 from amesa_core import AgentTeacher
+
+
+def _scalar(value) -> float:
+    """Sensor values arrive as one-element arrays; read them as a float."""
+    return float(np.asarray(value, dtype=float).reshape(-1)[0])
 
 
 class CounterOrchestratorTeacher(AgentTeacher):
@@ -14,29 +20,32 @@ class CounterOrchestratorTeacher(AgentTeacher):
     Sensors expected from the sim:
         demand (float): current operating demand (0..1)
         error  (float): absolute process error
+
+    The action is the index of the child that acts. By default an orchestrator
+    runs its children in fixed order (child 0 first, then stay or move to the
+    next); deploy it with sequenceType "variable" to let it switch freely.
     """
 
     async def compute_reward(self, transformed_sensors: Dict, action, sim_reward: float) -> float:
-        demand = float(transformed_sensors["demand"])
-        error = float(transformed_sensors["error"])
+        demand = _scalar(transformed_sensors["demand"])
+        error = _scalar(transformed_sensors["error"])
 
         # Favor high demand with low error.
         reward = float(sim_reward) - error + (0.2 * demand)
         return float(reward)
 
     async def compute_success_criteria(self, transformed_sensors: Dict, action) -> bool:
-        error = float(transformed_sensors["error"])
+        error = _scalar(transformed_sensors["error"])
         return bool(error < 0.05)
 
     async def compute_termination(self, transformed_sensors: Dict, action) -> bool:
-        error = float(transformed_sensors["error"])
+        error = _scalar(transformed_sensors["error"])
         return bool(error > 5.0)
 
     async def transform_action(self, transformed_sensors: Dict, action):
-        # Orchestrator actions must resolve to a valid child index.
-        if isinstance(action, (list, tuple)):
-            action = action[0]
-        return int(action)
+        # Orchestrator actions must resolve to a valid child index. The sampled
+        # action may be a plain int, a list or a one-element array.
+        return int(np.asarray(action).reshape(-1)[0])
 
     async def filtered_sensor_space(self) -> List[str]:
         return ["demand", "error"]
@@ -45,7 +54,7 @@ class CounterOrchestratorTeacher(AgentTeacher):
         return sensors
 
     async def compute_action_mask(self, transformed_sensors: Dict, action):
-        demand = float(transformed_sensors["demand"])
+        demand = _scalar(transformed_sensors["demand"])
 
         # Two children: [stabilize, recover]
         # Under high demand, force stabilize; otherwise allow both.

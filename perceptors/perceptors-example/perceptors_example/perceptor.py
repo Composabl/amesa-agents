@@ -1,6 +1,13 @@
 from typing import Dict, List
 
+import numpy as np
+
 from amesa_core import PerceptorImpl
+
+
+def _scalar(value) -> float:
+    """Sensors arrive as numpy arrays (a scalar sensor has shape (1,)); unwrap to a float."""
+    return float(np.asarray(value, dtype=np.float64).reshape(-1)[0])
 
 
 class KinematicsPerceptor(PerceptorImpl):
@@ -8,35 +15,31 @@ class KinematicsPerceptor(PerceptorImpl):
     Derives velocity and acceleration from consecutive position readings.
 
     Reads:
-        position (float): Raw position from the sim (metres).
+        position (float): Position sensor (metres).
         dt       (float): Elapsed time since the last step (seconds).
-                          If the sim does not provide dt, a fixed timestep
-                          of 0.05 s is assumed.
+                          If the orchestration has no dt sensor, a fixed
+                          timestep of 0.05 s is assumed.
 
     Produces:
         velocity     (float): First derivative of position (m/s).
         acceleration (float): Second derivative of position (m/s²).
 
     Both outputs are 0.0 on the first step of each episode because no
-    prior position is available. State persists across steps within an
-    episode but is NOT reset between episodes — reset it explicitly in
-    compute() when you detect a new episode (e.g. step_count == 0).
+    prior position is available. The runtime creates a fresh instance
+    (calls __init__ again) at every episode reset, so state never leaks
+    across episodes.
     """
 
-    DEFAULT_DT = 0.05  # seconds, used when the sim does not supply dt
+    DEFAULT_DT = 0.05  # seconds, used when there is no dt sensor
 
     def __init__(self, *args, **kwargs):
+        super().__init__()
         self.prev_position: float | None = None
         self.prev_velocity: float | None = None
 
-    async def compute(self, obs_spec, obs) -> Dict:
-        position = float(obs["position"])
-        dt = float(obs.get("dt", self.DEFAULT_DT))
-
-        # Reset state at the start of a new episode.
-        if obs.get("step_count", 1) == 0:
-            self.prev_position = None
-            self.prev_velocity = None
+    async def compute(self, obs_spec, obs) -> Dict[str, float]:
+        position = _scalar(obs["position"])
+        dt = _scalar(obs["dt"]) if "dt" in obs else self.DEFAULT_DT
 
         if self.prev_position is None:
             velocity = 0.0
