@@ -51,11 +51,54 @@ This repo's [`.mcp.json`](.mcp.json) already configures the AMESA MCP server as 
 
 Every tool acts as you, with your organization's permissions.
 
-### Have a compute node online
+### Connect an AMESA Compute Node
 
-Data, simulator and validation jobs run on a compute node connected to your organization, and training can also run on AMESA's managed compute. Before you start, ask your assistant to run `cluster_list` and `cluster_health_get` to confirm a node is connected.
+Data, simulator and validation jobs run on an AMESA Compute node connected to your organization, and training can also run on AMESA's managed compute. A compute node is a small set of Docker containers that runs on your own machine and registers with the AMESA platform.
 
-To add a machine of your own, `compute_enrollment_issue` (also available as `cluster_create_local`) issues a single-use enrollment code: run the command it returns on that machine within 15 minutes. The node is private to you unless you share it with your organization.
+#### Prerequisites
+
+- **Linux or macOS.** On Windows, use WSL (Windows Subsystem for Linux) and run every command below inside your WSL shell.
+- **Python 3.11** (3.10 is also supported).
+- **Docker**, installed and running. The node runs in containers, and `amesa compute connect` stops if the Docker daemon isn't running.
+- Ports **8000** (compute service) and **8888** (file storage) free on the machine.
+- An AMESA account.
+
+#### Set up the node
+
+1. Install AMESA. The `amesa` Python package includes AMESA Compute and the `amesa` CLI. Install it in a virtual environment:
+
+   ```bash
+   python3.11 -m venv .venv
+   source .venv/bin/activate
+   pip install amesa
+   ```
+
+   Check the installation with `amesa version`.
+
+2. Sign in to AMESA:
+
+   ```bash
+   amesa login
+   ```
+
+   The CLI opens your browser on the AMESA sign-in page. If it doesn't open, copy the URL the CLI prints. Sign in and grant the CLI access within about 60 seconds; if the step times out, run `amesa login` again.
+
+3. Connect the compute node:
+
+   ```bash
+   amesa compute connect
+   ```
+
+   The CLI checks Docker and the ports, asks you to pick your organization and name the node (default `<os-user>-local`), pulls the node images and starts the node in the background. It then registers the node with the platform. Reconnecting later reuses the same registration.
+
+4. Ask your assistant to run `cluster_list` and `cluster_health_get` to confirm the node is online. From the terminal, `amesa compute status` shows the node, its organization and its jobs.
+
+The node is private to you by default: only you, and assistants acting for you, can see it, run jobs on it or use the datasets staged on it. Add `--public` to `amesa compute connect` to share it with your organization. Every connect applies the setting, so reconnecting without `--public` makes the node private again.
+
+When you're done, `amesa compute disconnect` stops the node. Its registration is kept, so your staged datasets are still there on the next `amesa compute connect`.
+
+> [!TIP]
+> **Connecting without a browser login.** Your assistant can issue a single-use enrollment code with `compute_enrollment_issue` (also available as `cluster_create_local`). Run the command it returns, `amesa compute connect --enroll <code>`, on the machine within 15 minutes. This is useful for a remote server where you can't open a browser.
 
 > [!TIP]
 > **Finding a tool by intent.** If you're not sure which tool fits a task, the assistant can search the catalog with `mcp_tools_search`, which returns each match's description and arguments, and call one with `mcp_tools_call`. `mcp_tools_read` runs up to eight read-only tools in one round trip. `platform_methodology_search` and `platform_methodology_fetch` return AMESA's own guidance on how to approach a problem.
@@ -93,7 +136,28 @@ Start from historian exports or other time-series CSV data. Each column is a sen
 
 | You bring | You end with |
 | --- | --- |
-| A time-series CSV staged on your compute node | A dataset with a data score and clear column roles |
+| A time-series CSV and a connected compute node | A dataset with a data score and clear column roles |
+
+#### Stage the dataset first
+
+Before any data operation in this section, stage your CSV on your connected compute node with the `amesa` CLI you installed in [Connect an AMESA Compute Node](#connect-an-amesa-compute-node). Apart from setting up the node, this is the only CLI command you need before you use the MCP tools: the data, simulator and clustering tools all work on staged datasets.
+
+Run it on the machine where the compute node is running:
+
+```bash
+amesa data stage ./reactor.csv --name reactor
+```
+
+The CLI uploads the CSV to the node, cleans it and registers it with the platform. Only a pointer and the dataset's schema go to the platform; the data stays on your node. The CLI asks:
+
+1. **Dataset name**, unless you passed `--name`. It defaults to the file name.
+2. **Does this CSV have a units row?** Answer Yes if the first data row holds units, such as `,,C,kPa`, rather than measurements.
+3. **What is a row?** *Time-series* for moments of one process, or *Configuration-based* for independent samples such as recipes or tests.
+4. **Column roles**: sensor, action, replica or datetime. Columns named with an `s_`, `a_` or `r_` prefix are assigned sensor, action or replica automatically. At least one column must be a sensor, and training a simulator also needs at least one action. If you pick a datetime column, the rows are sorted by it.
+
+You can change the roles later with `amesa_data_assign`. Staging the same CSV again after it was removed from the node reattaches the original dataset.
+
+#### Work with the staged dataset
 
 1. Find the staged dataset with `dataset_list`, which shows its columns and their current roles.
 2. Profile it. `amesa_data_stats` describes each column, `amesa_data_integrity` scores empty, infinite, non-numeric, outlier and flat values, and `amesa_data_score` scores how strongly the sensors respond to the actions.
