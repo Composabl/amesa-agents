@@ -1,5 +1,8 @@
 <p align="center">
-  <img src="assets/amesa-wordmark.gif" alt="AMESA" width="600">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/amesa-wordmark-dark.webp">
+    <img src="assets/amesa-wordmark-light.webp" alt="AMESA" width="460">
+  </picture>
 </p>
 
 <h1 align="center">From Dataset to Autonomous Operational Agents</h1>
