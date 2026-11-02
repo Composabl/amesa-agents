@@ -1,58 +1,33 @@
 # AMESA MCP Tools: From a Dataset to Autonomous Operational Agents
 
+![AMESA Autonomy Studio overview](assets/amesa-autonomy-studio-overview.gif)
+
 The AMESA MCP server lets an AI assistant such as Claude run the whole AMESA platform for you. It turns plant data into a simulator, builds and trains agents against that simulator, and leaves you with agents that run your process.
 
-This README walks the lifecycle stage by stage and names the tools used at each step. The full list of tools is in the **[tool index](doc/tools.md)**.
+This README walks the platform lifecycle stage by stage and lists every tool, with its purpose, under the stage it belongs to. Tool availability depends on your organization's permissions. Use your browser's find (Ctrl+F / Cmd+F) to look up a tool by name or purpose.
 
 **181** tools · **9** lifecycle stages · **7** autonomous loop goals
 
-```mermaid
-flowchart LR
-		S1("1 · Set up<br/>use case")
-		S2("2 · Prepare data<br/>scored dataset")
-		S3("3 · Fit simulator<br/>validated DDM")
-		S4("4 · Capture knowledge<br/>domain graph")
-		S5("5 · Design agents<br/>decomposition")
-		S6("6 · Build components<br/>skills, perceptors")
-		S7("7 · Assemble<br/>orchestration")
-		S8("8 · Train and evaluate<br/>trained agents")
-		S9(["9 · Operate<br/>agents in service"])
-
-		S1 --> S2 --> S3 --> S4 --> S5 --> S6 --> S7 --> S8 --> S9
-
-		style S1 stroke:#000000,fill:#E1F0D4
-		style S2 stroke:#000000,fill:#A3E9CC
-		style S3 stroke:#000000,fill:#A3E9CC
-		style S4 stroke:#000000,fill:#DBCDF8
-		style S5 stroke:#000000,fill:#DBCDF8
-		style S6 stroke:#000000,fill:#DBCDF8
-		style S7 stroke:#000000,fill:#D4EFF0
-		style S8 stroke:#000000,fill:#D4EFF0
-		style S9 stroke:#000000,fill:#C2C4B3
-```
-
-Colors group the stages by the platform's journey stage: setup, data, knowledge, training and complete.
-
 ---
 
-## Table of Contents
+## Contents
 
-- [Before you begin](#before-you-begin)
-- **Lifecycle**
-  1. [Set up the use case](#1-set-up-the-use-case)
-  2. [Prepare the data](#2-prepare-the-data)
-  3. [Fit a simulator](#3-fit-a-simulator)
-  4. [Capture domain knowledge](#4-capture-domain-knowledge)
-  5. [Design the agent system](#5-design-the-agent-system)
-  6. [Build the components](#6-build-the-components)
-  7. [Assemble the orchestration](#7-assemble-the-orchestration)
-  8. [Train and evaluate](#8-train-and-evaluate)
-  9. [Operate the agents](#9-operate-the-agents)
-- **Reference**
-  - [Autonomous loops](#autonomous-loops)
-  - [Jobs and diagnostics](#jobs-and-diagnostics)
-  - [Tool index](doc/tools.md)
-- [Repo Structure](#repo-structure)
+| Section | Tools |
+| --- | ---: |
+| [Before you begin](#before-you-begin) | 9 |
+| [1. Set up the use case](#1-set-up-the-use-case) | 11 |
+| [2. Prepare the data](#2-prepare-the-data) | 10 |
+| [3. Fit a simulator](#3-fit-a-simulator) | 24 |
+| [4. Capture domain knowledge](#4-capture-domain-knowledge) | 9 |
+| [5. Design the agent system](#5-design-the-agent-system) | 9 |
+| [6. Build the components](#6-build-the-components) | 34 |
+| [7. Assemble the orchestration](#7-assemble-the-orchestration) | 17 |
+| [8. Train and evaluate](#8-train-and-evaluate) | 27 |
+| [9. Operate the agents](#9-operate-the-agents) | 15 |
+| [Autonomous loops](#autonomous-loops) | 12 |
+| [Jobs and diagnostics](#jobs-and-diagnostics) | 4 |
+| **Total** | **181** |
+| [Repo Structure](#repo-structure) | |
 
 ---
 
@@ -118,6 +93,20 @@ When you're done, `amesa compute disconnect` stops the node. Its registration is
 > [!TIP]
 > **Finding a tool by intent.** If you're not sure which tool fits a task, the assistant can search the catalog with `mcp_tools_search`, which returns each match's description and arguments, and call one with `mcp_tools_call`. `mcp_tools_read` runs up to eight read-only tools in one round trip. `platform_methodology_search` and `platform_methodology_fetch` return AMESA's own guidance on how to approach a problem.
 
+### Tools (9)
+
+| Tool | Purpose |
+| --- | --- |
+| `mcp_tools_search` | Search the tool catalog by intent; returns names, descriptions and arguments. |
+| `mcp_tools_read` | Run up to eight read-only tools in one round trip. |
+| `mcp_tools_call` | Call a tool found through the catalog. |
+| `platform_methodology_search` | Search AMESA's platform and SDK documentation. |
+| `platform_methodology_fetch` | Read one methodology document in full. |
+| `cluster_list` | List your organization's compute clusters and whether each is connected. |
+| `cluster_health_get` | Check whether a cluster is online and healthy. |
+| `cluster_create_local` | Issue a single-use code to enroll a local machine (same as compute_enrollment_issue). |
+| `compute_enrollment_issue` | Issue a single-use code that enrolls a new local compute node. |
+
 ---
 
 ## 1. Set up the use case
@@ -134,12 +123,21 @@ A *use case*, also called a project, holds everything for one process: its data,
 2. Define what success means. `kpi_settings_get` and `kpi_settings_update` read and set the KPI that training is measured against, for example yield, energy per tonne or off-spec time, and the ROI that converts it into money. An update replaces the saved settings as a whole.
 3. Track progress with `use_case_journey_get`. When a stage is finished, `use_case_journey_advance` records it. `assistant_handoff` hands the conversation to the platform assistant that leads the next stage.
 
-<details>
-<summary>Tools in this stage (11)</summary>
+### Tools (11)
 
-`organization_list` · `organization_get` · `use_case_list` · `use_case_get` · `use_case_brief_get` · `use_case_update` · `kpi_settings_get` · `kpi_settings_update` · `use_case_journey_get` · `use_case_journey_advance` · `assistant_handoff`
-
-</details>
+| Tool | Purpose |
+| --- | --- |
+| `organization_list` | List the organizations you belong to. |
+| `organization_get` | Find an organization's ID by its exact name. |
+| `use_case_list` | List use cases (projects). |
+| `use_case_get` | Read a use case in full. |
+| `use_case_brief_get` | Read a short overview of a use case. |
+| `use_case_update` | Change a use case's name, description or settings. |
+| `kpi_settings_get` | Read the KPI and ROI settings training is measured against. |
+| `kpi_settings_update` | Set the KPI and ROI settings (replaces them as a whole). |
+| `use_case_journey_get` | See which lifecycle stage the use case is in. |
+| `use_case_journey_advance` | Record that the use case moved to a new stage. |
+| `assistant_handoff` | Hand the conversation to the assistant that leads another stage. |
 
 ---
 
@@ -190,12 +188,20 @@ You can change the roles later with `amesa_data_assign`. Staging the same CSV ag
 amesa_data_score → amesa_data_suggest (suggest) → amesa_data_suggest (apply)
 ```
 
-<details>
-<summary>Tools in this stage (10)</summary>
+### Tools (10)
 
-`dataset_list` · `amesa_data_stats` · `amesa_data_integrity` · `amesa_data_score` · `amesa_data_assign` · `amesa_data_suggest` · `amesa_data_prune` · `amesa_data_split` · `amesa_data_perceive` · `amesa_data_kpi`
-
-</details>
+| Tool | Purpose |
+| --- | --- |
+| `dataset_list` | List staged datasets with their columns and roles. |
+| `amesa_data_stats` | Describe each column of a dataset. |
+| `amesa_data_integrity` | Score empty, infinite, non-numeric, outlier and flat values. |
+| `amesa_data_score` | Score how strongly the sensors respond to the actions. |
+| `amesa_data_assign` | Set columns as sensor, replica, action or ignored. |
+| `amesa_data_suggest` | Rank columns by how much they respond and propose a focused set. |
+| `amesa_data_prune` | Drop outlier values into a new copy of the dataset. |
+| `amesa_data_split` | Mark episode boundaries with rules and write the split dataset. |
+| `amesa_data_perceive` | Run a perceptor over a dataset and write its outputs as new columns. |
+| `amesa_data_kpi` | Derive a KPI benchmark from a data column and recommend the KPI. |
 
 ---
 
@@ -218,12 +224,34 @@ Agents learn by practicing on a simulator, never on the live plant. AMESA trains
 > [!NOTE]
 > **Mappings come from the simulator build.** Only a variable's mapped name can change. To make a column a sensor, an action or ignored, change the dataset's roles with `amesa_data_assign` and train a new build.
 
-<details>
-<summary>Tools in this stage (24)</summary>
+### Tools (24)
 
-`amesa_sim_train` · `amesa_sim_analyze` · `amesa_sim_validate` · `simulator_list` · `simulator_retrieve` · `simulator_score_get` · `simulator_validation_get` · `simulator_variable_fidelity_get` · `simulator_relationship_get` · `simulator_job_list` · `simulator_job_status` · `sim_publish_metadata` · `sim_publish_code` · `sim_confirm_upload` · `mapping_list` · `mapping_update` · `mapping_dependents_list` · `amesa_cluster_create` · `amesa_cluster_convert` · `amesa_cluster_sims` · `activity_cluster_get` · `activity_cluster_upload` · `use_case_simulator_assign` · `use_case_sensors_get`
-
-</details>
+| Tool | Purpose |
+| --- | --- |
+| `amesa_sim_train` | Train a data-driven simulator from a dataset. |
+| `amesa_sim_analyze` | Roll a trained simulator out over its dataset's episodes; the platform scores it. |
+| `amesa_sim_validate` | Validate a code simulator you published (not a data-driven one). |
+| `simulator_list` | List simulators and their latest builds. |
+| `simulator_retrieve` | Get a simulator build's image reference and whether it is ready. |
+| `simulator_score_get` | Read a simulator's score. |
+| `simulator_validation_get` | Read one simulator validation run. |
+| `simulator_variable_fidelity_get` | Read one variable's result from a validation run. |
+| `simulator_relationship_get` | Read how one action relates to one sensor in a validation run (not causal). |
+| `simulator_job_list` | List simulator, data and clustering jobs. |
+| `simulator_job_status` | Poll a running simulator job. |
+| `sim_publish_metadata` | Register your own simulator. |
+| `sim_publish_code` | Get the upload URL for your simulator's code. |
+| `sim_confirm_upload` | Confirm a simulator code upload and start its build. |
+| `mapping_list` | List a simulator build's sensor and action mappings. |
+| `mapping_update` | Rename variables (only the mapped name can change). |
+| `mapping_dependents_list` | See what still uses a variable's name. |
+| `amesa_cluster_create` | Find operating regimes in a dataset. |
+| `amesa_cluster_convert` | Turn found regimes into scenario definitions. |
+| `amesa_cluster_sims` | Train one simulator per regime. |
+| `activity_cluster_get` | Read the regimes of a variant simulator. |
+| `activity_cluster_upload` | Store clustering results as variant simulators and scenarios. |
+| `use_case_simulator_assign` | Attach a simulator to the use case. |
+| `use_case_sensors_get` | List the use case's sensors and actions. |
 
 ---
 
@@ -245,12 +273,19 @@ Good agents are built on how your experts run the process: operating modes, limi
 > [!TIP]
 > **Your own words count as evidence.** When you state a fact in conversation, such as "the jacket outlet must stay below 350 K", the assistant can record it as confirmed with you as the source. Facts the assistant infers from documents stay proposed until you or the evidence confirm them.
 
-<details>
-<summary>Tools in this stage (9, plus the methodology tools)</summary>
+### Tools (9)
 
-`use_case_document_upload` · `use_case_document_ingest` · `use_case_document_list` · `use_case_document_delete` · `use_case_search` · `use_case_graph_get` · `use_case_graph_query` · `use_case_graph_edit` · `use_case_graph_review` · `platform_methodology_search` · `platform_methodology_fetch`
-
-</details>
+| Tool | Purpose |
+| --- | --- |
+| `use_case_document_upload` | Upload a reference document. |
+| `use_case_document_ingest` | Read a document into the knowledge base. |
+| `use_case_document_list` | List the use case's documents. |
+| `use_case_document_delete` | Remove a document. |
+| `use_case_search` | Search the use case's documents, knowledge and past conversations, with citations. |
+| `use_case_graph_get` | Read the domain graph, an entity's neighborhood, or its gaps. |
+| `use_case_graph_query` | Ask targeted questions of the domain graph. |
+| `use_case_graph_edit` | Add, link, merge or correct entities and facts. |
+| `use_case_graph_review` | Confirm or retract proposed items and settle contradictions. |
 
 ---
 
@@ -289,12 +324,19 @@ flowchart TB
 
 Reusable shapes are saved as *orchestration patterns*: `orchestration_pattern_create`, `orchestration_pattern_list`, `orchestration_pattern_get`, `orchestration_pattern_update`, and `orchestration_pattern_apply` to stamp a pattern onto an orchestration.
 
-<details>
-<summary>Tools in this stage (9)</summary>
+### Tools (9)
 
-`decomposition_create` · `decomposition_edit` · `decomposition_get` · `decomposition_promote` · `orchestration_pattern_create` · `orchestration_pattern_list` · `orchestration_pattern_get` · `orchestration_pattern_update` · `orchestration_pattern_apply`
-
-</details>
+| Tool | Purpose |
+| --- | --- |
+| `decomposition_create` | Draft the tree of orchestrators and skills. |
+| `decomposition_edit` | Refine a draft decomposition. |
+| `decomposition_get` | Read a decomposition and its warnings. |
+| `decomposition_promote` | Create real components and an orchestration from an approved draft. |
+| `orchestration_pattern_create` | Save a reusable orchestration shape. |
+| `orchestration_pattern_list` | List saved patterns. |
+| `orchestration_pattern_get` | Read one pattern. |
+| `orchestration_pattern_update` | Change a pattern. |
+| `orchestration_pattern_apply` | Apply a pattern to an orchestration. |
 
 ---
 
@@ -328,12 +370,44 @@ Components are small Python packages that you publish as versions. Each new vers
 > [!IMPORTANT]
 > **Guidance overrides the code's hooks.** Only teachers take guidance; a controller is refused. A teacher with code takes it too: in training, reward clauses (Minimize, Maximize, Maintain, Approach, Avoid) replace `compute_reward`, Succeed replaces `compute_success_criteria` and Terminate replaces `compute_termination`, when JSON teacher mixing is enabled. Hooks without guidance keep using the code.
 
-<details>
-<summary>Tools in this stage (34)</summary>
+### Tools (34)
 
-`get_artifact_scaffold` · `submit_code_file` · `perceptor_list` · `perceptor_get` · `perceptor_create` · `perceptor_update` · `perceptor_implementation_publish` · `perceptor_confirm_upload` · `amesa_perceptor_validate` · `operational_agent_list` · `operational_agent_get` · `operational_agent_retrieve` · `operational_agent_create` · `operational_agent_create_template` · `operational_agent_update` · `operational_agent_implementation_publish` · `operational_agent_confirm_upload` · `amesa_agent_validate` · `orchestrator_list` · `orchestrator_get` · `orchestrator_create` · `orchestrator_update` · `orchestrator_implementation_publish` · `orchestrator_confirm_upload` · `amesa_orchestrator_validate` · `component_validation_status` · `component_source_get` · `guidance_list` · `guidance_get` · `guidance_create` · `guidance_update` · `guidance_publish_to_agent` · `guidance_agent_get` · `guidance_remove_from_agent`
-
-</details>
+| Tool | Purpose |
+| --- | --- |
+| `submit_code_file` | Publish files the assistant wrote as a new version of a skill, perceptor or orchestrator. |
+| `get_artifact_scaffold` | Get the runtime contract and a minimal example for a component type. |
+| `perceptor_list` | List perceptors. |
+| `perceptor_get` | Read a perceptor and its versions. |
+| `perceptor_create` | Create a perceptor and its first version. |
+| `perceptor_update` | Rename or describe a perceptor. |
+| `perceptor_implementation_publish` | Publish a new perceptor version. |
+| `perceptor_confirm_upload` | Confirm a perceptor code upload. |
+| `amesa_perceptor_validate` | Validate a perceptor version. |
+| `operational_agent_list` | List skills (teachers, controllers, coaches). |
+| `operational_agent_get` | Read a skill and its versions. |
+| `operational_agent_retrieve` | Get every file of one skill version. |
+| `operational_agent_create` | Create a skill and its first version. |
+| `operational_agent_create_template` | Create a teacher from the blank template; no upload, review, approval or validation needed. |
+| `operational_agent_update` | Rename or describe a skill. |
+| `operational_agent_implementation_publish` | Publish a new skill version. |
+| `operational_agent_confirm_upload` | Confirm a skill code upload. |
+| `amesa_agent_validate` | Validate a skill version, including a run against a mock simulator. |
+| `orchestrator_list` | List orchestrators. |
+| `orchestrator_get` | Read an orchestrator and its versions. |
+| `orchestrator_create` | Create an orchestrator and its first version. |
+| `orchestrator_update` | Rename or describe an orchestrator. |
+| `orchestrator_implementation_publish` | Publish a new orchestrator version. |
+| `orchestrator_confirm_upload` | Confirm an orchestrator code upload. |
+| `amesa_orchestrator_validate` | Validate an orchestrator version. |
+| `component_validation_status` | Follow a validation run started by an amesa_*_validate tool. |
+| `component_source_get` | Read the code of a published version. |
+| `guidance_list` | List guidance items in the library. |
+| `guidance_get` | Read one guidance item. |
+| `guidance_create` | Create a goal, constraint, success criterion or reward. |
+| `guidance_update` | Change a guidance item. |
+| `guidance_publish_to_agent` | Publish guidance to a teacher as a new version. |
+| `guidance_agent_get` | Read the guidance clauses on a skill version. |
+| `guidance_remove_from_agent` | Remove guidance clauses from a skill in a new version. |
 
 ---
 
@@ -352,12 +426,27 @@ An *orchestration* is the deployable agent system. It combines perceptors, orche
 3. Wire it. `orchestration_workflow_deploy` replaces the whole workflow in one step: root orchestrators, their skills, the perceptors and the scenarios assigned to each. `orchestration_component` changes one part. Read the result back with `orchestration_get_workflow`.
 4. Run `orchestration_prepare_for_training`, which repairs scenario selections that no longer match the use case's scenarios. It doesn't start training.
 
-<details>
-<summary>Tools in this stage (17)</summary>
+### Tools (17)
 
-`scenario_list` · `scenario_get` · `scenario_create` · `scenario_update` · `scenario_flow_get` · `scenario_flow_member_add` · `scenario_flow_member_remove` · `scenario_flow_edge_create` · `scenario_flow_graph_import` · `clustering_scenarios_publish` · `orchestration_list` · `orchestration_create` · `orchestration_duplicate` · `orchestration_component` · `orchestration_workflow_deploy` · `orchestration_get_workflow` · `orchestration_prepare_for_training`
-
-</details>
+| Tool | Purpose |
+| --- | --- |
+| `scenario_list` | List scenarios. |
+| `scenario_get` | Read one scenario. |
+| `scenario_create` | Define a training scenario. |
+| `scenario_update` | Change a scenario. |
+| `scenario_flow_get` | Read the scenario flow graph. |
+| `scenario_flow_member_add` | Add a scenario to the flow. |
+| `scenario_flow_member_remove` | Remove a scenario from the flow. |
+| `scenario_flow_edge_create` | Connect two scenarios in the flow. |
+| `scenario_flow_graph_import` | Import a whole scenario flow at once. |
+| `clustering_scenarios_publish` | Publish regime-based scenarios into the use case. |
+| `orchestration_list` | List orchestrations. |
+| `orchestration_create` | Create an orchestration. |
+| `orchestration_duplicate` | Copy an orchestration exactly. |
+| `orchestration_component` | Add or remove one component. |
+| `orchestration_workflow_deploy` | Replace the whole workflow in one step. |
+| `orchestration_get_workflow` | Read the current workflow. |
+| `orchestration_prepare_for_training` | Repair invalid scenario selections before training. |
 
 ---
 
@@ -377,12 +466,37 @@ Training runs on your compute cluster. Every finished training session is benchm
 4. Look at the history. `historian_query` returns the time series recorded during a run, and `training_history_get` returns the training curve.
 5. Share the results. The platform generates training, benchmark, historian and simulator reports by itself; `report_generate` makes sure one exists and reports its status. `report_create` saves a report the assistant wrote. `skill_report_candidates` lists the scenario and skill pairs a training report can cover.
 
-<details>
-<summary>Tools in this stage (27)</summary>
+### Tools (27)
 
-`training_capacity_probe` · `training_cycle_allocation_get` · `training_job_submit` · `training_job_stop` · `training_job_restart` · `training_job_submission_get` · `training_job_logs_get` · `training_session_list` · `training_session_get` · `training_skill_result_get` · `training_history_get` · `training_history_upload` · `benchmark_list` · `benchmark_summary` · `benchmark_describe` · `benchmark_query` · `benchmark_compare` · `benchmark_episode_trace` · `benchmark_artifact_list` · `benchmark_report_skill_get` · `historian_describe` · `historian_query` · `report_create` · `report_generate` · `report_list` · `report_get` · `skill_report_candidates`
-
-</details>
+| Tool | Purpose |
+| --- | --- |
+| `training_capacity_probe` | Check whether the cluster can take a training run. |
+| `training_cycle_allocation_get` | Get the suggested training cycles for each agent. |
+| `training_job_submit` | Start a training run. |
+| `training_job_stop` | Stop a training run. |
+| `training_job_restart` | Start a failed run again with the same parameters. |
+| `training_job_submission_get` | Dry-run a training submission without starting it. |
+| `training_job_logs_get` | Read a run's logs. |
+| `training_session_list` | List training sessions. |
+| `training_session_get` | Read a session's progress and results. |
+| `training_skill_result_get` | Read one skill's generated training result. |
+| `training_history_get` | Read the training curve. |
+| `training_history_upload` | Upload training history recorded elsewhere. |
+| `benchmark_list` | List benchmarks. |
+| `benchmark_summary` | Read a benchmark's episode, step and reward summary. |
+| `benchmark_describe` | Describe what a benchmark contains. |
+| `benchmark_query` | Query benchmark data in depth. |
+| `benchmark_compare` | Compare two training runs' benchmarks per scenario. |
+| `benchmark_episode_trace` | Page through a benchmark's episode rewards. |
+| `benchmark_artifact_list` | List a training run's artifacts (IDs and times only). |
+| `benchmark_report_skill_get` | Read one skill and scenario result from a benchmark report. |
+| `historian_describe` | List the columns of a run's recorded time series. |
+| `historian_query` | Query recorded time series. |
+| `report_create` | Save a report the assistant wrote. |
+| `report_generate` | Make sure a generated report exists and read its status. |
+| `report_list` | List reports. |
+| `report_get` | Read a report. |
+| `skill_report_candidates` | List scenario and skill pairs a training report can cover. |
 
 ---
 
@@ -405,6 +519,26 @@ Encode site rules and procedures from your policy documents and attach them to o
 `policy_agent_create` · `policy_agent_document_upload` · `policy_agent_document_search` · `policy_agent_list` · `policy_agent_get` · `policy_agent_update` · `policy_agent_document_list`
 
 Mark the use case complete with `use_case_journey_advance` once an orchestration beats its baseline.
+
+### Tools (15)
+
+| Tool | Purpose |
+| --- | --- |
+| `communication_agent_create` | Create a communication agent. |
+| `communication_agent_get` | Read a communication agent. |
+| `communication_agent_list` | List communication agents. |
+| `communication_agent_update` | Change a communication agent. |
+| `communication_agent_publish` | Publish a communication agent's name and prompt as a new version. |
+| `communication_agent_document_upload` | Upload a reference document. |
+| `communication_agent_document_ingest` | Read a document into the agent's knowledge. |
+| `communication_agent_document_list` | List the agent's documents. |
+| `policy_agent_create` | Create a policy agent. |
+| `policy_agent_get` | Read a policy agent. |
+| `policy_agent_list` | List policy agents. |
+| `policy_agent_update` | Change a policy agent. |
+| `policy_agent_document_upload` | Upload a policy document (PDF). |
+| `policy_agent_document_list` | List a policy agent's documents. |
+| `policy_agent_document_search` | Search a policy agent's documents. |
 
 ---
 
@@ -456,6 +590,23 @@ Two tools hand larger pieces of work to the platform's own assistants. Each open
 - **AMESA Brain.** `brain` hands a whole multi-step plan to AMESA Brain. Steps run in order, each step's specialists run in parallel, and each step is its own loop. Submitting the plan approves it, and it starts at once.
 - **AMESA Monitor.** `monitor` checks that a use case's orchestrations run. It starts short diagnostic jobs with `training_diagnostic_batch_start`, has failures fixed by validate-fix loops, re-runs what was fixed and reports back.
 
+### Tools (12)
+
+| Tool | Purpose |
+| --- | --- |
+| `agent_loop_preview` | Preview what a loop will do before it starts. |
+| `agent_loop_start` | Start a background loop toward a goal. |
+| `agent_loop_list` | List loops. |
+| `agent_loop_get` | Follow a loop's progress. |
+| `agent_loop_message` | Answer, steer or resume a loop. |
+| `agent_loop_approve` | Approve or reject a change a loop proposed. |
+| `agent_loop_stop` | Pause a loop; a message resumes it. |
+| `agent_loop_complete` | End a data, simulator or training loop and keep its result. |
+| `agent_loop_kpi_interview` | Ask for a missing KPI, then start the training loop. |
+| `brain` | Hand a whole multi-step plan to AMESA Brain. |
+| `monitor` | Have the AMESA Monitor check that orchestrations run. |
+| `training_diagnostic_batch_start` | Start short diagnostic jobs on several orchestrations (Monitor only). |
+
 ---
 
 ## Jobs and diagnostics
@@ -470,7 +621,14 @@ Data, simulator and clustering tools start *simulator jobs*, and training starts
 > [!WARNING]
 > **A job that never starts.** Jobs wait in the queue when the cluster they target is offline. Check `cluster_health_get`, and pass the ID of an online cluster when you start the job.
 
-For every tool with a one-line purpose, see the **[tool index](doc/tools.md)**.
+### Tools (4)
+
+| Tool | Purpose |
+| --- | --- |
+| `job_diagnostics_get` | Explain why a training job failed or struggles. |
+| `job_container_logs_get` | Read one container's logs for a training job. |
+| `job_speed_analyze` | Find what is slowing a job. |
+| `known_issue_match` | Match an error against known issues and fixes. |
 
 ---
 
@@ -481,6 +639,7 @@ amesa-agents/
 ├── AGENTS.md                 # AI agent guidelines (read this if you're an AI agent)
 ├── README.md                 # This file
 ├── .mcp.json                 # AMESA MCP server config
+├── assets/                   # Images used in the README
 ├── agent-context/            # Component specs for AI agents to read before implementing
 │   ├── teacher/              #   AgentTeacher reference, publishing, and quirks
 │   ├── controller/           #   AgentController reference, publishing, and quirks
@@ -501,7 +660,6 @@ amesa-agents/
 │       ├── coordinated-example/
 │       └── goals-example/
 ├── datasets/                 # Sample CSV datasets (concrete, fusion, mixer) to stage with `amesa data stage`
-├── doc/                      # tools.md: index of every AMESA MCP tool
 └── perceptors/               # Your implemented perceptor artifacts
     ├── creating-and-publishing-perceptors.md
     └── perceptors-example/
