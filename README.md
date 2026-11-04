@@ -13,7 +13,7 @@
 
 The AMESA MCP server lets an AI assistant such as Claude run the whole AMESA platform for you. It turns plant data into a simulator, builds and trains agents against that simulator, and leaves you with agents that run your process.
 
-This README walks the platform lifecycle stage by stage and lists every tool, with its purpose, under the stage it belongs to. Tool availability depends on your organization's permissions. Use your browser's find (Ctrl+F / Cmd+F) to look up a tool by name or purpose.
+This README walks the platform lifecycle stage by stage and lists every tool, with its purpose, under the stage it belongs to. Tool availability depends on your organization's permissions, enabled features and the server version. Clients may initially receive a filtered tool list: use `mcp_tools_search` to discover a documented tool and `mcp_tools_call` to invoke it when it is not directly listed. If discovery also refuses it, it is unavailable to that session; do not invent a replacement tool. Use your browser's find (Ctrl+F / Cmd+F) to look up a tool by name or purpose.
 
 **181** tools · **9** lifecycle stages · **7** autonomous loop goals
 
@@ -64,12 +64,12 @@ Data, simulator and validation jobs run on an AMESA Compute node connected to yo
 
 #### Set up the node
 
-1. Install AMESA. The `amesa` Python package includes AMESA Compute and the `amesa` CLI. Install it in a virtual environment:
+1. Install AMESA. During the v2 cutover, use the `amesa-test` Python package, which includes AMESA Compute and the `amesa` CLI. Install it in a virtual environment:
 
    ```bash
    python3.11 -m venv .venv
    source .venv/bin/activate
-   pip install amesa
+   pip install --upgrade --pre amesa-test
    ```
 
    Check the installation with `amesa version`.
@@ -173,7 +173,7 @@ amesa data stage ./reactor.csv --name reactor
 The CLI uploads the CSV to the node, cleans it and registers it with the platform. Only a pointer and the dataset's schema go to the platform; the data stays on your node. The CLI asks:
 
 1. **Dataset name**, unless you passed `--name`. It defaults to the file name.
-2. **Does this CSV have a units row?** Answer Yes if the first data row holds units, such as `,,C,kPa`, rather than measurements.
+2. **Does this CSV have a units row?** Answer Yes if the first line holds units, such as `,,C,kPa`, above the column-header line. The order is units, headers, then measurements.
 3. **What is a row?** *Time-series* for moments of one process, or *Configuration-based* for independent samples such as recipes or tests.
 4. **Column roles**: sensor, action, replica or datetime. Columns named with an `s_`, `a_` or `r_` prefix are assigned sensor, action or replica automatically. At least one column must be a sensor, and training a simulator also needs at least one action. If you pick a datetime column, the rows are sorted by it.
 
