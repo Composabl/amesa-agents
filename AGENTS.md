@@ -90,7 +90,7 @@ amesa-agents/
 
 - **Python version:** 3.10–3.11 (prefer 3.11.8)
 - Use a virtual environment: `python -m venv .venv && source .venv/bin/activate`
-- Install AMESA (includes AMESA Compute and the `amesa` CLI): `pip install amesa`
+- Install AMESA (includes AMESA Compute and the `amesa` CLI): `pip install --upgrade --pre amesa-test`
 - Dependency declarations go in `pyproject.toml` — do not use bare `requirements.txt` for new artifacts
 
 ### Project layout (per artifact)
