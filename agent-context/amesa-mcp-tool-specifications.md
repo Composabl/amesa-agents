@@ -14,7 +14,7 @@ Every tool of the AMESA MCP server, grouped by the lifecycle stage it belongs to
 - **Simulator jobs** (`amesa_data_*`, `amesa_sim_*`, `amesa_cluster_*`): a response without `next` already holds the finished job's result. A response with `next` is still running: poll each job ID in it with `simulator_job_status`, never with the training tools.
 - **Validation jobs** (`amesa_*_validate`): poll the returned job ID with `component_validation_status`.
 - **Training jobs**: `training_job_submit` returns a job ID; follow it with `training_session_get` and `training_job_logs_get`.
-- **Publishing code**: `*_create` and `*_implementation_publish` return a short-lived upload URL. Upload the packaged `.tar.gz` there, then call the matching `*_confirm_upload`. `submit_code_file` publishes files as a new version in one call.
+- **Publishing code**: `*_create` and `*_implementation_publish` return a short-lived upload URL. Pass a `requestId` (a UUID of your choice) on create, publish and update calls so a retry doesn't create a duplicate. Upload the packaged `.tar.gz` there, then call the matching `*_confirm_upload`. `submit_code_file` publishes files as a new version in one call.
 - **Datasets** must be staged on a connected compute node with `amesa data stage` before any data, simulator or clustering tool can use them.
 
 ## Getting started
@@ -26,8 +26,8 @@ Walkthrough: [Before you begin](../README.md#before-you-begin)
 | `mcp_tools_search` | `query` string | `topK?` integer | Search the tool catalog by intent; returns names, descriptions and arguments. |
 | `mcp_tools_read` | `calls` array of object |  | Run up to eight read-only tools in one round trip. |
 | `mcp_tools_call` | `name` string<br>`arguments` object |  | Call a tool found through the catalog. |
-| `platform_methodology_search` | none | `query?` string<br>`topic?` string<br>`topK?` integer | Search AMESA's platform and SDK documentation. |
-| `platform_methodology_fetch` | `path` string |  | Read one methodology document in full. |
+| `platform_knowledge_search` | none | `query?` string<br>`kind?` `entity` \| `fact`<br>`type?` string<br>`tags?` array of string<br>`includeProposed?` boolean<br>`limit?` integer<br>`after?` string<br>`version?` string | Search AMESA's curated platform facts and methodology concepts, with citations. |
+| `platform_knowledge_get` | `id` string | `includeProposed?` boolean<br>`limit?` integer<br>`version?` string | Read one platform fact or concept by its ID, with its related items and citations. |
 | `cluster_list` | none | `projectId?` uuid<br>`organizationId?` uuid | List your organization's compute clusters and whether each is connected. |
 | `cluster_health_get` | `clusterId` uuid | `windowMinutes?` integer | Check whether a cluster is online and healthy. |
 | `cluster_create_local` | none | `organizationId?` uuid<br>`projectId?` uuid<br>`name?` string | Issue a single-use code to enroll a local machine (same as compute_enrollment_issue). |
@@ -42,6 +42,7 @@ Walkthrough: [1. Set up the use case](../README.md#1-set-up-the-use-case)
 | `organization_list` | none |  | List the organizations you belong to. |
 | `organization_get` | `name` string |  | Find an organization's ID by its exact name. |
 | `use_case_list` | `organizationId` uuid |  | List use cases (projects). |
+| `use_case_create` | `organizationId` uuid<br>`name` string<br>`description` string<br>`icon` string<br>`iconColor` string |  | Create a use case *(preview: staging server only)*. |
 | `use_case_get` | `projectId` uuid |  | Read a use case in full. |
 | `use_case_brief_get` | `projectId` uuid |  | Read a short overview of a use case. |
 | `use_case_update` | `projectId` uuid | `name?` string<br>`description?` string<br>`simulatorId?` uuid \| null<br>`teamId?` uuid \| null<br>`icon?` string<br>`iconColor?` string | Change a use case's name, description or settings. |
@@ -58,7 +59,9 @@ Walkthrough: [2. Prepare the data](../README.md#2-prepare-the-data)
 | Tool | Required inputs | Optional inputs | Purpose |
 | --- | --- | --- | --- |
 | `dataset_list` | `clusterId` uuid<br>`organizationId` uuid |  | List staged datasets with their columns and roles. |
+| `use_case_dataset_attach` | `organizationId` uuid<br>`projectId` uuid | `datasetUuid?` uuid<br>`clusterId?` uuid<br>`datasetName?` string<br>`primary?` boolean | Attach a staged dataset to the use case; the first one becomes its primary dataset. |
 | `amesa_data_stats` | `organizationId` uuid<br>`datasetUuid` uuid | `simulatorId?` uuid<br>`metrics?` array of string | Describe each column of a dataset. |
+| `amesa_data_rows` | `organizationId` uuid<br>`datasetUuid` uuid<br>`columns` array of string | `projectId?` uuid<br>`start_row?` integer<br>`limit?` integer<br>`scan_rows?` integer<br>`where?` object<br>`expected_csv_sha256?` string | Read raw rows of a staged dataset, with optional filters (read-only). |
 | `amesa_data_integrity` | `organizationId` uuid<br>`datasetUuid` uuid | `simulatorId?` uuid | Score empty, infinite, non-numeric, outlier and flat values. |
 | `amesa_data_score` | `organizationId` uuid<br>`datasetUuid` uuid | `simulatorId?` uuid | Score how strongly the sensors respond to the actions. |
 | `amesa_data_assign` | `organizationId` uuid<br>`datasetUuid` uuid | `simulatorId?` uuid<br>`roles?` object<br>`datetimeColumn?` string \| null<br>`apply?` boolean | Set columns as sensor, replica, action or ignored. |
@@ -95,8 +98,8 @@ Walkthrough: [3. Fit a simulator](../README.md#3-fit-a-simulator)
 | `amesa_cluster_convert` | `organizationId` uuid<br>`clusteringJobId` uuid |  | Turn found regimes into scenario definitions. |
 | `amesa_cluster_sims` | `organizationId` uuid<br>`clusteringJobId` uuid | `name?` string<br>`gpu?` boolean<br>`allowDuplicate?` boolean | Train one simulator per regime. |
 | `activity_cluster_get` | `simulatorId` uuid |  | Read the regimes of a variant simulator. |
-| `activity_cluster_upload` | *not in the server catalog* | | Store clustering results as variant simulators and scenarios. |
-| `use_case_simulator_assign` | `organizationId` uuid<br>`projectId` uuid<br>`simulatorIds` array of uuid |  | Attach a simulator to the use case. |
+| `use_case_simulator_assign` | `organizationId` uuid<br>`projectId` uuid<br>`simulatorIds` array of uuid |  | Attach one or more simulators to the use case. |
+| `use_case_simulator_replace` | `organizationId` uuid<br>`projectId` uuid<br>`simulatorId` uuid | `dryRun?` boolean<br>`dropUnsatisfiedVariables?` boolean | Make another trained simulator the use case's primary simulator. |
 | `use_case_sensors_get` | `projectId` uuid |  | List the use case's sensors and actions. |
 
 ## Knowledge
@@ -125,11 +128,7 @@ Walkthrough: [5. Design the agent system](../README.md#5-design-the-agent-system
 | `decomposition_edit` | `projectId` uuid<br>`decompositionId` uuid<br>`reason` string | `expectedRevision?` integer<br>`operations?` array of object \| object \| object \| object \| object<br>`name?` string<br>`goal?` string \| null | Refine a draft decomposition. |
 | `decomposition_get` | `projectId` uuid | `decompositionId?` uuid<br>`revision?` integer<br>`includeHistory?` boolean | Read a decomposition and its warnings. |
 | `decomposition_promote` | `projectId` uuid<br>`decompositionId` uuid<br>`requestId` uuid | `revision?` integer<br>`orchestrationName?` string | Create real components and an orchestration from an approved draft. |
-| `orchestration_pattern_create` | `projectId` uuid<br>`name` string<br>`type` `skillGroup` \| `orchestratorSkills` \| `strategySet` \| `coordinatedSet`<br>`skills` array of object | `requestId?` uuid<br>`description?` string<br>`orchestratorImplementationId?` uuid<br>`populationAgentImplementationId?` uuid<br>`policyAgents?` array of object<br>`committed?` boolean | Save a reusable orchestration shape. |
-| `orchestration_pattern_list` | `projectId` uuid | `committedOnly?` boolean<br>`limit?` integer<br>`offset?` integer | List saved patterns. |
-| `orchestration_pattern_get` | `patternId` uuid<br>`projectId` uuid |  | Read one pattern. |
-| `orchestration_pattern_update` | `patternId` uuid<br>`projectId` uuid | `requestId?` uuid<br>`name?` string<br>`description?` string<br>`type?` `skillGroup` \| `orchestratorSkills` \| `strategySet` \| `coordinatedSet`<br>`orchestratorImplementationId?` uuid \| null<br>`populationAgentImplementationId?` uuid \| null<br>`skills?` array of object<br>`policyAgents?` array of object<br>`committed?` boolean<br>`recommended?` boolean | Change a pattern. |
-| `orchestration_pattern_apply` | `projectId` uuid<br>`orchestrationId` uuid<br>`patternId` uuid | `parentOrchestratorNodeId?` uuid<br>`requestId?` uuid | Apply a pattern to an orchestration. |
+| `decomposition_delete` | `projectId` uuid<br>`decompositionId` uuid | `expectedRevision?` integer | Delete a decomposition and its history (can't be undone). |
 
 ## Components
 
@@ -189,12 +188,18 @@ Walkthrough: [7. Assemble the orchestration](../README.md#7-assemble-the-orchest
 | `scenario_flow_graph_import` | `projectId` uuid<br>`phases` array of object | `edges?` array of object | Import a whole scenario flow at once. |
 | `clustering_scenarios_publish` | `organizationId` uuid<br>`jobId` uuid<br>`projectId` uuid |  | Publish regime-based scenarios into the use case. |
 | `orchestration_list` | `projectId` uuid | `limit?` integer<br>`offset?` integer | List orchestrations. |
+| `orchestration_baseline_create` | `projectId` uuid | `name?` string<br>`clusteringJobId?` uuid<br>`datasetUuid?` uuid<br>`lens?` `temporal` \| `aggregate` \| `categorical`<br>`categoricalVariable?` string<br>`sequence?` array of string<br>`simulators?` `per-cluster` \| `single` | Build a first orchestration from the activity clusters: one teacher per cluster under one orchestrator. |
 | `orchestration_create` | `projectId` uuid | `requestId?` uuid<br>`name?` string<br>`description?` string<br>`graph?` object | Create an orchestration. |
 | `orchestration_duplicate` | `projectId` uuid<br>`orchestrationId` uuid | `requestId?` uuid<br>`name?` string<br>`description?` string | Copy an orchestration exactly. |
 | `orchestration_component` | `projectId` uuid<br>`orchestrationId` uuid<br>`kind` `optimization_agent` \| `policy_agent` \| `perceptor` \| `communication_agent`<br>`action` `add` \| `remove`<br>`implementationId` uuid | `requestId?` uuid<br>`orchestratorNodeId?` uuid<br>`selectedScenarios?` array of uuid \| null | Add or remove one component. |
 | `orchestration_workflow_deploy` | `projectId` uuid<br>`orchestrationId` uuid<br>`orchestrators` array of object | `requestId?` uuid<br>`perceptors?` array of uuid<br>`communicationAgents?` array of uuid | Replace the whole workflow in one step. |
 | `orchestration_get_workflow` | `projectId` uuid<br>`orchestrationId` uuid |  | Read the current workflow. |
 | `orchestration_prepare_for_training` | `projectId` uuid<br>`orchestrationId` uuid | `requestId?` uuid<br>`dryRun?` boolean | Repair invalid scenario selections before training. |
+| `orchestration_pattern_create` | `projectId` uuid<br>`name` string<br>`type` `skillGroup` \| `orchestratorSkills` \| `strategySet` \| `coordinatedSet`<br>`skills` array of object | `requestId?` uuid<br>`description?` string<br>`orchestratorImplementationId?` uuid<br>`populationAgentImplementationId?` uuid<br>`policyAgents?` array of object<br>`committed?` boolean | Save a reusable orchestration shape built from published components. |
+| `orchestration_pattern_list` | `projectId` uuid | `committedOnly?` boolean<br>`limit?` integer<br>`offset?` integer | List saved patterns. |
+| `orchestration_pattern_get` | `patternId` uuid<br>`projectId` uuid |  | Read one pattern. |
+| `orchestration_pattern_update` | `patternId` uuid<br>`projectId` uuid | `requestId?` uuid<br>`name?` string<br>`description?` string<br>`type?` `skillGroup` \| `orchestratorSkills` \| `strategySet` \| `coordinatedSet`<br>`orchestratorImplementationId?` uuid \| null<br>`populationAgentImplementationId?` uuid \| null<br>`skills?` array of object<br>`policyAgents?` array of object<br>`committed?` boolean<br>`recommended?` boolean | Change a pattern. |
+| `orchestration_pattern_apply` | `projectId` uuid<br>`orchestrationId` uuid<br>`patternId` uuid | `parentOrchestratorNodeId?` uuid<br>`requestId?` uuid | Attach a pattern beneath an orchestrator in an orchestration. |
 
 ## Train and evaluate
 
@@ -258,8 +263,8 @@ Walkthrough: [Autonomous loops](../README.md#autonomous-loops)
 
 | Tool | Required inputs | Optional inputs | Purpose |
 | --- | --- | --- | --- |
-| `agent_loop_preview` | `projectId` uuid | `threadId?` uuid<br>`goalKind?` `training-kpi` \| `simulator-fit` \| `data-score` \| `agent-fix` \| `domain-graph` \| `training-recovery` \| `training-diagnostics`<br>`orchestrationId?` uuid<br>`simulatorId?` uuid<br>`scoreThreshold?` number<br>`datasetUuid?` uuid<br>`candidates?` `any` \| `all`<br>`maxVariableErrorPercent?` number<br>`variableErrorOverrides?` array of object<br>`minAnalyzedEpisodes?` integer<br>`componentId?` uuid<br>`orchestrationIds?` array of uuid<br>`autonomous?` boolean<br>`clusterId?` uuid \| null<br>`title?` string<br>`maxAttempts?` integer<br>`maxHours?` number<br>`mode?` `meet` \| `improve`<br>`policy?` object<br>`instructions?` string | Preview what a loop will do before it starts. |
-| `agent_loop_start` | `projectId` uuid | `threadId?` uuid<br>`goalKind?` `training-kpi` \| `simulator-fit` \| `data-score` \| `agent-fix` \| `domain-graph` \| `training-recovery` \| `training-diagnostics`<br>`orchestrationId?` uuid<br>`simulatorId?` uuid<br>`scoreThreshold?` number<br>`datasetUuid?` uuid<br>`candidates?` `any` \| `all`<br>`maxVariableErrorPercent?` number<br>`variableErrorOverrides?` array of object<br>`minAnalyzedEpisodes?` integer<br>`componentId?` uuid<br>`orchestrationIds?` array of uuid<br>`autonomous?` boolean<br>`clusterId?` uuid \| null<br>`title?` string<br>`maxAttempts?` integer<br>`maxHours?` number<br>`mode?` `meet` \| `improve`<br>`policy?` object<br>`instructions?` string | Start a background loop toward a goal. |
+| `agent_loop_preview` | `projectId` uuid | `threadId?` uuid<br>`goalKind?` `training-kpi` \| `simulator-fit` \| `data-score` \| `agent-fix` \| `training-recovery` \| `training-diagnostics`<br>`orchestrationId?` uuid<br>`simulatorId?` uuid<br>`scoreThreshold?` number<br>`datasetUuid?` uuid<br>`candidates?` `any` \| `all`<br>`maxVariableErrorPercent?` number<br>`variableErrorOverrides?` array of object<br>`minAnalyzedEpisodes?` integer<br>`componentId?` uuid<br>`orchestrationIds?` array of uuid<br>`autonomous?` boolean<br>`clusterId?` uuid \| null<br>`title?` string<br>`maxAttempts?` integer<br>`maxHours?` number<br>`mode?` `meet` \| `improve`<br>`policy?` object<br>`instructions?` string | Preview what a loop will do before it starts. |
+| `agent_loop_start` | `projectId` uuid | `threadId?` uuid<br>`goalKind?` `training-kpi` \| `simulator-fit` \| `data-score` \| `agent-fix` \| `training-recovery` \| `training-diagnostics`<br>`orchestrationId?` uuid<br>`simulatorId?` uuid<br>`scoreThreshold?` number<br>`datasetUuid?` uuid<br>`candidates?` `any` \| `all`<br>`maxVariableErrorPercent?` number<br>`variableErrorOverrides?` array of object<br>`minAnalyzedEpisodes?` integer<br>`componentId?` uuid<br>`orchestrationIds?` array of uuid<br>`autonomous?` boolean<br>`clusterId?` uuid \| null<br>`title?` string<br>`maxAttempts?` integer<br>`maxHours?` number<br>`mode?` `meet` \| `improve`<br>`policy?` object<br>`instructions?` string | Start a background loop toward a goal. |
 | `agent_loop_list` | `projectId` uuid | `orchestrationId?` uuid | List loops. |
 | `agent_loop_get` | `projectId` uuid<br>`loopId` uuid |  | Follow a loop's progress. |
 | `agent_loop_message` | `projectId` uuid<br>`loopId` uuid<br>`text` string |  | Answer, steer or resume a loop. |
@@ -304,4 +309,4 @@ Earlier versions of the AMESA MCP server used the tools below. They are not in t
 | `get_benchmark_artifact_download_url` | `benchmark_describe` + `benchmark_query`, `benchmark_artifact_list` |
 | `get_historian_artifact_download_url` | `historian_describe` + `historian_query` |
 | `read_sim_sensors`, `read_sim_actions` | `use_case_sensors_get`, `mapping_list` |
-| `list_docs`, `fetch_doc` | `platform_methodology_search`, `platform_methodology_fetch` |
+| `list_docs`, `fetch_doc` | `platform_knowledge_search`, `platform_knowledge_get` |
